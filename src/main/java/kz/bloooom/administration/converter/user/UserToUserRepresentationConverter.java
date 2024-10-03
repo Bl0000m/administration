@@ -12,6 +12,7 @@ public class UserToUserRepresentationConverter {
         target.setEnabled(true);
         target.setUsername(source.getEmail());
         target.setFirstName(source.getName());
+        target.setLastName(source.getName());
         target.setEmail(source.getEmail());
         return target;
     }
