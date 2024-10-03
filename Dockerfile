@@ -1,5 +1,5 @@
 FROM openjdk:11-jdk-slim
-
+# workdir
 WORKDIR /app
 
 COPY pom.xml ./
