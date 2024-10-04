@@ -5,9 +5,9 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/bloom-administration-dev-db
-    username: islam
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:q_sight_organization_service_db_dev}
+    username: ${DB_USER:islam}
+    password: ${DB_PASSWORD:admin}
   flyway:
     baselineOnMigrate: true
     enabled: true
@@ -23,11 +23,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${JWT_SET_URI:http://127.0.0.1:8080/realms/dev/protocol/openid-connect/certs}
+          jwk-set-uri: ${JWT_SET_URI:http://keycloak:8080/realms/dev/protocol/openid-connect/certs}
       client:
         provider:
           keycloak:
-            token-uri: ${CLIENT_TOKEN_URL:http://127.0.0.1:8080/realms/dev/protocol/openid-connect/token}
+            token-uri: ${CLIENT_TOKEN_URL:http://keycloak:8080/realms/dev/protocol/openid-connect/token}
         registration:
           keycloak:
             client-id: ${CLIENT_ID:bloom-core}
@@ -36,15 +36,15 @@ spring:
 
 springdoc:
   swagger-ui:
-    configUrl: ${SWAGGER_CONFIG_UI:/api/v1/api-docs/swagger-config}
+    configUrl: ${SWAGGER_CONFIG_UI:/administration/api/v1/api-docs/swagger-config}
     disable-swagger-default-url: true
-    url: ${SWAGGER_UI:/api/v1/api-docs}
+    url: ${SWAGGER_UI:/administration/api/v1/api-docs}
     doc-expansion: none
   api-docs:
-    path: /api/v1/api-docs
+    path: /administration/api/v1/api-docs
     version: openapi_3_0
 swagger:
-  url: ${SWAGGER_SERVER_URL:localhost:9090/bloom/swagger}
+  url: ${SWAGGER_SERVER_URL:45.8.116.32/administration/swagger}
 management:
   info:
     env:
@@ -69,7 +69,7 @@ server:
   forward-headers-strategy: framework
 
 keycloak:
-  auth-server-url: ${AUTH_SERVER_URL:http://127.0.0.1:8080}
+  auth-server-url: ${AUTH_SERVER_URL:http://keycloak:8080}
   realm: ${REALM:dev}
   resource: ${CLIENT_ID:bloom-core}
   client-secret: ${CLIENT_SECRET:BCVz6t5NKQZbvcCGOyshvqimVSBeueJM}
