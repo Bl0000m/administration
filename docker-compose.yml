@@ -20,18 +20,15 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
+      DB_ADDR: localhost
       DB_DATABASE: bloom-administration-dev-db
       DB_USER: islam
       DB_PASSWORD: admin
       KEYCLOAK_LOGLEVEL: DEBUG
-    ports:
-      - 8080:8080
-    command: ["start-dev"]
+    command: [ "start-dev" ]
 #    depends_on:
 #      - postgres
-    networks:
-      - backend
+    network_mode: host
 
   administration-app:
     build:
@@ -46,8 +43,7 @@ services:
     depends_on:
 #      - postgres
       - keycloak
-    ports:
-      - 9090:9090
+    network_mode: host
     networks:
       - backend
 
