@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   postgres:
     image: postgres:14
@@ -6,40 +7,49 @@ services:
       POSTGRES_USER: islam
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: bloom-administration-dev-db
+    ports:
+      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    network_mode: host
-  
+    networks:
+      - backend
+      
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       DB_VENDOR: POSTGRES
-      DB_ADDR: localhost
+      DB_ADDR: postgres
       DB_DATABASE: bloom-administration-dev-db
       DB_USER: islam
       DB_PASSWORD: admin
       KEYCLOAK_LOGLEVEL: DEBUG
+    ports:
+      - 8080:8080
     command: ["start-dev"]
     depends_on:
       - postgres
-    network_mode: host
+    networks:
+      - backend
 
   administration-app:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/bloom-administration-dev-db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bloom-administration-dev-db
       SPRING_DATASOURCE_USERNAME: islam
       SPRING_DATASOURCE_PASSWORD: admin
-      KEYCLOAK_URL: http://localhost:8080
-      JWT_SET_URI: http://localhost:8080/realms/dev/protocol/openid-connect/certs
+      KEYCLOAK_URL: http://keycloak:8080
+      JWT_SET_URI: http://keycloak:8080/realms/dev/protocol/openid-connect/certs
     depends_on:
       - postgres
       - keycloak
-    network_mode: host
+    ports:
+      - 9090:9090
+    networks:
+      - backend
 
   nginx:
     image: nginx:alpine
@@ -49,7 +59,13 @@ services:
       - 80:80
     depends_on:
       - administration-app
-    network_mode: host
+    networks:
+      - backend
+      - frontend
+
+networks:
+  backend:
+  frontend:
 
 volumes:
   postgres_data:
