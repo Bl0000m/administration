@@ -25,7 +25,7 @@ services:
       KEYCLOAK_LOGLEVEL: DEBUG
     ports:
       - 8080:8080
-    command: [ "./kc.sh", "start", "--auto-build" ]
+    command: ["start-dev"]
     depends_on:
       - postgres
     networks:
