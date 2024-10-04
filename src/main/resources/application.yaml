@@ -5,7 +5,7 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:q_sight_organization_service_db_dev}
+    url: jdbc:postgresql://${DB_HOST:45.8.116.32}:${DB_PORT:5432}/${DB_NAME:bloom-administration-dev-db}
     username: ${DB_USER:islam}
     password: ${DB_PASSWORD:admin}
   flyway:
@@ -36,15 +36,15 @@ spring:
 
 springdoc:
   swagger-ui:
-    configUrl: ${SWAGGER_CONFIG_UI:/administration/api/v1/api-docs/swagger-config}
+    configUrl: ${SWAGGER_CONFIG_UI:/api/v1/api-docs/swagger-config}
     disable-swagger-default-url: true
-    url: ${SWAGGER_UI:/administration/api/v1/api-docs}
+    url: ${SWAGGER_UI:/api/v1/api-docs}
     doc-expansion: none
   api-docs:
-    path: /administration/api/v1/api-docs
+    path: /api/v1/api-docs
     version: openapi_3_0
 swagger:
-  url: ${SWAGGER_SERVER_URL:45.8.116.32/administration/swagger}
+  url: ${SWAGGER_SERVER_URL:45.8.116.32:9090}
 management:
   info:
     env:
@@ -69,7 +69,7 @@ server:
   forward-headers-strategy: framework
 
 keycloak:
-  auth-server-url: ${AUTH_SERVER_URL:http://keycloak:8080}
+  auth-server-url: ${AUTH_SERVER_URL:http://45.8.116.32:8080}
   realm: ${REALM:dev}
   resource: ${CLIENT_ID:bloom-core}
   client-secret: ${CLIENT_SECRET:BCVz6t5NKQZbvcCGOyshvqimVSBeueJM}
