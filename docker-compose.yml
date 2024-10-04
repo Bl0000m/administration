@@ -11,7 +11,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
-
+      
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
@@ -25,6 +25,7 @@ services:
       KEYCLOAK_LOGLEVEL: DEBUG
     ports:
       - 8080:8080
+    command: [ "./kc.sh", "start", "--auto-build" ]
     depends_on:
       - postgres
     networks:
