@@ -1,19 +1,19 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:14
-    environment:
-      POSTGRES_USER: islam
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: bloom-administration-dev-db
-    ports:
-      - 5432:5432
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
-      
+#  postgres:
+#    image: postgres:14
+#    environment:
+#      POSTGRES_USER: islam
+#      POSTGRES_PASSWORD: admin
+#      POSTGRES_DB: bloom-administration-dev-db
+#    ports:
+#      - 5432:5432
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - backend
+
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
@@ -28,8 +28,8 @@ services:
     ports:
       - 8080:8080
     command: ["start-dev"]
-    depends_on:
-      - postgres
+#    depends_on:
+#      - postgres
     networks:
       - backend
 
@@ -44,7 +44,7 @@ services:
       KEYCLOAK_URL: http://keycloak:8080
       JWT_SET_URI: http://keycloak:8080/realms/dev/protocol/openid-connect/certs
     depends_on:
-      - postgres
+#      - postgres
       - keycloak
     ports:
       - 9090:9090
