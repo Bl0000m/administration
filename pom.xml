@@ -101,16 +101,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>maven-public</id>
-            <url>https://nexus-prod.vlife.kz:8443/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>q-sight-common</id>
-            <url>https://nexus-prod.vlife.kz:8443/repository/common/</url>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
