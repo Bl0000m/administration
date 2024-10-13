@@ -4,7 +4,9 @@ WORKDIR /app
 
 # Скопируем файл pom.xml и загрузим зависимости
 COPY pom.xml ./
-RUN mvn dependency:go-offline -B
+
+# Указываем альтернативный репозиторий в случае проблем с центральным репозиторием
+RUN mvn dependency:go-offline -B -Dmaven.repo.local=/root/.m2/repository -Drepo1.maven.org/maven2
 
 # Скопируем весь проект и соберем артефакт
 COPY . ./
