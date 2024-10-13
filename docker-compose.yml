@@ -45,6 +45,9 @@ services:
       - keycloak
     ports:
       - 9090:9090
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     networks:
       - backend
 
