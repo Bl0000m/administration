@@ -1,12 +1,8 @@
-# Stage 1: Build the application with Maven
-FROM maven:3.8.6-openjdk-11-slim AS build
-WORKDIR /app
-
 # Скопируем файл pom.xml и загрузим зависимости
 COPY pom.xml ./
 
-# Указываем альтернативный репозиторий в случае проблем с центральным репозиторием
-RUN mvn dependency:go-offline -B -Dmaven.repo.local=/root/.m2/repository -Drepo1.maven.org/maven2
+# Загрузим зависимости без использования кэширования
+RUN mvn dependency:resolve
 
 # Скопируем весь проект и соберем артефакт
 COPY . ./
