@@ -118,10 +118,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.10.1</version> <!-- Версия плагина -->
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg> <!-- Добавляем поддержку параметров для полной совместимости с Java 11 -->
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
