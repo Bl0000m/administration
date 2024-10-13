@@ -5,8 +5,8 @@ WORKDIR /app
 # Скопируем файл pom.xml и загрузим зависимости
 COPY ./pom.xml ./
 
-# Добавим зеркала для Maven репозиториев
-RUN echo "<settings><mirrors><mirror><id>central</id><mirrorOf>central</mirrorOf><url>https://repo1.maven.org/maven2/</url></mirror></mirrors></settings>" > /root/.m2/settings.xml
+# Создадим каталог .m2 и добавим зеркала для Maven репозиториев
+RUN mkdir -p /root/.m2 && echo "<settings><mirrors><mirror><id>central</id><mirrorOf>central</mirrorOf><url>https://repo1.maven.org/maven2/</url></mirror></mirrors></settings>" > /root/.m2/settings.xml
 
 # Скопируем исходники проекта
 COPY ./src ./src
