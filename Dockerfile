@@ -5,7 +5,13 @@ WORKDIR /app
 # Скопируем файл pom.xml и загрузим зависимости
 COPY ./pom.xml ./
 
-# Соберем артефакт (уже с кэшированными зависимостями)
+# Добавим зеркала для Maven репозиториев
+RUN echo "<settings><mirrors><mirror><id>central</id><mirrorOf>central</mirrorOf><url>https://repo1.maven.org/maven2/</url></mirror></mirrors></settings>" > /root/.m2/settings.xml
+
+# Скопируем исходники проекта
+COPY ./src ./src
+
+# Собираем проект и скачиваем зависимости
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final image with just the JAR file
