@@ -2,14 +2,11 @@
 FROM maven:3.8.6-openjdk-11-slim AS build
 WORKDIR /app
 
-# Скопируем файл pom.xml и загрузим зависимости
-COPY ./pom.xml ./
+# Скопируем локально кэшированные зависимости и проект
+COPY .m2 /root/.m2
+COPY . .
 
-# Загрузим зависимости
-RUN mvn dependency:resolve
-
-# Скопируем весь проект и соберем артефакт
-COPY . ./
+# Соберем артефакт (уже с кэшированными зависимостями)
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final image with just the JAR file
