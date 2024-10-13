@@ -1,7 +1,11 @@
-# Скопируем файл pom.xml и загрузим зависимости
-COPY pom.xml ./
+# Stage 1: Build the application with Maven
+FROM maven:3.8.6-openjdk-11-slim AS build
+WORKDIR /app
 
-# Загрузим зависимости без использования кэширования
+# Скопируем файл pom.xml и загрузим зависимости
+COPY ./pom.xml ./
+
+# Загрузим зависимости
 RUN mvn dependency:resolve
 
 # Скопируем весь проект и соберем артефакт
