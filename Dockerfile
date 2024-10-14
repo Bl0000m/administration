@@ -2,9 +2,6 @@
 FROM maven:3.8.6-openjdk-11-slim AS build
 WORKDIR /app
 
-# Копируем локальный Maven кэш с зависимостями
-COPY ~/.m2 /root/.m2
-
 # Скопируем исходники проекта
 COPY ./src ./src
 COPY ./pom.xml ./pom.xml
