@@ -1,6 +1,8 @@
 FROM maven:3.6.3-jdk-11 AS build
 WORKDIR /app
 
+COPY /home/user/.m2 /root/.m2
+
 COPY . .
 
 RUN mvn clean package -DskipTests
