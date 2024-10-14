@@ -7,7 +7,7 @@ COPY ./src ./src
 COPY ./pom.xml ./pom.xml
 
 # Собираем проект
-RUN --network=host mvn clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final image with just the JAR file
 FROM openjdk:11-jdk-slim
