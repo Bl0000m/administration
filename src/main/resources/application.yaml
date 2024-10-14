@@ -5,7 +5,7 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:0.0.0.0}:${DB_PORT:5432}/${DB_NAME:bloom_administration_dev_db}
+    url: jdbc:postgresql://${DB_HOST:192.168.1.33}:${DB_PORT:5432}/${DB_NAME:bloom_administration_dev_db}
     username: ${DB_USER:islam}
     password: ${DB_PASSWORD:admin}
   flyway:
