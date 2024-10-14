@@ -14,6 +14,9 @@
     <name>administration</name>
     <description>bloooom-administration</description>
     <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
         <java.version>11</java.version>
         <keycloak.version>20.0.1</keycloak.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
@@ -89,6 +92,13 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -118,13 +128,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version> <!-- Версия плагина -->
+                <version>3.8.1</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
-                    <compilerArgs>
-                        <arg>-parameters</arg> <!-- Добавляем поддержку параметров для полной совместимости с Java 11 -->
-                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
