@@ -1,23 +1,21 @@
-# Stage 1: Build the application with Maven
-FROM maven:3.8.6-openjdk-11-slim AS build
+FROM maven:3.6.3-jdk-11 AS build
 WORKDIR /app
 
-# Скопируем исходники проекта
-COPY ./src ./src
-COPY ./pom.xml ./pom.xml
+COPY . .
 
-# Собираем проект
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final image with just the JAR file
-FROM openjdk:11-jdk-slim
-WORKDIR /app
+FROM eclipse-temurin:11.0.14.1_1-jre-alpine
+ENV TZ=Asia/Aqtau
+RUN mkdir -p /apps/tmp
+WORKDIR /apps
 
-# Копируем JAR файл из первого этапа
-COPY --from=build /app/target/administration-0.0.1-SNAPSHOT.jar /app/administration.jar
-
-# Открываем порт
 EXPOSE 9090
 
+COPY --from=build /app/target/administration-*.jar /apps/administration.jar
+
+RUN adduser --disabled-password -u 8835 sa && chown -R sa /apps/
+USER sa
+
 # Запуск приложения
-ENTRYPOINT ["java", "-jar", "/app/administration.jar"]
+ENTRYPOINT ["java", "-jar", "administration.jar"]
