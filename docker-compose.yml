@@ -43,13 +43,12 @@ services:
     depends_on:
 #      - postgres
       - keycloak
+    network_mode: host
     ports:
       - 9090:9090
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    networks:
-      - backend
 
 #  nginx:
 #    image: nginx:alpine
@@ -63,9 +62,9 @@ services:
 #      - backend
 #      - frontend
 
-networks:
-  backend:
-  frontend:
+#networks:
+#  backend:
+#  frontend:
 
 volumes:
   postgres_data:
