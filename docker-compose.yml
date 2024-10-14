@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://192.168.1.33:5432/bloom-administration-dev-db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://192.168.1.33:5432/bloom_administration_dev_db
       SPRING_DATASOURCE_USERNAME: islam
       SPRING_DATASOURCE_PASSWORD: admin
       KEYCLOAK_URL: http://keycloak:8080
