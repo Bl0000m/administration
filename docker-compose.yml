@@ -25,6 +25,7 @@ services:
       DB_USER: islam
       DB_PASSWORD: admin
       KEYCLOAK_LOGLEVEL: DEBUG
+      KEYCLOAK_PORT: 7070
     command: [ "start-dev" ]
 #    depends_on:
 #      - postgres
@@ -39,8 +40,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://192.168.1.33:5432/bloom_administration_dev_db
       SPRING_DATASOURCE_USERNAME: islam
       SPRING_DATASOURCE_PASSWORD: admin
-      KEYCLOAK_URL: http://localhost:8080
-      JWT_SET_URI: http://localhost:8080/realms/dev/protocol/openid-connect/certs
+      KEYCLOAK_URL: http://localhost:7070
+      JWT_SET_URI: http://localhost:7070/realms/dev/protocol/openid-connect/certs
     depends_on:
 #      - postgres
       - keycloak
