@@ -28,7 +28,8 @@ services:
     command: [ "start-dev" ]
 #    depends_on:
 #      - postgres
-    network_mode: host
+    ports:
+      - 8080:8080
 
   administration-app:
     build:
@@ -38,8 +39,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://192.168.1.33:5432/bloom_administration_dev_db
       SPRING_DATASOURCE_USERNAME: islam
       SPRING_DATASOURCE_PASSWORD: admin
-      KEYCLOAK_URL: http://keycloak:8080
-      JWT_SET_URI: http://keycloak:8080/realms/dev/protocol/openid-connect/certs
+      KEYCLOAK_URL: http://localhost:8080
+      JWT_SET_URI: http://localhost:8080/realms/dev/protocol/openid-connect/certs
     depends_on:
 #      - postgres
       - keycloak
@@ -69,3 +70,4 @@ networks:
 
 volumes:
   postgres_data:
+
