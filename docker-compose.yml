@@ -25,7 +25,7 @@ services:
       DB_USER: islam
       DB_PASSWORD: admin
       KEYCLOAK_LOGLEVEL: DEBUG
-#      KEYCLOAK_PORT: 7070
+      KEYCLOAK_PORT: 8080
     command: [ "start-dev" ]
 #    depends_on:
 #      - postgres
