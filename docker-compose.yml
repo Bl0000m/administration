@@ -30,7 +30,9 @@ services:
       KC_HOSTNAME_ADMIN_URL: http://45.8.116.32:8080/
       KC_HOSTNAME_STRICT: false
       KEYCLOAK_FRONTEND_URL: http://45.8.116.32:8080/
-    command: [ "start-dev" ]
+    command: [ "start-dev",
+               "--hostname=45.8.116.32",
+               "--http-port=8787"]
     #    depends_on:
     #      - postgres
     ports:
