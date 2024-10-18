@@ -29,6 +29,7 @@ services:
       KC_HOSTNAME: 45.8.116.32
       KC_HOSTNAME_ADMIN_URL: http://45.8.116.32
       KC_HOSTNAME_STRICT: false
+      KEYCLOAK_FRONTEND_URL: http://keycloak.localdev/
     command: [ "start-dev" ]
 #    depends_on:
 #      - postgres
