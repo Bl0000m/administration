@@ -20,8 +20,8 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       DB_VENDOR: POSTGRES
-      DB_ADDR: localhost
-      DB_DATABASE: bloom-administration-dev-db
+      DB_ADDR: 192.168.1.33
+      DB_DATABASE: bloom_administration_dev_db
       DB_USER: islam
       DB_PASSWORD: admin
       KEYCLOAK_LOGLEVEL: DEBUG
@@ -72,4 +72,5 @@ networks:
 
 volumes:
   postgres_data:
+
 
