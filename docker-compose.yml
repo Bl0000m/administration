@@ -29,6 +29,7 @@ services:
       KC_HOSTNAME: 45.8.116.32
       KC_HOSTNAME_ADMIN_URL: http://45.8.116.32:8443/
       KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
       KEYCLOAK_FRONTEND_URL: http://45.8.116.32:8080/
     command: [ "start-dev"]
     #    depends_on:
