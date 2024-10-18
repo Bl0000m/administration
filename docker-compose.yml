@@ -17,8 +17,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
       DB_VENDOR: POSTGRES
       DB_ADDR: 192.168.1.33
       DB_DATABASE: bloom_administration_dev_db
@@ -35,7 +35,7 @@ services:
     #      - postgres
     ports:
       - 8080:8080
-      - 8443:8080
+      - 8443:8443
 
   administration-app:
     build:
