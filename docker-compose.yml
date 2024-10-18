@@ -17,6 +17,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
+      KC_FEATURES: hostname[:v2]
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       DB_VENDOR: POSTGRES
