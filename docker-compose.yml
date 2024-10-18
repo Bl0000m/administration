@@ -1,23 +1,22 @@
 version: '3.8'
 
 services:
-#  postgres:
-#    image: postgres:14
-#    environment:
-#      POSTGRES_USER: islam
-#      POSTGRES_PASSWORD: admin
-#      POSTGRES_DB: bloom-administration-dev-db
-#    ports:
-#      - 5432:5432
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    networks:
-#      - backend
+  #  postgres:
+  #    image: postgres:14
+  #    environment:
+  #      POSTGRES_USER: islam
+  #      POSTGRES_PASSWORD: admin
+  #      POSTGRES_DB: bloom-administration-dev-db
+  #    ports:
+  #      - 5432:5432
+  #    volumes:
+  #      - postgres_data:/var/lib/postgresql/data
+  #    networks:
+  #      - backend
 
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
-      KC_FEATURES: hostname[:v2]
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       DB_VENDOR: POSTGRES
@@ -30,10 +29,10 @@ services:
       KC_HOSTNAME: 45.8.116.32
       KC_HOSTNAME_ADMIN_URL: http://45.8.116.32:8080
       KC_HOSTNAME_STRICT: false
-      KEYCLOAK_FRONTEND_URL: keycloak.localdev
-    command: [ "start-dev" ]
-#    depends_on:
-#      - postgres
+      KEYCLOAK_FRONTEND_URL: http://45.8.116.32:8080
+    command: [ "start-dev",  "--hostname=45.8.116.32" ]
+    #    depends_on:
+    #      - postgres
     ports:
       - 8080:8080
       - 8443:8443
@@ -49,7 +48,7 @@ services:
       KEYCLOAK_URL: http://keycloak:8080
       JWT_SET_URI: http://keycloak:8080/realms/dev/protocol/openid-connect/certs
     depends_on:
-#      - postgres
+      #      - postgres
       - keycloak
     ports:
       - 9090:9090
