@@ -1,0 +1,67 @@
+# Every branch shoud have own workflow, if ci/cd needed
+name: Build and Deploy
+
+# Permissions to push registry
+permissions: 
+  actions: none
+  attestations: write
+  checks: none
+  contents: read
+  deployments: none
+  discussions: none
+  id-token: write
+  issues: none 
+  packages: write
+  pages: none
+  pull-requests: none
+  repository-projects: none 
+  security-events: none
+  statuses: none
+
+# Triger on push to branch
+on:
+  push:
+    branches:
+    - main
+
+# Own enviroment variable
+env:
+  docker_compose_yml_path: '/opt/docker/docker-compose.yml'
+  PROJECT_NAME: 'administration'
+  REGISTRY: ghcr.io
+  IMAGE: indigico/gov/dev
+  DOCKER_BUILD_ARGS: ""
+
+jobs:
+  build:
+    name: Build docker image
+    runs-on: bloomsrv-32
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Docker login
+        run: docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} $REGISTRY
+      - name: docker build 
+        run: |
+          docker pull $REGISTRY/$IMAGE || true
+          docker build --push --cache-from $REGISTRY/$IMAGE -t $REGISTRY/$IMAGE $DOCKER_BUILD_ARGS .
+          docker rmi $REGISTRY/$IMAGE
+          docker logout $REGISTRY
+  deploy:
+    name: Deploy docker-compose
+    needs: build
+    runs-on: bloomsrv-32
+    steps:
+      - name: docker login
+        run: |
+          docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} $REGISTRY
+        shell: bash
+      - name: docker-compose recreate
+        run: |
+          docker-compose -f $docker_compose_yml_path pull $PROJECT_NAME
+          docker-compose -f $docker_compose_yml_path up -d $PROJECT_NAME
+        shell: bash
+      - name: docker logout
+        run: |
+          docker logout $REGISTRY
+        shell: bash
