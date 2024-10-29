@@ -29,7 +29,7 @@ env:
   docker_compose_yml_path: '/opt/docker/docker-compose.yml'
   PROJECT_NAME: 'administration'
   REGISTRY: ghcr.io
-  IMAGE: indigico/gov/dev
+  IMAGE: bloooom/administration/dev
   DOCKER_BUILD_ARGS: ""
 
 jobs:
