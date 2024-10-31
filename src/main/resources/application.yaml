@@ -1,13 +1,13 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 20MB
+      max-request-size: 50MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.1.33:5432/bloom_administration_dev_db
-    username: islam
-    password: admin
+    url: jdbc:postgresql://192.168.1.33:5432/administration
+    username: administration
+    password: tS8WybXT8mUCV08jmuuU
   flyway:
     baselineOnMigrate: true
     enabled: true
@@ -65,7 +65,7 @@ management:
 server:
   compression:
     enabled: true
-  port: 9090
+  port: 8087
   address: 0.0.0.0
   forward-headers-strategy: framework
 
