@@ -31,7 +31,7 @@ spring:
         registration:
           keycloak:
             client-id: ${CLIENT_ID:bloom-core}
-            client-secret: ${CLIENT_SECRET:BCVz6t5NKQZbvcCGOyshvqimVSBeueJM}
+            client-secret: ${CLIENT_SECRET:DO9gJAnWW1vilaB1cJnB1BZ3nmX4ccZ3}
             authorization-grant-type: client_credentials
 
 springdoc:
@@ -73,9 +73,9 @@ keycloak:
   auth-server-url: ${AUTH_SERVER_URL:http://192.168.1.33:8080}
   realm: ${REALM:dev}
   resource: ${CLIENT_ID:bloom-core}
-  client-secret: ${CLIENT_SECRET:BCVz6t5NKQZbvcCGOyshvqimVSBeueJM}
+  client-secret: ${CLIENT_SECRET:DO9gJAnWW1vilaB1cJnB1BZ3nmX4ccZ3}
   username: ${REALM_USERNAME:bloom-admin@bloom.kz}
-  password: ${REALM_USER_PASSWORD:12345}
+  password: ${REALM_USER_PASSWORD:PQzmBchnP4LduQu}
 
 logging:
   level:
