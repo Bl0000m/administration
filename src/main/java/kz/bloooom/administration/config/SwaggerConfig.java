@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .info(new Info().title("Bloom Administration API")
                         .description("Bloom Project")
                         .version("v1.0.0").license(new License().name("Apache 2.0")
-                                .url("http://springdoc.org")).contact(new Contact().name("Miras Madiyev")
-                                .email("m.madiyev@vlife.kz"))).servers(List.of(s2));
+                                .url("http://springdoc.org")).contact(new Contact().name("Islam Yemzhayev")
+                                .email(""))).servers(List.of(s2));
     }
 }

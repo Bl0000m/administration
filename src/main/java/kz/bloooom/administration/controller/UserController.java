@@ -22,14 +22,14 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/users")
-@Tag(name = "User API", description = "Методы для работы с пользователями")
+@Tag(name = "User API", description = "Методы для работы с пользователями в админ системе")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
     UserFacade userFacade;
 
     @PostMapping
-    @Operation(description = "Создать пользователя")
+    @Operation(summary = "Создать пользователя")
     public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDto dto) {
         log.info("POST: /v1/users to create user form web admin");
         userFacade.create(dto);

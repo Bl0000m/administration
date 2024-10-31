@@ -23,14 +23,14 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/client/users")
-@Tag(name = "User API", description = "Методы для работы с пользователями")
+@Tag(name = "User Mobile API", description = "Методы для работы с пользователями в мобиольном приложении")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserMobileController {
 
     UserFacade userFacade;
 
     @PostMapping
-    @Operation(description = "Регистрация пользователя")
+    @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<Void> create(@Valid @RequestBody UserRegistrationDto dto) {
         log.info("POST: /v1/client/users register user form mobile");
         userFacade.register(dto);

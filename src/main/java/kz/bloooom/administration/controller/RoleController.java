@@ -33,12 +33,13 @@ public class RoleController {
     }
 
     @GetMapping("/id/{id}")
-    @Operation(summary = "Получить список всех ролей")
+    @Operation(summary = "Получить роль по id")
     public RoleDto getRoleById(@PathVariable Long id) {
         return roleFacade.getRoleById(id);
     }
 
     @GetMapping("/code/{code}")
+    @Operation(summary = "Получить роль по коду")
     public RoleDto getRoleByCode(@PathVariable RoleCode code) {
         return roleFacade.getRoleByCode(code);
     }
