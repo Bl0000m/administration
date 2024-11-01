@@ -23,11 +23,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${JWT_SET_URI:http://keycloak.bloooom.kz:8443/realms/dev/protocol/openid-connect/certs}
+          jwk-set-uri: ${JWT_SET_URI:http://keycloak.bloooom.kz:8080/realms/dev/protocol/openid-connect/certs}
       client:
         provider:
           keycloak:
-            token-uri: ${CLIENT_TOKEN_URL:http://keycloak.bloooom.kz:8443/realms/dev/protocol/openid-connect/token}
+            token-uri: ${CLIENT_TOKEN_URL:http://keycloak.bloooom.kz:8080/realms/dev/protocol/openid-connect/token}
         registration:
           keycloak:
             client-id: ${CLIENT_ID:bloom-core}
@@ -70,7 +70,7 @@ server:
   forward-headers-strategy: framework
 
 keycloak:
-  auth-server-url: ${AUTH_SERVER_URL:http://keycloak.bloooom.kz:8443}
+  auth-server-url: ${AUTH_SERVER_URL:http://keycloak.bloooom.kz:8080}
   realm: ${REALM:dev}
   resource: ${CLIENT_ID:bloom-core}
   client-secret: ${CLIENT_SECRET:DO9gJAnWW1vilaB1cJnB1BZ3nmX4ccZ3}
