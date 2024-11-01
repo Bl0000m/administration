@@ -33,25 +33,19 @@ public class ResourceServerConfig {
             "/actuator/**",
             "/v1/users/login",
             "/v1/client/users",
-            "/v1/users/client/login",
             "/v1/users/refresh",
             "/api/v1/api-docs/**"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
-                        .antMatchers(AUTH_WHILE_LIST).permitAll()
-                        .antMatchers(HttpMethod.POST, "/v1/client/users").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
-                .build();
-
-
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(SecurityConfigurerAdapter::and)
+                .authorizeHttpRequests(auth -> auth.antMatchers(AUTH_WHILE_LIST).permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        return http.build();
     }
 
     @Bean
