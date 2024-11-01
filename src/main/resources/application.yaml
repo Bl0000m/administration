@@ -44,7 +44,7 @@ springdoc:
     path: /api/v1/api-docs
     version: openapi_3_0
 swagger:
-  url: ${SWAGGER_SERVER_URL:http://192.168.1.33:9090}
+  url: ${SWAGGER_SERVER_URL:http://http://api.bloooom.kz:8443}
 management:
   info:
     env:
