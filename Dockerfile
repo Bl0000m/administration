@@ -15,8 +15,8 @@ EXPOSE 9090
 
 COPY --from=build /app/target/administration-*.jar /apps/administration.jar
 
-RUN adduser --disabled-password -u 8835 sa && chown -R sa /apps/
-USER sa
+# RUN adduser --disabled-password -u 8835 sa && chown -R sa /apps/
+# USER sa
 
 # Запуск приложения
 ENTRYPOINT ["java", "-jar", "administration.jar"]
