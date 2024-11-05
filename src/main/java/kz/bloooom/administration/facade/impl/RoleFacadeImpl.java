@@ -1,7 +1,7 @@
 package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.converter.role.RoleConverter;
-import kz.bloooom.administration.domain.dto.role.RoleDto;
+import kz.bloooom.administration.domain.dto.AbstractEnumDto;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.facade.RoleFacade;
 import kz.bloooom.administration.service.RoleService;
@@ -15,29 +15,24 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleFacadeImpl implements RoleFacade {
     RoleService roleService;
     RoleConverter roleConverter;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    @Transactional(readOnly = true)
-    public List<RoleDto> getAllRoles() {
+    public List<AbstractEnumDto<RoleCode>> getAllRoles() {
         return roleConverter.convert(roleService.getAllRoles());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public RoleDto getRoleById(Long id) {
+    public AbstractEnumDto<RoleCode> getRoleById(Long id) {
         return roleConverter.convert(roleService.getById(id));
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public RoleDto getRoleByCode(RoleCode code) {
+    public AbstractEnumDto<RoleCode> getRoleByCode(RoleCode code) {
         return roleConverter.convert(roleService.getByCode(code));
     }
 }

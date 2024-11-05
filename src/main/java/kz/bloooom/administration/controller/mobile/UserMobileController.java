@@ -2,9 +2,6 @@ package kz.bloooom.administration.controller.mobile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
-import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
-import kz.bloooom.administration.domain.dto.user.UserCreateDto;
 import kz.bloooom.administration.domain.dto.user.UserRegistrationDto;
 import kz.bloooom.administration.facade.UserFacade;
 import lombok.AccessLevel;

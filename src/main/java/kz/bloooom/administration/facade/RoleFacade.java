@@ -1,15 +1,16 @@
 package kz.bloooom.administration.facade;
 
 
+import kz.bloooom.administration.domain.dto.AbstractEnumDto;
 import kz.bloooom.administration.domain.dto.role.RoleDto;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 
 import java.util.List;
 
 public interface RoleFacade {
-    List<RoleDto> getAllRoles();
+    List<AbstractEnumDto<RoleCode>> getAllRoles();
 
-    RoleDto getRoleById(Long id);
+    AbstractEnumDto<RoleCode> getRoleById(Long id);
 
-    RoleDto getRoleByCode(RoleCode code);
+    AbstractEnumDto<RoleCode> getRoleByCode(RoleCode code);
 }

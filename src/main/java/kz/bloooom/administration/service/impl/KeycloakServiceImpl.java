@@ -9,6 +9,7 @@ import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.role.RoleMappingDto;
 import kz.bloooom.administration.domain.dto.role.RoleRepresentationDeleteDto;
 import kz.bloooom.administration.domain.dto.role.RoleRepresentationDto;
+import kz.bloooom.administration.domain.entity.AbstractUserEntity;
 import kz.bloooom.administration.domain.entity.Role;
 import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.role.RoleCode;
@@ -133,7 +134,7 @@ public class KeycloakServiceImpl implements KeycloakService {
      * @return {@link String}
      */
     @Override
-    public String createUserAndGetKeycloakId(User user, String password) {
+    public <T extends AbstractUserEntity> String createUserAndGetKeycloakId(T user, String password) {
         UserRepresentation userRepresentation = userToUserRepresentationConverter.convert(user);
         userRepresentation.setEmailVerified(true);
         setUserRepresentationCredentials(userRepresentation, password);
@@ -372,7 +373,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     @Transactional
-    public void rolesUnpinAndAssignToUser(String userKeycloakId, List<RoleCode> roleCodes) {
+    public void rolesUnpinAndAssignToUser(String userKeycloakId, RoleCode roleCode) {
         // get all roles from user
         List<RoleRepresentationDto> roleRepresentationDtoList = getRoleByKeycloakId(userKeycloakId).getRealmMappings();
 
@@ -381,8 +382,8 @@ public class KeycloakServiceImpl implements KeycloakService {
             unpinUserRole(userKeycloakId, roleRepresentationDtoList);
         }
 
-        if (Objects.nonNull(roleCodes) && BooleanUtils.isFalse(roleCodes.isEmpty())) {
-            List<String> rolesString = roleCodes.stream().map(Enum::name).collect(Collectors.toList());
+        if (Objects.nonNull(roleCode)) {
+            String rolesString = roleCode.name();
             List<RoleRepresentationDto> representationDtoList = getAvailableRoles(userKeycloakId)
                     .stream()
                     .filter(roleRepresentationDto ->

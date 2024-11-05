@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -17,8 +16,8 @@ import javax.validation.constraints.NotNull;
 @Schema(description = "Обьект для регистрации юзера")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserRegistrationDto {
-    @NotBlank(message = "Поле фамилия пользователя не должно быть пустым")
-    @Schema(description = "Фамилия пользователя")
+    @NotBlank(message = "Поле имя пользователя не должно быть пустым")
+    @Schema(description = "Имя пользователя")
     String name;
 
     @NotBlank(message = "Поле почта пользователя не должно быть пустым")

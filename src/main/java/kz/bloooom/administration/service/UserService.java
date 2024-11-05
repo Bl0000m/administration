@@ -1,6 +1,5 @@
 package kz.bloooom.administration.service;
 
-import com.nimbusds.openid.connect.sdk.assurance.evidences.attachment.Attachment;
 import kz.bloooom.administration.domain.entity.User;
 
 public interface UserService {

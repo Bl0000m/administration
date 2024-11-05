@@ -13,22 +13,22 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users_roles")
+@Table(name = "employee")
 @FieldNameConstants
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserRole {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Employee extends AbstractUserEntity {
 
-    @ManyToOne
-    User user;
+    @Column(name = "iin")
+    String iin;
 
-    @ManyToOne
-    Role role;
+    @Column(name = "position")
+    String position;
 
-    public UserRole(User user, Role role) {
-        this.user = user;
-        this.role = role;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    Company company;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "status_id")
+    Status status;
 }

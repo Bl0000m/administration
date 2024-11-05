@@ -4,6 +4,7 @@ package kz.bloooom.administration.service;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.role.RoleMappingDto;
 import kz.bloooom.administration.domain.dto.role.RoleRepresentationDto;
+import kz.bloooom.administration.domain.entity.AbstractUserEntity;
 import kz.bloooom.administration.domain.entity.Role;
 import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.role.RoleCode;
@@ -21,7 +22,7 @@ public interface KeycloakService {
      * @param password Пароль пользователя
      * @return id Keycloak
      */
-    String createUserAndGetKeycloakId(User user, String password);
+    <T extends AbstractUserEntity> String createUserAndGetKeycloakId(T  user, String password);
 
     List<UserSessionRepresentation> getUserSession(String keycloakId);
 
@@ -113,7 +114,7 @@ public interface KeycloakService {
     void assignRoleToUser(String keycloakId, List<RoleRepresentationDto> representationDto);
 
 
-    void rolesUnpinAndAssignToUser(String userKeycloakId, List<RoleCode> roleCodes);
+    void rolesUnpinAndAssignToUser(String userKeycloakId, RoleCode roleCode);
 
 
     RoleMappingDto getRoleByKeycloakId(String keycloakId);

@@ -3,6 +3,7 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.AbstractEnumDto;
 import kz.bloooom.administration.domain.dto.role.RoleDto;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.facade.RoleFacade;
@@ -28,19 +29,19 @@ public class RoleController {
 
     @GetMapping()
     @Operation(summary = "Получить список всех ролей")
-    public List<RoleDto> getAllRoles() {
+    public List<AbstractEnumDto<RoleCode>> getAllRoles() {
         return roleFacade.getAllRoles();
     }
 
     @GetMapping("/id/{id}")
     @Operation(summary = "Получить роль по id")
-    public RoleDto getRoleById(@PathVariable Long id) {
+    public AbstractEnumDto<RoleCode> getRoleById(@PathVariable Long id) {
         return roleFacade.getRoleById(id);
     }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить роль по коду")
-    public RoleDto getRoleByCode(@PathVariable RoleCode code) {
+    public AbstractEnumDto<RoleCode> getRoleByCode(@PathVariable RoleCode code) {
         return roleFacade.getRoleByCode(code);
     }
 
