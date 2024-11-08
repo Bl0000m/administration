@@ -46,10 +46,10 @@ public class MailServiceImpl implements MailService {
         try {
             message.setFrom(new InternetAddress(sender));
             message.setRecipients(MimeMessage.RecipientType.TO, email);
-            message.setSubject("");
             message.setSubject(subject);
             message.setContent(text, "text/html; charset=utf-8");
             mailSender.send(message);
+            log.info("Send message: {} to email: {}", text, email);
         } catch (Exception e) {
             log.error("Exception: send: text={}, subject={}, email={}", text, subject, email, e);
             throw new BloomAdministrationException(

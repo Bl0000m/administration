@@ -15,18 +15,20 @@ spring:
     locations: classpath:db/migration
   mail:
     host: 192.168.1.33
-    username: no-reply@bloooom.kz
-    sign-in-link: ${SIGN_IN_LINK:}
     port: 25
+    username: no-reply@bloooom.kz
+    password:
+    protocol: smtp
     properties:
       mail:
         smtp:
           auth: false
+          starttls:
+            enable: false
           connectiontimeout: 10000
           timeout: 10000
           writetimeout: 10000
-        transport:
-          protocol: smtp
+    default-encoding: UTF-8
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     hibernate:
