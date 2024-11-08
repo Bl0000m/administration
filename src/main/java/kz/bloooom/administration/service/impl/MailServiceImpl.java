@@ -34,8 +34,8 @@ public class MailServiceImpl implements MailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Value("${spring.mail.sign-in-link}")
-    private String signInLink;
+//    @Value("${spring.mail.sign-in-link}")
+//    private String signInLink;
 
     /**
      * {@inheritDoc}
