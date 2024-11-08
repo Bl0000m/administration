@@ -11,6 +11,7 @@ import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.UserFacade;
 import kz.bloooom.administration.service.KeycloakService;
+import kz.bloooom.administration.service.MailService;
 import kz.bloooom.administration.service.UserService;
 import kz.bloooom.administration.validator.EmailValidator;
 import kz.bloooom.administration.validator.PasswordValidator;
@@ -41,6 +42,7 @@ public class UserFacadeImpl implements UserFacade {
     KeycloakService keycloakService;
     AccessTokenResponseConverter accessTokenResponseConverter;
     PasswordValidator passwordValidator;
+    MailService mailService;
 
     @Override
     @Transactional
@@ -55,12 +57,11 @@ public class UserFacadeImpl implements UserFacade {
             assignRolesToUser(user);
 
             log.info("UserServiceImpl:create: userInfoDto={}, keycloakId={}", dto, keycloakId);
-//            return mailService.sendRegistrationMessage(dto.getFirstName(),
-//                    dto.getLastName(),
-//                    dto.getEmail(),
-//                    position.getName(),
-//                    position.getStructureLevel().getCompany().getName(),
-//                    keycloakId);
+            // отправка сообщении на указанную почту
+
+            mailService.sendRegistrationMessage(dto.getName(),
+                    dto.getEmail(),
+                    keycloakId);
 
         } catch (Exception e) {
             log.error(e.getMessage());

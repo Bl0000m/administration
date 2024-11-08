@@ -13,6 +13,20 @@ spring:
     enabled: true
     schemas: public
     locations: classpath:db/migration
+  mail:
+    host: 192.168.1.33
+    username: no-reply@bloooom.kz
+    sign-in-link: ${SIGN_IN_LINK:}
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: false
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+        transport:
+          protocol: smtp
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     hibernate:
@@ -68,6 +82,9 @@ server:
   port: 8087
   address: 0.0.0.0
   forward-headers-strategy: framework
+
+bloom:
+  stage: ${BLOOM_STAGE:DEV}
 
 keycloak:
   auth-server-url: ${AUTH_SERVER_URL:http://keycloak.bloooom.kz:8080}
