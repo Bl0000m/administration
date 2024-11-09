@@ -14,17 +14,17 @@ spring:
     schemas: public
     locations: classpath:db/migration
   mail:
-    host: 192.168.1.33
-    port: 25
+    host: mail.bloooom.kz
+    port: 587
     username: no-reply@bloooom.kz
-    password:
+    password: ITbloooom2024$
     protocol: smtp
     properties:
       mail:
         smtp:
-          auth: false
+          auth: true
           starttls:
-            enable: false
+            enable: true
           connectiontimeout: 10000
           timeout: 10000
           writetimeout: 10000
