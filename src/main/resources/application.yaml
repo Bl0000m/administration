@@ -8,6 +8,14 @@ spring:
     url: jdbc:postgresql://192.168.1.33:5432/administration
     username: administration
     password: tS8WybXT8mUCV08jmuuU
+    hikari:
+      minimumIdle: ${HCP_MIN_IDL:2}
+      idleTimeout: ${HCP_IDLE_TIMEOUT:60000}
+      connectionTimeout: ${HCP_CONN_TIMEOUT:30000}
+      maxLifetime: ${HCP_MAX_LIFETIME:300000}
+      maximumPoolSize: 50
+      connection-test-query: SELECT 1
+      poolName: SpringBootJPAHikariCP
   flyway:
     baselineOnMigrate: true
     enabled: true
