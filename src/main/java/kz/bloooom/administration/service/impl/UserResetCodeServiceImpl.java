@@ -47,7 +47,8 @@ public class UserResetCodeServiceImpl implements UserResetCodeService {
         return generateResetCode;
     }
 
-    private String generateCode() {
+    @Override
+    public String generateCode() {
         Set<Integer> digits = new HashSet<>();
         while (digits.size() < 4) {
             digits.add((int) (Math.random() * 10));

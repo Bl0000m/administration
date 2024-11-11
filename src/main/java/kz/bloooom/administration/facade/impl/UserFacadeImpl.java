@@ -59,12 +59,14 @@ public class UserFacadeImpl implements UserFacade {
             keycloakId = createKeycloakId(dto);
             User user = createUserInDatabase(dto, keycloakId);
             assignRolesToUser(user);
+            String code = userResetCodeService.generateCode();
 
             log.info("UserServiceImpl:create: userInfoDto={}, keycloakId={}", dto, keycloakId);
             // отправка сообщении на указанную почту
 
             mailService.sendRegistrationMessage(dto.getName(),
                     dto.getEmail(),
+                    code,
                     keycloakId);
 
         } catch (Exception e) {

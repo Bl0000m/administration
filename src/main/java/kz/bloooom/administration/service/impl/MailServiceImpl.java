@@ -26,7 +26,8 @@ public class MailServiceImpl implements MailService {
     private static final String MAIL_SUBJECT = "Добро пожаловать в Bloooom.";
     private static final String FORGOT_PASS_SUBJECT = "Восстановление пароля учетной записи. %s";
     public static final String REGISTRATION_MESSAGE = "Уважаемый/ая %s," +
-            "</br>Добро пожаловать в Bloooom!";
+            "</br> Добро пожаловать в Bloooom!" +
+            "</br> Ваш код подтверждения %s";
 
 
     private final JavaMailSender mailSender;
@@ -63,8 +64,9 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendRegistrationMessage(String name,
                                         String email,
+                                        String code,
                                         String keycloakId) {
-        String[] args = {name};
+        String[] args = {name, code};
         String message = String.format(REGISTRATION_MESSAGE, args);
         send(message, String.format(MAIL_SUBJECT), email);
     }
