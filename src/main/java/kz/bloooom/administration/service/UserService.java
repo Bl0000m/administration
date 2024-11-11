@@ -13,6 +13,8 @@ public interface UserService {
 
     boolean existsByEmailAndNotDelete(String email);
 
+    boolean isVerifyEmail(String email);
+
     boolean existsByPhoneNumber(String phoneNumber);
 
     User findByKeycloakId(String keycloakId);

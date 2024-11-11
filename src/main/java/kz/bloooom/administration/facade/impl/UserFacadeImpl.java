@@ -22,6 +22,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -84,15 +85,25 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
-//        boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-//
-//        if (BooleanUtils.isFalse(isUserNotDelete)) {
-//            throw new BloomAdministrationException(
-//                    HttpStatus.UNAUTHORIZED,
-//                    ErrorCodeConstant.USER_NOT_FOUNT,
-//                    "messages.exception.user-not-found", keycloakAuthRequestDto.getUsername()
-//            );
-//        }
+        boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
+
+        if (BooleanUtils.isFalse(isUserNotDelete)) {
+            throw new BloomAdministrationException(
+                    HttpStatus.UNAUTHORIZED,
+                    ErrorCodeConstant.USER_NOT_FOUNT,
+                    "messages.exception.user-not-found", keycloakAuthRequestDto.getUsername()
+            );
+        }
+
+        boolean isVerify = userService.isVerifyEmail(keycloakAuthRequestDto.getUsername());
+
+        if (BooleanUtils.isFalse(isVerify)) {
+            throw new BloomAdministrationException(
+                    HttpStatus.UNAUTHORIZED,
+                    ErrorCodeConstant.USER_NOT_VERIFY_EMAIL,
+                    "messages.exception.user-not-verify-email", keycloakAuthRequestDto.getUsername()
+            );
+        }
 
         return accessTokenResponseConverter.convert(keycloakService.login(keycloakAuthRequestDto));
     }
