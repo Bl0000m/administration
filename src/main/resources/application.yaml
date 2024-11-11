@@ -107,5 +107,7 @@ keycloak:
 logging:
   level:
     org.flywaydb.core: DEBUG
+    org.springframework: DEBUG
+    org.hibernate: DEBUG
 
 
