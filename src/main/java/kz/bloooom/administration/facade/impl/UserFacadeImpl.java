@@ -104,6 +104,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    @Transactional
     public void sendForgotPasswordCode(UserResetCodeRequestDto userResetCodeRequestDto) {
         String resetCode = userResetCodeService.getUserResetCode(userResetCodeRequestDto);
         mailService.sendForgotPasswordCode(userResetCodeRequestDto, resetCode);
