@@ -7,10 +7,11 @@ public interface UserService {
 
     User save(User user);
 
+    User getByEmail(String email);
+
     boolean existsByEmail(String email);
 
     boolean existsByEmailAndNotDelete(String email);
-
 
     boolean existsByPhoneNumber(String phoneNumber);
 

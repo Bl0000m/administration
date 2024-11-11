@@ -20,11 +20,10 @@ public class EmailValidator {
     public void checkValid(String email) {
         for (EmailChecker emailChecker : emailCheckers) {
             if (emailChecker.emailExists(email)) {
-                String checkerName = emailChecker.getClass().getSimpleName();
                 throw new BloomAdministrationException(
                         HttpStatus.BAD_REQUEST,
                         ErrorCodeConstant.USER_EMAIL_ALREADY_EXIST,
-                        "messages.exception." + checkerName.toLowerCase(), email);
+                        "messages.exception.user-email-already-exist", email);
             }
         }
     }

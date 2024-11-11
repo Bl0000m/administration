@@ -23,5 +23,6 @@ public class ErrorCodeConstant {
     public final String STATUS_WITH_THIS_ID_DOEST_EXISTS = "STATUS_WITH_THIS_ID_DOEST_EXISTS";
     public final String STATUS_WITH_THIS_CODE_DOEST_EXISTS = "STATUS_WITH_THIS_CODE_DOEST_EXISTS";
     public final String MAILING_ERROR = "MAILING_ERROR";
-
+    public final String RESET_CODE_INVALID = "RESET_CODE_INVALID";
+    public final String RESET_CODE_EXPIRED = "RESET_CODE_EXPIRED";
 }

@@ -6,7 +6,6 @@ import kz.bloooom.administration.domain.dto.role.RoleMappingDto;
 import kz.bloooom.administration.domain.dto.role.RoleRepresentationDto;
 import kz.bloooom.administration.domain.entity.AbstractUserEntity;
 import kz.bloooom.administration.domain.entity.Role;
-import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.UserSessionRepresentation;
@@ -22,7 +21,7 @@ public interface KeycloakService {
      * @param password Пароль пользователя
      * @return id Keycloak
      */
-    <T extends AbstractUserEntity> String createUserAndGetKeycloakId(T  user, String password);
+    <T extends AbstractUserEntity> String createUserAndGetKeycloakId(T user, String password);
 
     List<UserSessionRepresentation> getUserSession(String keycloakId);
 

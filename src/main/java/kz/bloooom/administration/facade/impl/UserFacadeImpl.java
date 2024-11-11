@@ -5,23 +5,24 @@ import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.converter.user.UserRegisterDtoConverter;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
+import kz.bloooom.administration.domain.dto.user.ForgotPasswordRequestDto;
+import kz.bloooom.administration.domain.dto.user.ResetCodeValidateRequestDto;
 import kz.bloooom.administration.domain.dto.user.UserRegistrationDto;
+import kz.bloooom.administration.domain.dto.user.UserResetCodeRequestDto;
 import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.UserFacade;
 import kz.bloooom.administration.service.KeycloakService;
 import kz.bloooom.administration.service.MailService;
+import kz.bloooom.administration.service.UserResetCodeService;
 import kz.bloooom.administration.service.UserService;
-import kz.bloooom.administration.validator.EmailValidator;
-import kz.bloooom.administration.validator.PasswordValidator;
-import kz.bloooom.administration.validator.PhoneNumberValidator;
+import kz.bloooom.administration.validator.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,9 @@ public class UserFacadeImpl implements UserFacade {
     AccessTokenResponseConverter accessTokenResponseConverter;
     PasswordValidator passwordValidator;
     MailService mailService;
+    UserResetCodeService userResetCodeService;
+    ResetCodeValidator resetCodeValidator;
+    ForgotPasswordValidator forgotPasswordValidator;
 
     @Override
     @Transactional
@@ -89,6 +93,27 @@ public class UserFacadeImpl implements UserFacade {
 //        }
 
         return accessTokenResponseConverter.convert(keycloakService.login(keycloakAuthRequestDto));
+    }
+
+    @Override
+    @Transactional
+    public void forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        forgotPasswordValidator.validate(forgotPasswordRequestDto);
+        String keycloakId = userService.getByEmail(forgotPasswordRequestDto.getEmail()).getKeycloakId();
+        keycloakService.forgotPassword(keycloakId, forgotPasswordRequestDto.getNewPassword());
+    }
+
+    @Override
+    public void sendForgotPasswordCode(UserResetCodeRequestDto userResetCodeRequestDto) {
+        emailValidator.checkValid(userResetCodeRequestDto.getEmail());
+        String resetCode = userResetCodeService.getUserResetCode(userResetCodeRequestDto);
+        mailService.sendForgotPasswordCode(userResetCodeRequestDto, resetCode);
+    }
+
+    @Override
+    public void validateResetCode(ResetCodeValidateRequestDto resetCodeValidateRequestDto) {
+        resetCodeValidator.validate(resetCodeValidateRequestDto);
+        userResetCodeService.deleteUserResetCode(resetCodeValidateRequestDto);
     }
 
     private void assignRolesToUser(User user) {
