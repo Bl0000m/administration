@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -39,8 +40,9 @@ public class UserResetCodeServiceImpl implements UserResetCodeService {
         UserResetCode userResetCode = UserResetCode.builder()
                 .email(userResetCodeRequestDto.getEmail())
                 .resetCode(generateResetCode)
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .updatedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
-
         userResetCodeRepository.save(userResetCode);
         return generateResetCode;
     }
