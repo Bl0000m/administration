@@ -1,10 +1,9 @@
 package kz.bloooom.administration.service;
 
 import kz.bloooom.administration.domain.dto.user.ResetCodeValidateRequestDto;
-import kz.bloooom.administration.domain.dto.user.UserResetCodeRequestDto;
 
 public interface UserResetCodeService {
-    String getUserResetCode(UserResetCodeRequestDto userResetCodeRequestDto);
+    String getUserResetCode(String email);
 
     String generateCode();
 

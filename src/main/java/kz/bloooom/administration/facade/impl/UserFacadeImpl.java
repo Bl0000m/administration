@@ -59,7 +59,7 @@ public class UserFacadeImpl implements UserFacade {
             keycloakId = createKeycloakId(dto);
             User user = createUserInDatabase(dto, keycloakId);
             assignRolesToUser(user);
-            String code = userResetCodeService.generateCode();
+            String code = userResetCodeService.getUserResetCode(dto.getEmail());
 
             log.info("UserServiceImpl:create: userInfoDto={}, keycloakId={}", dto, keycloakId);
             // отправка сообщении на указанную почту
@@ -108,14 +108,18 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @Transactional
     public void sendForgotPasswordCode(UserResetCodeRequestDto userResetCodeRequestDto) {
-        String resetCode = userResetCodeService.getUserResetCode(userResetCodeRequestDto);
+        String resetCode = userResetCodeService.getUserResetCode(userResetCodeRequestDto.getEmail());
         mailService.sendForgotPasswordCode(userResetCodeRequestDto, resetCode);
     }
 
     @Override
+    @Transactional
     public void validateResetCode(ResetCodeValidateRequestDto resetCodeValidateRequestDto) {
         resetCodeValidator.validate(resetCodeValidateRequestDto);
         userResetCodeService.deleteUserResetCode(resetCodeValidateRequestDto);
+        User user = userService.getByEmail(resetCodeValidateRequestDto.getEmail());
+        user.setVerify(true);
+        userService.save(user);
     }
 
     private void assignRolesToUser(User user) {

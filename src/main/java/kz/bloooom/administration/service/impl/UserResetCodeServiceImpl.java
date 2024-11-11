@@ -34,11 +34,11 @@ public class UserResetCodeServiceImpl implements UserResetCodeService {
 
     @Override
     @Transactional
-    public String getUserResetCode(UserResetCodeRequestDto userResetCodeRequestDto) {
+    public String getUserResetCode(String email) {
         String generateResetCode = generateCode();
 
         UserResetCode userResetCode = UserResetCode.builder()
-                .email(userResetCodeRequestDto.getEmail())
+                .email(email)
                 .resetCode(generateResetCode)
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .updatedDate(new Timestamp(System.currentTimeMillis()))
