@@ -24,7 +24,6 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserResetCodeServiceImpl implements UserResetCodeService {
 
