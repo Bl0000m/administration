@@ -32,6 +32,8 @@ public class ResourceServerConfig {
             "/v1/users/login",
             "/v1/client/users",
             "/v1/users/refresh",
+            "/v1/client/users/forgot-password",
+            "/v1/client/users/reset-code/**",
             "/api/v1/api-docs/**"
     };
 
