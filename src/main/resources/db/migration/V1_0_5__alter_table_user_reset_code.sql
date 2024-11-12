@@ -1,0 +1,3 @@
+ALTER TABLE user_reset_code
+DROP
+CONSTRAINT user_reset_code_email_key;
