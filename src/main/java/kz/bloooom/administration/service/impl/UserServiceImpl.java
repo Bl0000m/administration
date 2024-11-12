@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isVerifyEmail(String email) {
-        return userRepository.existsByVerifyIsTrue(email);
+        return userRepository.existsByEmailAndVerifyTrue(email);
     }
 
     @Override
