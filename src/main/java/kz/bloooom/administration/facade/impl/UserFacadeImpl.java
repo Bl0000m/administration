@@ -5,6 +5,7 @@ import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.converter.user.UserRegisterDtoConverter;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
+import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
 import kz.bloooom.administration.domain.dto.user.ForgotPasswordRequestDto;
 import kz.bloooom.administration.domain.dto.user.ResetCodeValidateRequestDto;
 import kz.bloooom.administration.domain.dto.user.UserRegistrationDto;
@@ -106,6 +107,12 @@ public class UserFacadeImpl implements UserFacade {
         }
 
         return accessTokenResponseConverter.convert(keycloakService.login(keycloakAuthRequestDto));
+    }
+
+    @Override
+    public KeycloakAuthResponseDto refresh(KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto) {
+        return accessTokenResponseConverter.convert(
+                keycloakService.refresh(keycloakAuthWithRefreshTokenDto.getRefreshToken()));
     }
 
     @Override

@@ -4,16 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
+import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
 import kz.bloooom.administration.facade.UserFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -33,5 +31,13 @@ public class UserController {
             @Valid @RequestBody KeycloakAuthRequestDto keycloakAuthRequestDto
     ) {
         return ResponseEntity.ok(userFacade.login(keycloakAuthRequestDto));
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Обновить токен доступа")
+    public ResponseEntity<KeycloakAuthResponseDto> refresh(
+            @Valid @RequestBody KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto, @RequestHeader(value = "X-Request-ID", required = true) String requestId) {
+        log.info("X-Request-ID: {}. POST /v1/users/refresh", requestId);
+        return ResponseEntity.ok(userFacade.refresh(keycloakAuthWithRefreshTokenDto));
     }
 }
