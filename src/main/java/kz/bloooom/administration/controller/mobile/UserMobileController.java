@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/client/users")
-@Tag(name = "User Mobile API", description = "Методы для работы с пользователями в мобиольном приложении")
+@Tag(name = "User Mobile API", description = "Методы для работы с пользователями в мобильном приложении")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserMobileController {
     UserFacade userFacade;

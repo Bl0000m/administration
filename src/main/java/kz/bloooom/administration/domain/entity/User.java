@@ -5,10 +5,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,6 +18,10 @@ import javax.persistence.Table;
 @FieldNameConstants
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends AbstractUserEntity {
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    Set<Subscription> subscriptions;
+
     @Column(name = "verify")
     boolean verify;
 }
