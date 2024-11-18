@@ -36,8 +36,8 @@ public class UserController {
     @PostMapping("/refresh")
     @Operation(summary = "Обновить токен доступа")
     public ResponseEntity<KeycloakAuthResponseDto> refresh(
-            @Valid @RequestBody KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto, @RequestHeader(value = "X-Request-ID", required = true) String requestId) {
-        log.info("X-Request-ID: {}. POST /v1/users/refresh", requestId);
+            @Valid @RequestBody KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto) {
+        log.info("POST /v1/users/refresh");
         return ResponseEntity.ok(userFacade.refresh(keycloakAuthWithRefreshTokenDto));
     }
 }
