@@ -3,10 +3,7 @@ package kz.bloooom.administration.facade;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
-import kz.bloooom.administration.domain.dto.user.ForgotPasswordRequestDto;
-import kz.bloooom.administration.domain.dto.user.ResetCodeValidateRequestDto;
-import kz.bloooom.administration.domain.dto.user.UserRegistrationDto;
-import kz.bloooom.administration.domain.dto.user.UserResetCodeRequestDto;
+import kz.bloooom.administration.domain.dto.user.*;
 
 public interface UserFacade {
     void register(UserRegistrationDto dto);
@@ -14,6 +11,10 @@ public interface UserFacade {
     KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto);
 
     KeycloakAuthResponseDto refresh(KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto);
+
+    UserMeInfoDto getMe();
+
+    void logout();
 
     void forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
 

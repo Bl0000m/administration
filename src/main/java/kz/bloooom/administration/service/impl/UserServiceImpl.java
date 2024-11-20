@@ -1,10 +1,14 @@
 package kz.bloooom.administration.service.impl;
 
+import kz.bloooom.administration.config.KeycloakComponent;
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.domain.entity.User;
+import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.repository.UserRepository;
+import kz.bloooom.administration.service.KeycloakService;
 import kz.bloooom.administration.service.UserService;
+import kz.bloooom.administration.util.JwtUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
+    KeycloakComponent keycloakComponent;
+    KeycloakService keycloakService;
 
     @Override
     public User getById(Long userId) {
@@ -44,6 +50,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getCurrentUser() {
+        String keycloakId = JwtUtils.getKeycloakId();
+        return getByKeycloakId(keycloakId);
+    }
+
+    @Override
+    public User getByKeycloakId(String keycloakId){
+        if (keycloakService.getRolesByKeycloakId(keycloakId).stream().anyMatch(s -> s.equals(RoleCode.SUPER_ADMIN.name()))) {
+            return keycloakComponent.getUserFromKeycloak();
+        } else {
+            return userRepository.findByKeycloakId(keycloakId).orElseThrow(() ->
+                    new BloomAdministrationException(
+                            HttpStatus.NOT_FOUND,
+                            ErrorCodeConstant.USER_WITH_THIS_KEYCLOAK_NOT_FOUND,
+                            "messages.exception.user-with-keycloak-not-found", keycloakId
+                    ));
+        }
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
@@ -61,10 +87,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByPhoneNumber(String phoneNumber) {
         return userRepository.existsByPhoneNumber(phoneNumber);
-    }
-
-    @Override
-    public User findByKeycloakId(String keycloakId) {
-        return userRepository.findByKeycloakId(keycloakId);
     }
 }

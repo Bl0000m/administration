@@ -9,6 +9,10 @@ public interface UserService {
 
     User getByEmail(String email);
 
+    User getCurrentUser();
+
+    User getByKeycloakId(String keycloakId);
+
     boolean existsByEmail(String email);
 
     boolean existsByEmailAndNotDelete(String email);
@@ -17,5 +21,4 @@ public interface UserService {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    User findByKeycloakId(String keycloakId);
 }

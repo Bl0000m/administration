@@ -1,10 +1,12 @@
 package kz.bloooom.administration.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
+import kz.bloooom.administration.domain.dto.user.UserMeInfoDto;
 import kz.bloooom.administration.facade.UserFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +41,20 @@ public class UserController {
             @Valid @RequestBody KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto) {
         log.info("POST /v1/users/refresh");
         return ResponseEntity.ok(userFacade.refresh(keycloakAuthWithRefreshTokenDto));
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Получить информацию о текущем пользователе")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserMeInfoDto> getMe() {
+        return ResponseEntity.ok(userFacade.getMe());
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Метод для выхода из системы")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> logout() {
+        userFacade.logout();
+        return ResponseEntity.ok().build();
     }
 }

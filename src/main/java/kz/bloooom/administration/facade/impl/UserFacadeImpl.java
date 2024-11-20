@@ -2,14 +2,12 @@ package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
+import kz.bloooom.administration.converter.user.UserMeInfoDtoConverter;
 import kz.bloooom.administration.converter.user.UserRegisterDtoConverter;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
-import kz.bloooom.administration.domain.dto.user.ForgotPasswordRequestDto;
-import kz.bloooom.administration.domain.dto.user.ResetCodeValidateRequestDto;
-import kz.bloooom.administration.domain.dto.user.UserRegistrationDto;
-import kz.bloooom.administration.domain.dto.user.UserResetCodeRequestDto;
+import kz.bloooom.administration.domain.dto.user.*;
 import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
@@ -49,6 +47,7 @@ public class UserFacadeImpl implements UserFacade {
     UserResetCodeService userResetCodeService;
     ResetCodeValidator resetCodeValidator;
     ForgotPasswordValidator forgotPasswordValidator;
+    UserMeInfoDtoConverter userMeInfoDtoConverter;
 
     @Override
     @Transactional
@@ -113,6 +112,16 @@ public class UserFacadeImpl implements UserFacade {
     public KeycloakAuthResponseDto refresh(KeycloakAuthWithRefreshTokenDto keycloakAuthWithRefreshTokenDto) {
         return accessTokenResponseConverter.convert(
                 keycloakService.refresh(keycloakAuthWithRefreshTokenDto.getRefreshToken()));
+    }
+
+    @Override
+    public UserMeInfoDto getMe() {
+        return userMeInfoDtoConverter.convert(userService.getCurrentUser());
+    }
+
+    @Override
+    public void logout() {
+        keycloakService.logout();
     }
 
     @Override
