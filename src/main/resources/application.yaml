@@ -110,4 +110,12 @@ logging:
     org.springframework: DEBUG
     org.hibernate: DEBUG
 
-
+cloud:
+  minio:
+    region:
+      static: ${MINIO_CLOUD_AWS_REGION_STATIC:ru-central1-a}
+    credentials:
+      accessKey: ${MINIO_CLOUD_AWS_ACCESS_KEY:dqgmfwhwmwlHbnDd}
+      secretKey: ${MINIO_CLOUD_AWS_SECRET_KEY:bfUnGIR89U67BthAF0cVUuqxkoz9lQ19}
+    bucket: ${MINIO_CLOUD_AWS_BUCKET:image-recognition}
+    host: ${MINIO_CLOUD_HOST:https://minio-server.nls.kz:9000}

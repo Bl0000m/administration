@@ -4,6 +4,7 @@ import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.converter.user.UserMeInfoDtoConverter;
 import kz.bloooom.administration.converter.user.UserRegisterDtoConverter;
+import kz.bloooom.administration.converter.user.UserSubscriptionsInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
@@ -16,6 +17,7 @@ import kz.bloooom.administration.service.KeycloakService;
 import kz.bloooom.administration.service.MailService;
 import kz.bloooom.administration.service.UserResetCodeService;
 import kz.bloooom.administration.service.UserService;
+import kz.bloooom.administration.util.JwtUtils;
 import kz.bloooom.administration.validator.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +50,7 @@ public class UserFacadeImpl implements UserFacade {
     ResetCodeValidator resetCodeValidator;
     ForgotPasswordValidator forgotPasswordValidator;
     UserMeInfoDtoConverter userMeInfoDtoConverter;
+    UserSubscriptionsInfoDtoConverter userSubscriptionsInfoDtoConverter;
 
     @Override
     @Transactional
@@ -117,6 +120,12 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public UserMeInfoDto getMe() {
         return userMeInfoDtoConverter.convert(userService.getCurrentUser());
+    }
+
+    @Override
+    public UserSubscriptionsInfoDto getMySubscriptions() {
+        User user = userService.getCurrentUser();
+        return userSubscriptionsInfoDtoConverter.convert(user);
     }
 
     @Override

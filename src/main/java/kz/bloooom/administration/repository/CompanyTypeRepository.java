@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyTypeRepository extends JpaRepository<CompanyType, Long> {
-    Optional<CompanyType> getByCode(CompanyTypeCode roleCode);
+    Optional<CompanyType> getByCode(CompanyTypeCode companyTypeCode);
 }

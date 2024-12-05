@@ -14,6 +14,8 @@ public interface UserFacade {
 
     UserMeInfoDto getMe();
 
+    UserSubscriptionsInfoDto getMySubscriptions();
+
     void logout();
 
     void forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);

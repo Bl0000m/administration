@@ -7,6 +7,7 @@ import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
 import kz.bloooom.administration.domain.dto.user.UserMeInfoDto;
+import kz.bloooom.administration.domain.dto.user.UserSubscriptionsInfoDto;
 import kz.bloooom.administration.facade.UserFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,13 @@ public class UserController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<UserMeInfoDto> getMe() {
         return ResponseEntity.ok(userFacade.getMe());
+    }
+
+    @GetMapping("/my-subscriptions")
+    @Operation(summary = "Получить информацию подписках пользователя")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserSubscriptionsInfoDto> getMySubscriptions() {
+        return ResponseEntity.ok(userFacade.getMySubscriptions());
     }
 
     @PostMapping("/logout")
