@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "order")
+@Table(name = "orders")
 @FieldNameConstants
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order {

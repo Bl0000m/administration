@@ -74,7 +74,7 @@ create table bouquet
     updated_date timestamp with time zone         not null default now()
 );
 
-create table order
+create table orders
 (
     id              bigserial primary key,
     order_code      numeric                             not null,
