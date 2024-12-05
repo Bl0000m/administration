@@ -30,14 +30,6 @@ public class SubscriptionCreateDto {
     @Schema(description = "Id типа подписки")
     Long subscriptionTypeId;
 
-    @Schema(description = "Время начала подписки", example = "2022-06-30 11:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    LocalDateTime startTime;
-
-    @Schema(description = "Время завершения подписки", example = "2022-06-30 11:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    LocalDateTime endTime;
-
     @Schema(description = "Время заказов", example = "[2022-06-30 11:00, ...]")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     List<LocalDateTime> orderDates;
