@@ -28,7 +28,7 @@ public class OrderFillDtoConverter {
         target.setAddress(source.getAddress());
         target.setOrderStatus(orderStatusService.getByCode(OrderStatusCode.NEW));
         target.setOrderCode(generateUniqueOrderCode());
-        target.setBouquet(bouquetService.getById(source.getBoughtId()));
+        target.setBouquet(bouquetService.getById(source.getBouquetId()));
         return target;
     }
 

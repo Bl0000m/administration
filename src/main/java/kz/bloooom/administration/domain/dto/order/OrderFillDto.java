@@ -21,7 +21,7 @@ public class OrderFillDto {
 
     @NotNull(message = "Id букета не должен быть пустым")
     @Schema(description = "Id букета")
-    Long boughtId;
+    Long bouquetId;
 
     @Schema(description = "Адрес доставки")
     String address;

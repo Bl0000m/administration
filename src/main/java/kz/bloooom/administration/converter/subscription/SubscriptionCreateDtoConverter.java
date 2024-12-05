@@ -25,10 +25,11 @@ public class SubscriptionCreateDtoConverter {
     public Subscription convert(SubscriptionCreateDto source) {
         Subscription target = new Subscription();
         target.setUser(userService.getById(source.getUserId()));
+        target.setName(source.getName());
         target.setSubscriptionType(subscriptionTypeService.getById(source.getSubscriptionTypeId()));
         target.setSubscriptionStatus(subscriptionStatusService.getByCode(SubscriptionStatusCode.NOT_ACTIVE));
-        target.setStartTime(source.getStartTime());
-        target.setEndTime(source.getEndTime());
+        target.setStartTime(source.getOrderDates().get(0));
+        target.setEndTime(source.getOrderDates().get(source.getOrderDates().size() - 1));
         target.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         target.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         return target;
