@@ -5,6 +5,7 @@ import kz.bloooom.administration.converter.subscription.SubscriptionCreateDtoCon
 import kz.bloooom.administration.converter.subscription.SubscriptionShortInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.subscription.SubscriptionCreateDto;
 import kz.bloooom.administration.domain.dto.subscription.SubscriptionShortInfoDto;
+import kz.bloooom.administration.domain.dto.subscription.OrderTimeDto;
 import kz.bloooom.administration.domain.entity.Order;
 import kz.bloooom.administration.domain.entity.Subscription;
 import kz.bloooom.administration.facade.SubscriptionFacade;
@@ -17,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,13 +54,13 @@ public class SubscriptionFacadeImpl implements SubscriptionFacade {
         }
     }
 
-    private List<Order> createOrders(List<LocalDateTime> orderDates, Subscription subscription) {
+    private List<Order> createOrders(List<OrderTimeDto> orderDates, Subscription subscription) {
         return orderDates.stream()
-                .map(deliveryTime -> {
-                    if (deliveryTime == null) {
+                .map(orderTime -> {
+                    if (orderTime == null) {
                         throw new IllegalArgumentException("Delivery time cannot be null.");
                     }
-                    return orderCreateDtoConverter.convert(subscription, deliveryTime);
+                    return orderCreateDtoConverter.convert(subscription, orderTime);
                 })
                 .collect(Collectors.toList());
     }

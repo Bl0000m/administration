@@ -1,13 +1,11 @@
 package kz.bloooom.administration.domain.dto.subscription;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -30,7 +28,6 @@ public class SubscriptionCreateDto {
     @Schema(description = "Id типа подписки")
     Long subscriptionTypeId;
 
-    @Schema(description = "Время заказов", example = "[2022-06-30 11:00, ...]")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    List<LocalDateTime> orderDates;
+    @Schema(description = "Время заказов",example = "[{orderDate: 2024-12-09, orderStartTime: 08:00, orderEndTime: 12:59}, {}]")
+    List<OrderTimeDto> orderDates;
 }

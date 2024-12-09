@@ -1,5 +1,6 @@
 package kz.bloooom.administration.converter.order;
 
+import kz.bloooom.administration.domain.dto.subscription.OrderTimeDto;
 import kz.bloooom.administration.domain.entity.Order;
 import kz.bloooom.administration.domain.entity.Subscription;
 import lombok.AccessLevel;
@@ -15,10 +16,12 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderCreateDtoConverter {
 
-    public Order convert(Subscription subscription, LocalDateTime deliveryTime) {
+    public Order convert(Subscription subscription, OrderTimeDto orderTimeDto) {
         Order target = new Order();
         target.setSubscription(subscription);
-        target.setDeliveryTime(deliveryTime);
+        target.setDeliveryDate(orderTimeDto.getOrderDate());
+        target.setDeliveryStartTime(orderTimeDto.getOrderStartTime());
+        target.setDeliveryEndTime(orderTimeDto.getOrderEndTime());
         target.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         target.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         return target;

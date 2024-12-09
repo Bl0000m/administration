@@ -26,7 +26,9 @@ public class OrderInfoDtoConverter {
         target.setOrderCode(source.getOrderCode());
         target.setAddress(source.getAddress());
         target.setBouquetInfo(bouquetInfoDtoConverter.convert(source.getBouquet()));
-        target.setDeliveryTime(source.getDeliveryTime());
+        target.setDeliveryDate(source.getDeliveryDate());
+        target.setDeliveryStartTime(source.getDeliveryStartTime());
+        target.setDeliveryEndTime(source.getDeliveryEndTime());
         target.setOrderStatus(source.getOrderStatus().getName().get("ru"));
         return target;
     }

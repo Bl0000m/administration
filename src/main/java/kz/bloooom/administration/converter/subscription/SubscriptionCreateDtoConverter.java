@@ -28,8 +28,8 @@ public class SubscriptionCreateDtoConverter {
         target.setName(source.getName());
         target.setSubscriptionType(subscriptionTypeService.getById(source.getSubscriptionTypeId()));
         target.setSubscriptionStatus(subscriptionStatusService.getByCode(SubscriptionStatusCode.NOT_ACTIVE));
-        target.setStartTime(source.getOrderDates().get(0));
-        target.setEndTime(source.getOrderDates().get(source.getOrderDates().size() - 1));
+//        target.setStartTime(source.getOrderDates().get(0));
+//        target.setEndTime(source.getOrderDates().get(source.getOrderDates().size() - 1));
         target.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         target.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         return target;

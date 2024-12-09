@@ -8,7 +8,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import javax.persistence.Column;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -28,8 +31,14 @@ public class OrderInfoDto {
     @Schema(description = "Информаци о букете")
     BouquetInfoDto bouquetInfo;
 
-    @Schema(description = "Время доставки")
-    LocalDateTime deliveryTime;
+    @Schema(description = "Дата доставки")
+    LocalDate deliveryDate;
+
+    @Schema(description = "Начало время доставки")
+    LocalTime deliveryStartTime;
+
+    @Schema(description = "Окончание время доставки")
+    LocalTime deliveryEndTime;
 
     @Schema(description = "Статус заказа")
     String orderStatus;
