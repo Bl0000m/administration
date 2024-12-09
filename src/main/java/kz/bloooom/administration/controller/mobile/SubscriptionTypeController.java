@@ -28,18 +28,21 @@ public class SubscriptionTypeController {
 
     @GetMapping()
     @Operation(summary = "Получить список всех типов подписок")
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<AbstractEnumDto<SubscriptionTypeCode>> getAllSubscriptionTypes() {
         return subscriptionTypeFacade.getAllSubscriptionTypes();
     }
 
     @GetMapping("/id/{id}")
     @Operation(summary = "Получить тип подписки по id")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<SubscriptionTypeCode> getSubscriptionTypeById(@PathVariable Long id) {
         return subscriptionTypeFacade.getSubscriptionTypeById(id);
     }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить тип подписки по коду")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<SubscriptionTypeCode> getSubscriptionTypeByCode(@PathVariable SubscriptionTypeCode code) {
         return subscriptionTypeFacade.getSubscriptionTypeByCode(code);
     }

@@ -28,18 +28,21 @@ public class CompanyTypeController {
 
     @GetMapping()
     @Operation(summary = "Получить список всех типов компании")
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<AbstractEnumDto<CompanyTypeCode>> getAllCompanyTypes() {
         return companyTypeFacade.getAllCompanyTypes();
     }
 
     @GetMapping("/id/{id}")
     @Operation(summary = "Получить тип компани по id")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<CompanyTypeCode> getCompanyTypeById(@PathVariable Long id) {
         return companyTypeFacade.getCompanyTypeById(id);
     }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить тип компани по коду")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<CompanyTypeCode> getCompanyTypeByCode(@PathVariable CompanyTypeCode code) {
         return companyTypeFacade.getCompanyTypeByCode(code);
     }

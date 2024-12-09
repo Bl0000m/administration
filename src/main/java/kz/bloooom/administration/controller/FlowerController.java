@@ -1,6 +1,7 @@
 package kz.bloooom.administration.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.flower.FlowerCreatDto;
 import kz.bloooom.administration.facade.FlowerFacade;
@@ -27,6 +28,7 @@ public class FlowerController {
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "Создание цветка")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(
             @Valid @RequestPart(name = "dto") FlowerCreatDto bouquetCreateDto,
             @RequestParam(name = "file") MultipartFile file) {

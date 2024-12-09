@@ -28,18 +28,21 @@ public class StatusController {
 
     @GetMapping()
     @Operation(summary = "Получить список всех статусов")
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<AbstractEnumDto<StatusCode>> getAllStatuses() {
         return statusFacade.getAllStatuses();
     }
 
     @GetMapping("/id/{id}")
     @Operation(summary = "Получить статус по id")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<StatusCode> getStatusById(@PathVariable Long id) {
         return statusFacade.getStatusById(id);
     }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить статус по коду")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<StatusCode> getStatusByCode(@PathVariable StatusCode code) {
         return statusFacade.getStatusByCode(code);
     }

@@ -1,10 +1,10 @@
 package kz.bloooom.administration.controller.mobile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.subscription.SubscriptionCreateDto;
 import kz.bloooom.administration.domain.dto.subscription.SubscriptionShortInfoDto;
-import kz.bloooom.administration.domain.dto.user.UserRegistrationDto;
 import kz.bloooom.administration.facade.SubscriptionFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,7 @@ public class SubscriptionMobileController {
 
     @PostMapping
     @Operation(summary = "Создание подписки")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<SubscriptionShortInfoDto> create(@Valid @RequestBody SubscriptionCreateDto dto) {
         log.info("POST: /v1/client/subscription create subscription for user id: {}", dto.getUserId());
         subscriptionFacade.create(dto);

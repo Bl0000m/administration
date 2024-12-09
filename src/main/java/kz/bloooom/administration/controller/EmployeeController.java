@@ -1,6 +1,7 @@
 package kz.bloooom.administration.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
 import kz.bloooom.administration.facade.EmployeeFacade;
@@ -28,6 +29,7 @@ public class EmployeeController {
 
     @PostMapping
     @Operation(summary = "Создать сотрудника")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody EmployeeCreateDto dto) {
         log.info("POST: /v1/employee to create user form web admin");
         employeeFacade.create(dto);

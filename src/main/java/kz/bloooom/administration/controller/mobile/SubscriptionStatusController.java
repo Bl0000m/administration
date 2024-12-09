@@ -28,18 +28,21 @@ public class SubscriptionStatusController {
 
     @GetMapping()
     @Operation(summary = "Получить список всех статусов подписок")
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<AbstractEnumDto<SubscriptionStatusCode>> getAllSubscriptionStatuses() {
         return subscriptionStatusFacade.getAllSubscriptionStatuses();
     }
 
     @GetMapping("/id/{id}")
     @Operation(summary = "Получить статус подписки по id")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<SubscriptionStatusCode> getSubscriptionStatusById(@PathVariable Long id) {
         return subscriptionStatusFacade.getSubscriptionStatusById(id);
     }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить статус подписки по коду")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<SubscriptionStatusCode> getSubscriptionTypeByCode(@PathVariable SubscriptionStatusCode code) {
         return subscriptionStatusFacade.getSubscriptionStatusByCode(code);
     }

@@ -29,18 +29,21 @@ public class RoleController {
 
     @GetMapping()
     @Operation(summary = "Получить список всех ролей")
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<AbstractEnumDto<RoleCode>> getAllRoles() {
         return roleFacade.getAllRoles();
     }
 
     @GetMapping("/id/{id}")
     @Operation(summary = "Получить роль по id")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<RoleCode> getRoleById(@PathVariable Long id) {
         return roleFacade.getRoleById(id);
     }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить роль по коду")
+    @SecurityRequirement(name = "Bearer Authentication")
     public AbstractEnumDto<RoleCode> getRoleByCode(@PathVariable RoleCode code) {
         return roleFacade.getRoleByCode(code);
     }

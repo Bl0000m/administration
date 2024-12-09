@@ -1,6 +1,7 @@
 package kz.bloooom.administration.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
 import kz.bloooom.administration.domain.dto.order.OrderFillDto;
@@ -28,6 +29,7 @@ public class BouquetController {
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "Создание букета")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(
             @Valid @RequestPart(name = "dto") BouquetCreateDto bouquetCreateDto,
             @RequestParam(name = "files") List<MultipartFile> files) {

@@ -1,6 +1,7 @@
 package kz.bloooom.administration.controller.mobile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.order.OrderFillDto;
 import kz.bloooom.administration.domain.dto.order.OrderInfoDto;
@@ -27,6 +28,7 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "Заполнение заказа")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> fill(@Valid @RequestBody OrderFillDto orderFillDto) {
         log.info("POST: /v1/client/order fill order");
         orderFacade.fillOrder(orderFillDto);
@@ -35,6 +37,7 @@ public class OrderController {
 
     @GetMapping("/subscription/{subscriptionId}")
     @Operation(summary = "Получить все заказы по id подписки")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<List<OrderInfoDto>> getOrdersBySubscriptionId(@PathVariable("subscriptionId") Long subscriptionId) {
         log.info("GET: /v1/client/subscription/{}", subscriptionId);
         return ResponseEntity.ok(orderFacade.getOrdersBySubscriptionId(subscriptionId));

@@ -1,6 +1,7 @@
 package kz.bloooom.administration.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.company.CompanyCreateDto;
 import kz.bloooom.administration.domain.dto.company.CompanyInfoDto;
@@ -33,6 +34,7 @@ public class CompanyController {
 
     @PostMapping
     @Operation(summary = "Создать компанию")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody CompanyCreateDto dto) {
         log.info("POST: /v1/companies to create company form web admin");
         companyFacade.create(dto);
@@ -41,12 +43,14 @@ public class CompanyController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить компанию по id")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<CompanyInfoDto> getCompanyById(@PathVariable Long id) {
         return ResponseEntity.ok(companyFacade.getCompanyById(id));
     }
 
     @GetMapping
     @Operation(summary = "Получить список всех компании")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<PageDTO<CompanyInfoDto>> getCompanies(
             @Valid @ParameterObject CompanySearchDto companySearchDto,
             @PageableDefault(sort = {
