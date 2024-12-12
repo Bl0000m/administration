@@ -31,7 +31,8 @@ public class OrderInfoDtoConverter {
         target.setDeliveryDate(source.getDeliveryDate());
         target.setDeliveryStartTime(source.getDeliveryStartTime());
         target.setDeliveryEndTime(source.getDeliveryEndTime());
-        target.setOrderStatus(source.getOrderStatus().getName().get("ru"));
+        target.setOrderStatus(Objects.nonNull(source.getOrderStatus()) ?
+                source.getOrderStatus().getName().get("ru") : null);
         return target;
     }
 
