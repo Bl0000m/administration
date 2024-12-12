@@ -23,7 +23,7 @@ public class BouquetInfoDto {
     String name;
 
     @Schema(description = "Описание букета")
-    String discription;
+    String description;
 
     @Schema(description = "Наименование компании")
     String companyName;

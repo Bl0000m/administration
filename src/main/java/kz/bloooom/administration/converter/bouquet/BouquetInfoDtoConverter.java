@@ -18,7 +18,7 @@ public class BouquetInfoDtoConverter {
         BouquetInfoDto target = new BouquetInfoDto();
         target.setId(source.getId());
         target.setName(source.getName());
-        target.setDiscription(source.getDescription());
+        target.setDescription(source.getDescription());
         target.setCompanyName(source.getCompany().getName());
         target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquetPhotos()));
         target.setPrice(source.getPrice());
