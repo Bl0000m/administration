@@ -33,7 +33,6 @@ public class SubscriptionMobileController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<SubscriptionShortInfoDto> create(@Valid @RequestBody SubscriptionCreateDto dto) {
         log.info("POST: /v1/client/subscription create subscription for user id: {}", dto.getUserId());
-        subscriptionFacade.create(dto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(subscriptionFacade.create(dto));
     }
 }
