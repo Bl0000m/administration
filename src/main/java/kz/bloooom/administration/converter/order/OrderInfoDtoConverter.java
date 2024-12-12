@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,7 +26,8 @@ public class OrderInfoDtoConverter {
         target.setId(source.getId());
         target.setOrderCode(source.getOrderCode());
         target.setAddress(source.getAddress());
-        target.setBouquetInfo(bouquetInfoDtoConverter.convert(source.getBouquet()));
+        target.setBouquetInfo(Objects.nonNull(source.getBouquet()) ?
+                bouquetInfoDtoConverter.convert(source.getBouquet()) : null);
         target.setDeliveryDate(source.getDeliveryDate());
         target.setDeliveryStartTime(source.getDeliveryStartTime());
         target.setDeliveryEndTime(source.getDeliveryEndTime());
