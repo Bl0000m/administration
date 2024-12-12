@@ -34,6 +34,10 @@ public class UserSubscriptionsInfoDtoConverter {
         return SubscriptionShortInfoForUserDto.builder()
                 .id(subscription.getId())
                 .name(subscription.getName())
+                .type(subscription.getSubscriptionType().getName().get("ru"))
+                .startDate(subscription.getStartTime())
+                .endDate(subscription.getEndTime())
+                .status(subscription.getSubscriptionStatus().getName().get("ru"))
                 .build();
     }
 }

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,12 @@ public class SubscriptionFacadeImpl implements SubscriptionFacade {
     @Transactional
     public SubscriptionShortInfoDto create(SubscriptionCreateDto dto) {
         validateDto(dto);
+
+        List<OrderTimeDto> sortedOrderDates = dto.getOrderDates().stream()
+                .sorted(Comparator.comparing(OrderTimeDto::getOrderDate))
+                .collect(Collectors.toList());
+
+        dto.setOrderDates(sortedOrderDates);
 
         Subscription subscription = subscriptionCreateDtoConverter.convert(dto);
         subscriptionService.save(subscription);

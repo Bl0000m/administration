@@ -1,5 +1,6 @@
 package kz.bloooom.administration.converter.subscription;
 
+import kz.bloooom.administration.domain.dto.subscription.OrderTimeDto;
 import kz.bloooom.administration.domain.dto.subscription.SubscriptionCreateDto;
 import kz.bloooom.administration.domain.entity.Subscription;
 import kz.bloooom.administration.enumeration.subscription_status.SubscriptionStatusCode;
@@ -28,8 +29,11 @@ public class SubscriptionCreateDtoConverter {
         target.setName(source.getName());
         target.setSubscriptionType(subscriptionTypeService.getById(source.getSubscriptionTypeId()));
         target.setSubscriptionStatus(subscriptionStatusService.getByCode(SubscriptionStatusCode.NOT_ACTIVE));
-//        target.setStartTime(source.getOrderDates().get(0));
-//        target.setEndTime(source.getOrderDates().get(source.getOrderDates().size() - 1));
+
+        OrderTimeDto firstOrderTime = source.getOrderDates().get(0);
+        OrderTimeDto lastOrderTime = source.getOrderDates().get(source.getOrderDates().size() - 1);
+        target.setStartTime(firstOrderTime.getOrderDate().atTime(firstOrderTime.getOrderStartTime()));
+        target.setEndTime(lastOrderTime.getOrderDate().atTime(lastOrderTime.getOrderStartTime()));
         target.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         target.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         return target;
