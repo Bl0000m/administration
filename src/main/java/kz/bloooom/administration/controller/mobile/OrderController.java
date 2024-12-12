@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +42,9 @@ public class OrderController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<List<OrderInfoDto>> getOrdersBySubscriptionId(@PathVariable("subscriptionId") Long subscriptionId) {
         log.info("GET: /v1/client/subscription/{}", subscriptionId);
-        return ResponseEntity.ok(orderFacade.getOrdersBySubscriptionId(subscriptionId));
+        List<OrderInfoDto> orders = orderFacade.getOrdersBySubscriptionId(subscriptionId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(orders);
     }
-
 }

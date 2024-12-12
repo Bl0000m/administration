@@ -8,9 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -43,3 +41,4 @@ public class OrderInfoDto {
     @Schema(description = "Статус заказа")
     String orderStatus;
 }
+
