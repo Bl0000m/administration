@@ -1,7 +1,9 @@
 package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.converter.bouquet.BouquetCreateDtoConverter;
+import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
 import kz.bloooom.administration.domain.dto.flower.FlowerShortInfoToAttachBouquetDto;
 import kz.bloooom.administration.domain.dto.storage.FileInfo;
 import kz.bloooom.administration.domain.entity.Bouquet;
@@ -40,6 +42,7 @@ public class BouquetFacadeImpl implements BouquetFacade {
     FlowerService flowerService;
     BouquetFlowersService bouquetFlowersService;
     BouquetCreateDtoConverter bouquetCreateDtoConverter;
+    BouquetInfoDtoConverter bouquetInfoDtoConverter;
 
     @Override
     @Transactional
@@ -49,10 +52,15 @@ public class BouquetFacadeImpl implements BouquetFacade {
         Bouquet bouquet = bouquetCreateDtoConverter.convert(bouquetCreateDto);
         bouquet = bouquetService.create(bouquet);
         log.info("Created bouquet: {}", bouquet.getId());
-
         String organizationPath = getOrganizationPath(bouquet.getCompany().getName(), bouquet.getId());
         savePhoto(files, bouquet, organizationPath);
 
+    }
+
+    @Override
+    public List<BouquetInfoDto> getAll() {
+        List<Bouquet> bouquets = bouquetService.getAll();
+        return bouquetInfoDtoConverter.convert(bouquets);
     }
 
     private void attachFlowersToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
