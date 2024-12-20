@@ -4,12 +4,12 @@ import kz.bloooom.administration.converter.bouquet.BouquetCreateDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
-import kz.bloooom.administration.domain.dto.flower.FlowerShortInfoToAttachBouquetDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyShortInfoToAttachBouquetDto;
 import kz.bloooom.administration.domain.dto.storage.FileInfo;
 import kz.bloooom.administration.domain.entity.Bouquet;
-import kz.bloooom.administration.domain.entity.BouquetFlowers;
+import kz.bloooom.administration.domain.entity.BouquetFlowerVariety;
 import kz.bloooom.administration.domain.entity.BouquetPhoto;
-import kz.bloooom.administration.domain.entity.Flower;
+import kz.bloooom.administration.domain.entity.FlowerVariety;
 import kz.bloooom.administration.facade.BouquetFacade;
 import kz.bloooom.administration.service.*;
 import kz.bloooom.administration.util.JwtUtils;
@@ -39,7 +39,7 @@ public class BouquetFacadeImpl implements BouquetFacade {
     BouquetService bouquetService;
     StorageService storageService;
     BouquetPhotoService photoService;
-    FlowerService flowerService;
+    FlowerVarietyService flowerVarietyService;
     BouquetFlowersService bouquetFlowersService;
     BouquetCreateDtoConverter bouquetCreateDtoConverter;
     BouquetInfoDtoConverter bouquetInfoDtoConverter;
@@ -55,6 +55,7 @@ public class BouquetFacadeImpl implements BouquetFacade {
         String organizationPath = getOrganizationPath(bouquet.getCompany().getName(), bouquet.getId());
         savePhoto(files, bouquet, organizationPath);
 
+        attachFlowerVarietiesToBouquet(bouquetCreateDto, bouquet);
     }
 
     @Override
@@ -63,22 +64,24 @@ public class BouquetFacadeImpl implements BouquetFacade {
         return bouquetInfoDtoConverter.convert(bouquets);
     }
 
-    private void attachFlowersToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
-        Map<Long, Integer> flowerQuantityMap = bouquetCreateDto.getFlowersInfo()
+    private void attachFlowerVarietiesToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
+        Map<Long, Integer> flowerQuantityMap = bouquetCreateDto.getFlowersVarietyInfo()
                 .stream()
-                .collect(Collectors.toMap(FlowerShortInfoToAttachBouquetDto::getId, FlowerShortInfoToAttachBouquetDto::getQuantity));
+                .collect(Collectors.toMap(FlowerVarietyShortInfoToAttachBouquetDto::getId,
+                        FlowerVarietyShortInfoToAttachBouquetDto::getQuantity));
 
-        List<Flower> flowers = flowerService.getFlowersByIdIn((List<Long>) flowerQuantityMap.keySet());
+        List<FlowerVariety> flowerVarieties =
+                flowerVarietyService.getFlowerVarietiesByIdIn((List<Long>) flowerQuantityMap.keySet());
 
-        List<BouquetFlowers> bouquetFlowersList = flowers.stream()
-                .map(flower -> BouquetFlowers.builder()
+        List<BouquetFlowerVariety> bouquetFlowerVarietyList = flowerVarieties.stream()
+                .map(flowerVariety -> BouquetFlowerVariety.builder()
                         .bouquet(bouquet)
-                        .flower(flower)
-                        .quantity(flowerQuantityMap.get(flower.getId()))
+                        .flowerVariety(flowerVariety)
+                        .quantity(flowerQuantityMap.get(flowerVariety.getId()))
                         .build())
                 .collect(Collectors.toList());
 
-        bouquetFlowersService.saveAll(bouquetFlowersList);
+        bouquetFlowersService.saveAll(bouquetFlowerVarietyList);
     }
 
     private String getOrganizationPath(String companyName, Long questionId) {

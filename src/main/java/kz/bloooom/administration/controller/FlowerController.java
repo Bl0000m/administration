@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.flower.FlowerCreatDto;
+import kz.bloooom.administration.domain.dto.flower.FlowerInfoDto;
 import kz.bloooom.administration.facade.FlowerFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -34,5 +36,19 @@ public class FlowerController {
             @RequestParam(name = "file") MultipartFile file) {
         flowerFacade.createFlower(bouquetCreateDto, file);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Получить цветок по id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<FlowerInfoDto> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(flowerFacade.getById(id));
+    }
+
+    @GetMapping()
+    @Operation(summary = "Получить список цветов")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<FlowerInfoDto>> getByAll() {
+        return ResponseEntity.ok(flowerFacade.getAll());
     }
 }

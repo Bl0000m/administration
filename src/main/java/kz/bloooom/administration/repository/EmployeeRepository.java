@@ -13,6 +13,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     boolean existsByEmailAndIsDeletedIsFalse(String email);
 
-
     boolean existsByPhoneNumber(String phoneNumber);
 }

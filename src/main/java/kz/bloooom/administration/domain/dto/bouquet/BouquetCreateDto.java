@@ -1,7 +1,10 @@
 package kz.bloooom.administration.domain.dto.bouquet;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kz.bloooom.administration.domain.dto.flower.FlowerShortInfoToAttachBouquetDto;
+import kz.bloooom.administration.domain.dto.bouquet_style.BouquetStyleInfoDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyShortInfoToAttachBouquetDto;
+import kz.bloooom.administration.domain.entity.BouquetStyle;
+import kz.bloooom.administration.repository.BouquetStyleRepository;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +43,9 @@ public class BouquetCreateDto {
 
     @NotNull(message = "Id-ки цветов из которых состоит не должен быть пустым")
     @Schema(description = "Id-ки цветов из которых состоит")
-    List<FlowerShortInfoToAttachBouquetDto> flowersInfo;
+    List<FlowerVarietyShortInfoToAttachBouquetDto> flowersVarietyInfo;
 
+    @NotNull(message = "Id стиля букета не должен быть пустым")
+    @Schema(description = "Id стиля букета")
+    Long bouquetStyleId;
 }

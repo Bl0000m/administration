@@ -1,6 +1,6 @@
 package kz.bloooom.administration.service.impl;
 
-import kz.bloooom.administration.domain.entity.BouquetFlowers;
+import kz.bloooom.administration.domain.entity.BouquetFlowerVariety;
 import kz.bloooom.administration.repository.BouquetFlowersRepository;
 import kz.bloooom.administration.service.BouquetFlowersService;
 import lombok.AccessLevel;
@@ -22,7 +22,7 @@ public class BouquetFlowersServiceImpl implements BouquetFlowersService {
 
     @Override
     @Transactional
-    public void saveAll(List<BouquetFlowers> bouquetFlowers) {
+    public void saveAll(List<BouquetFlowerVariety> bouquetFlowers) {
         bouquetFlowersRepository.saveAll(bouquetFlowers);
     }
 }

@@ -1,4 +1,4 @@
-package kz.bloooom.administration.domain.dto.flower;
+package kz.bloooom.administration.domain.dto.flower_variety;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -8,9 +8,9 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@Schema(description = "Краткая информация о картинке")
+@Schema(description = "Краткая информация")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FlowerShortInfoToAttachBouquetDto {
+public class FlowerVarietyShortInfoToAttachBouquetDto {
     @Schema(description = "Id")
     Long id;
 

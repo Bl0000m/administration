@@ -2,7 +2,6 @@ package kz.bloooom.administration.domain.entity;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -12,9 +11,9 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "bouquet_flowers")
+@Table(name = "bouquet_flower_variety")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BouquetFlowers {
+public class BouquetFlowerVariety {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -23,7 +22,7 @@ public class BouquetFlowers {
     Bouquet bouquet;
 
     @ManyToOne
-    Flower flower;
+    FlowerVariety flowerVariety;
 
     int quantity;
 }

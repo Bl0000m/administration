@@ -7,5 +7,9 @@ import java.util.List;
 public interface FlowerService {
     Flower create(Flower flower);
 
+    Flower getById(Long id);
+
     List<Flower> getFlowersByIdIn(List<Long> ids);
+
+    List<Flower> getAll();
 }

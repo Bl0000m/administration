@@ -36,6 +36,10 @@ public class Bouquet {
     @JoinColumn(name = "company_id")
     Company company;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bouquet_styles_id")
+    BouquetStyle bouquetStyle;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bouquet", cascade = CascadeType.ALL)
     Set<BouquetPhoto> bouquetPhotos;
 
@@ -46,10 +50,10 @@ public class Bouquet {
     String addition;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "bouquet_flowers",
-            joinColumns = @JoinColumn(name = "bouque_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "flower_id", referencedColumnName = "id"))
-    Set<Flower> flowers = new HashSet<>();
+    @JoinTable(name = "bouquet_flower_variety",
+            joinColumns = @JoinColumn(name = "bouquet_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "flower_variety_id", referencedColumnName = "id"))
+    Set<FlowerVariety> flowers = new HashSet<>();
 
     @Column(name = "created_date")
     @CreatedDate
