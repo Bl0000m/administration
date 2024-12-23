@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/flower-variety")
-@Tag(name = "Country API", description = "Методы для работы с сортами цветовов")
+@Tag(name = "Flower Variety API", description = "Методы для работы с сортами цветовов")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlowerVarietyController {
     FlowerVarietyFacade flowerVarietyFacade;

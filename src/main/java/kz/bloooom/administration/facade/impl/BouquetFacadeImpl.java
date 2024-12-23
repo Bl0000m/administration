@@ -84,9 +84,9 @@ public class BouquetFacadeImpl implements BouquetFacade {
         bouquetFlowersService.saveAll(bouquetFlowerVarietyList);
     }
 
-    private String getOrganizationPath(String companyName, Long questionId) {
+    private String getOrganizationPath(String companyName, Long bouquetId) {
         return companyName + File.separator
-                + questionId + File.separator;
+                + bouquetId + File.separator;
     }
 
     private void savePhoto(List<MultipartFile> files,
@@ -94,7 +94,6 @@ public class BouquetFacadeImpl implements BouquetFacade {
                            String organizationUrl) {
         List<BouquetPhoto> photos = new ArrayList<>();
         String keycloakId = JwtUtils.getKeycloakId();
-        LocalDateTime now = LocalDateTime.now();
         for (MultipartFile file : files) {
             FileInfo info = storageService.storeFile(file, organizationUrl);
             BouquetPhoto photo = new BouquetPhoto();

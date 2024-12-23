@@ -52,9 +52,9 @@ public class StorageServiceImpl implements StorageService {
         log.info("UPLOADING_FILE_SIZE_LOG_MESSAGE {}", multipartFile.getSize());
         try {
             File file = convertMultiPartFileToFile(multipartFile);
-            String fileName = uploadFileToS3BucketAndGetKey(file, directory);
+            String bucketKey = uploadFileToS3BucketAndGetKey(file);
             file.delete();
-            return new FileInfo(fileName);
+            return new FileInfo(bucketKey);
         } catch (AmazonServiceException e) {
             log.error("UPLOAD_FILE_ERROR_LOG_MESSAGE {} {}", multipartFile.getOriginalFilename(), e);
             throw new BloomAdministrationException(
