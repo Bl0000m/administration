@@ -67,11 +67,15 @@ public class BouquetFacadeImpl implements BouquetFacade {
     private void attachFlowerVarietiesToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
         Map<Long, Integer> flowerQuantityMap = bouquetCreateDto.getFlowersVarietyInfo()
                 .stream()
-                .collect(Collectors.toMap(FlowerVarietyShortInfoToAttachBouquetDto::getId,
-                        FlowerVarietyShortInfoToAttachBouquetDto::getQuantity));
+                .collect(Collectors.toMap(
+                        FlowerVarietyShortInfoToAttachBouquetDto::getId,
+                        FlowerVarietyShortInfoToAttachBouquetDto::getQuantity
+                ));
+
+        List<Long> flowerVarietyIds = new ArrayList<>(flowerQuantityMap.keySet());
 
         List<FlowerVariety> flowerVarieties =
-                flowerVarietyService.getFlowerVarietiesByIdIn((List<Long>) flowerQuantityMap.keySet());
+                flowerVarietyService.getFlowerVarietiesByIdIn(flowerVarietyIds);
 
         List<BouquetFlowerVariety> bouquetFlowerVarietyList = flowerVarieties.stream()
                 .map(flowerVariety -> BouquetFlowerVariety.builder()
