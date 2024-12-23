@@ -2,7 +2,7 @@ spring:
   servlet:
     multipart:
       max-file-size: 20MB
-      max-request-size: 50MB
+      max-request-size: 1000MB
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://192.168.1.33:5432/administration
