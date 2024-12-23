@@ -11,10 +11,6 @@ import lombok.experimental.FieldDefaults;
 @Schema(description = "Краткая информация о картинке")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlowerCreatDto {
-
-    @Schema(description = "Id цветка")
-    Long id;
-
     @Schema(description = "Наименование цветка")
     String name;
 
