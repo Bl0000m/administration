@@ -29,7 +29,7 @@ public class Bouquet {
     @Column(name = "name")
     String name;
 
-    @Column(name = "discription")
+    @Column(name = "description")
     String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
