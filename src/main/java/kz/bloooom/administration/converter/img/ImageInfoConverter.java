@@ -37,6 +37,6 @@ public class ImageInfoConverter {
     }
 
     private String getImagesUrl(BouquetPhoto source) {
-        return host + "/" + bucket + "/" + source.getDirectory() + "/" + source.getTitle();
+        return host + "/" + bucket + "/" + "/" + source.getTitle();
     }
 }

@@ -30,9 +30,6 @@ public class TemperatureCare {
     @Column(name = "name")
     String name;
 
-    @Column(name = "description")
-    String description;
-
     @Column(name = "created_date")
     @CreatedDate
     Timestamp createdDate;
