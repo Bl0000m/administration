@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
-import kz.bloooom.administration.domain.dto.order.OrderFillDto;
 import kz.bloooom.administration.facade.BouquetFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +36,13 @@ public class BouquetController {
             @RequestParam(name = "files") List<MultipartFile> files) {
         bouquetFacade.createBouquet(bouquetCreateDto, files);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Получить доп элемент по id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<BouquetDetailInfoDto> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(bouquetFacade.getById(id));
     }
 
     @GetMapping

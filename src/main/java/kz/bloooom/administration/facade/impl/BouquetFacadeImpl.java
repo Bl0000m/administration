@@ -1,15 +1,15 @@
 package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.converter.bouquet.BouquetCreateDtoConverter;
+import kz.bloooom.administration.converter.bouquet.BouquetDetailInfoDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsShortInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyShortInfoToAttachBouquetDto;
 import kz.bloooom.administration.domain.dto.storage.FileInfo;
-import kz.bloooom.administration.domain.entity.Bouquet;
-import kz.bloooom.administration.domain.entity.BouquetFlowerVariety;
-import kz.bloooom.administration.domain.entity.BouquetPhoto;
-import kz.bloooom.administration.domain.entity.FlowerVariety;
+import kz.bloooom.administration.domain.entity.*;
 import kz.bloooom.administration.facade.BouquetFacade;
 import kz.bloooom.administration.service.*;
 import kz.bloooom.administration.util.JwtUtils;
@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +39,12 @@ public class BouquetFacadeImpl implements BouquetFacade {
     StorageService storageService;
     BouquetPhotoService photoService;
     FlowerVarietyService flowerVarietyService;
+    AdditionalElementsService additionalElementsService;
+    BouquetAdditionalElementsService bouquetAdditionalElementsService;
     BouquetFlowersService bouquetFlowersService;
     BouquetCreateDtoConverter bouquetCreateDtoConverter;
     BouquetInfoDtoConverter bouquetInfoDtoConverter;
+    BouquetDetailInfoDtoConverter bouquetDetailInfoDtoConverter;
 
     @Override
     @Transactional
@@ -56,6 +58,13 @@ public class BouquetFacadeImpl implements BouquetFacade {
         savePhoto(files, bouquet, organizationPath);
 
         attachFlowerVarietiesToBouquet(bouquetCreateDto, bouquet);
+
+        attachAdditionalElementsToBouquet(bouquetCreateDto, bouquet);
+    }
+
+    @Override
+    public BouquetDetailInfoDto getById(Long id) {
+        return bouquetDetailInfoDtoConverter.convert(bouquetService.getById(id));
     }
 
     @Override
@@ -86,6 +95,32 @@ public class BouquetFacadeImpl implements BouquetFacade {
                 .collect(Collectors.toList());
 
         bouquetFlowersService.saveAll(bouquetFlowerVarietyList);
+    }
+
+    private void attachAdditionalElementsToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
+        Map<Long, AdditionalElementsShortInfoDto> additionalElementsMap = bouquetCreateDto.getAdditionalElements()
+                .stream()
+                .collect(Collectors.toMap(
+                        AdditionalElementsShortInfoDto::getId,
+                        additionalElement -> additionalElement
+                ));
+
+
+        List<Long> additionalElementsIds = new ArrayList<>(additionalElementsMap.keySet());
+
+        List<AdditionalElements> additionalElements =
+                additionalElementsService.getAdditionalElementsByIdIn(additionalElementsIds);
+
+        List<BouquetAdditionalElements> bouquetAdditionalElementsList = additionalElements.stream()
+                .map(elements -> BouquetAdditionalElements.builder()
+                        .bouquet(bouquet)
+                        .additionalElements(elements)
+                        .quantity(additionalElementsMap.get(elements.getId()).getQuantity())
+                        .color(additionalElementsMap.get(elements.getId()).getColor())
+                        .build())
+                .collect(Collectors.toList());
+
+        bouquetAdditionalElementsService.saveAll(bouquetAdditionalElementsList);
     }
 
     private String getOrganizationPath(String companyName, Long bouquetId) {

@@ -29,9 +29,6 @@ public class Bouquet {
     @Column(name = "name")
     String name;
 
-    @Column(name = "description")
-    String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     Company company;
@@ -46,14 +43,17 @@ public class Bouquet {
     @Column(name = "price")
     Double price;
 
-    @Column(name = "addition")
-    String addition;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "bouquet_flower_variety",
             joinColumns = @JoinColumn(name = "bouquet_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "flower_variety_id", referencedColumnName = "id"))
     Set<FlowerVariety> flowers = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "bouquet_additional_elements",
+            joinColumns = @JoinColumn(name = "bouquet_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "additional_elements_id", referencedColumnName = "id"))
+    Set<AdditionalElements> additionalElements = new HashSet<>();
 
     @Column(name = "created_date")
     @CreatedDate

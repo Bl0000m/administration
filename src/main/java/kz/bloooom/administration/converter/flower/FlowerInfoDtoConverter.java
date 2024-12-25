@@ -15,7 +15,6 @@ public class FlowerInfoDtoConverter {
         return FlowerInfoDto.builder()
                 .id(source.getId())
                 .name(source.getName())
-                .description(source.getDescription())
                 .build();
     }
 

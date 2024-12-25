@@ -13,7 +13,4 @@ import lombok.experimental.FieldDefaults;
 public class FlowerCreatDto {
     @Schema(description = "Наименование цветка")
     String name;
-
-    @Schema(description = "Описание цветка")
-    String description;
 }

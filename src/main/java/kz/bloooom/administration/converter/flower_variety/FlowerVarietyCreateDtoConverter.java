@@ -30,6 +30,7 @@ public class FlowerVarietyCreateDtoConverter {
                 .fragrance(dto.getFragranceCode())
                 .season(dto.getSeason())
                 .steamType(dto.getSteamType())
+                .color(dto.getColor())
                 .budSizeMin(dto.getBudSizeMin())
                 .budSizeMax(dto.getBudSizeMax())
                 .stemHeightSizeMin(dto.getStemHeightSizeMin())

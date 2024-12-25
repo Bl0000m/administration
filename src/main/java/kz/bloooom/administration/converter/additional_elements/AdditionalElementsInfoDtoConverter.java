@@ -1,8 +1,7 @@
-package kz.bloooom.administration.converter.bouquet;
+package kz.bloooom.administration.converter.additional_elements;
 
-import kz.bloooom.administration.converter.img.ImageInfoConverter;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
-import kz.bloooom.administration.domain.entity.Bouquet;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
+import kz.bloooom.administration.domain.entity.AdditionalElements;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,20 +15,19 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class BouquetInfoDtoConverter {
-    ImageInfoConverter imageInfoConverter;
+public class AdditionalElementsInfoDtoConverter {
 
-    public BouquetInfoDto convert(Bouquet source) {
-        BouquetInfoDto target = new BouquetInfoDto();
+    public AdditionalElementsInfoDto convert(AdditionalElements source) {
+        AdditionalElementsInfoDto target = new AdditionalElementsInfoDto();
         target.setId(source.getId());
         target.setName(source.getName());
-        target.setCompanyName(source.getCompany().getName());
-        target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquetPhotos()));
-        target.setPrice(source.getPrice());
+        target.setDescription(source.getDescription());
+        target.setExample(source.getExample());
+        target.setUnitOfMeasurement(source.getUnitOfMeasurement());
         return target;
     }
 
-    public List<BouquetInfoDto> convert(List<Bouquet> bouquets) {
+    public List<AdditionalElementsInfoDto> convert(List<AdditionalElements> bouquets) {
         return CollectionUtils.isEmpty(bouquets) ?
                 Collections.emptyList() :
                 bouquets.stream().map(this::convert).collect(Collectors.toList());

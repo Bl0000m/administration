@@ -10,7 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -41,30 +40,33 @@ public class FlowerVarietyCreateDto {
     @Schema(description = "Сезон")
     Season season;
 
-    @Schema(name = "Тип стебля на русском")
+    @Schema(description = "Тип стебля на русском")
     StemType steamType;
 
-    @Schema(name = "Минимальный размер бутона в сантиметрах")
+    @Schema(description = "Цвет")
+    String color;
+
+    @Schema(description = "Минимальный размер бутона в сантиметрах")
     Double budSizeMin;
 
-    @Schema(name = "Максимальный размер бутона в сантиметрах")
+    @Schema(description = "Максимальный размер бутона в сантиметрах")
     Double budSizeMax;
 
-    @Schema(name = "Минимальная высота стебля в сантиметрах")
+    @Schema(description = "Минимальная высота стебля в сантиметрах")
     Double stemHeightSizeMin;
 
-    @Schema(name = "Максимальная высота стебля в сантиметрах")
+    @Schema(description = "Максимальная высота стебля в сантиметрах")
     Double stemHeightSizeMax;
 
-    @Schema(name = "Id информации об ухаде")
+    @Schema(description = "Id информации об ухаде")
     Long stemCareId;
 
-    @Schema(name = "Id информации о температуре")
+    @Schema(description = "Id информации о температуре")
     Long temperatureCareId;
 
-    @Schema(name = "Id информации о воде")
+    @Schema(description = "Id информации о воде")
     Long waterCareId;
 
-    @Schema(name = "Id страны")
+    @Schema(description = "Id страны")
     Long countryId;
 }

@@ -67,6 +67,9 @@ public class FlowerVariety {
     @Column(name = "image")
     String image;
 
+    @Column(name = "color")
+    String color;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "stem_care_id")
     StemCare stemCare;

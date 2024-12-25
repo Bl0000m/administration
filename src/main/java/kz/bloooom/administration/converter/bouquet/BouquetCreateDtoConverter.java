@@ -22,11 +22,9 @@ public class BouquetCreateDtoConverter {
     public Bouquet convert(BouquetCreateDto source) {
         Bouquet target = new Bouquet();
         target.setName(source.getName());
-        target.setDescription(source.getDescription());
         target.setCompany(companyService.getById(source.getCompanyId()));
         target.setPrice(source.getPrice());
         target.setBouquetStyle(bouquetStyleService.getById(source.getBouquetStyleId()));
-        target.setAddition(source.getAddition());
         target.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         target.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         return target;

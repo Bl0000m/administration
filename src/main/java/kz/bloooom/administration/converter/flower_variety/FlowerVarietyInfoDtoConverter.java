@@ -40,6 +40,7 @@ public class FlowerVarietyInfoDtoConverter {
                 .shelfLifeDaysMax(source.getShelfLifeDaysMax())
                 .fragranceInfo(fragranceInfoDtoConverter.convert(source.getFragrance()))
                 .seasonInfo(seasonInfoDtoConverter.convert(source.getSeason()))
+                .color(source.getColor())
                 .steamTypeInfo(stemTypeInfoDtoConverter.convert(source.getSteamType()))
                 .budSizeMin(source.getBudSizeMin())
                 .budSizeMax(source.getBudSizeMax())

@@ -18,7 +18,4 @@ public class FlowerInfoDto {
 
     @Schema(description = "Наименование цветка")
     String name;
-
-    @Schema(description = "Описание цветка")
-    String description;
 }

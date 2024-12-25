@@ -38,33 +38,36 @@ public class FlowerVarietyInfoDto {
     @Schema(description = "Сезон")
     SeasonInfoDto seasonInfo;
 
-    @Schema(name = "Тип стебля на русском")
+    @Schema(description = "Тип стебля на русском")
     StemTypeInfoDto steamTypeInfo;
 
-    @Schema(name = "Минимальный размер бутона в сантиметрах")
+    @Schema(description = "Цвет")
+    String color;
+
+    @Schema(description = "Минимальный размер бутона в сантиметрах")
     Double budSizeMin;
 
-    @Schema(name = "Максимальный размер бутона в сантиметрах")
+    @Schema(description = "Максимальный размер бутона в сантиметрах")
     Double budSizeMax;
 
-    @Schema(name = "Минимальная высота стебля в сантиметрах")
+    @Schema(description = "Минимальная высота стебля в сантиметрах")
     Double stemHeightSizeMin;
 
-    @Schema(name = "Максимальная высота стебля в сантиметрах")
+    @Schema(description = "Максимальная высота стебля в сантиметрах")
     Double stemHeightSizeMax;
 
-    @Schema(name = "Фото")
+    @Schema(description = "Фото")
     String image;
 
-    @Schema(name = "Id информации об ухаде")
+    @Schema(description = "Id информации об ухаде")
     StemCareInfoDto stemCareInfo;
 
-    @Schema(name = "Id информации о температуре")
+    @Schema(description = "Id информации о температуре")
     TemperatureCareInfoDto temperatureCareInfo;
 
-    @Schema(name = "Id информации о воде")
+    @Schema(description = "Id информации о воде")
     WaterCareInfoDto waterCareInfo;
 
-    @Schema(name = "Id страны")
+    @Schema(description = "Id страны")
     CountryInfoDto countryInfoDto;
 }
