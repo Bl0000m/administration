@@ -12,7 +12,6 @@ public class TemperatureCareCreateDtoConverter {
     public TemperatureCare convert(TemperatureCareCreateDto dto) {
         return TemperatureCare.builder()
                 .name(dto.getName())
-                .description(dto.getDescription())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .updatedDate(new Timestamp(System.currentTimeMillis()))
                 .createdBy(JwtUtils.getKeycloakId())

@@ -16,7 +16,6 @@ public class WaterCareInfoDtoConverter {
         return WaterCareInfoDto.builder()
                 .id(source.getId())
                 .name(source.getName())
-                .description(source.getDescription())
                 .build();
     }
 

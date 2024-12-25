@@ -12,7 +12,6 @@ public class WaterCareCreateDtoConverter {
     public WaterCare convert(WaterCareCreateDto dto) {
         return WaterCare.builder()
                 .name(dto.getName())
-                .description(dto.getDescription())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .updatedDate(new Timestamp(System.currentTimeMillis()))
                 .createdBy(JwtUtils.getKeycloakId())

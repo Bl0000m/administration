@@ -13,7 +13,6 @@ public class StemCareCreateDtoConverter {
     public StemCare convert(StemCareCreateDto dto) {
         return StemCare.builder()
                 .name(dto.getName())
-                .description(dto.getDescription())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .updatedDate(new Timestamp(System.currentTimeMillis()))
                 .createdBy(JwtUtils.getKeycloakId())

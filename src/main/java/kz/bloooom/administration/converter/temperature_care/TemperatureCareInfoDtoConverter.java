@@ -15,7 +15,6 @@ public class TemperatureCareInfoDtoConverter {
         return TemperatureCareInfoDto.builder()
                 .id(source.getId())
                 .name(source.getName())
-                .description(source.getDescription())
                 .build();
     }
 

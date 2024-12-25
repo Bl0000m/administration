@@ -22,7 +22,6 @@ public class StemCareInfoDtoConverter {
         return StemCareInfoDto.builder()
                 .id(source.getId())
                 .name(source.getName())
-                .description(source.getDescription())
                 .build();
     }
 
