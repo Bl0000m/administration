@@ -47,4 +47,5 @@ public class AdditionalElementsController {
     public ResponseEntity<List<AdditionalElementsInfoDto>> getByAll() {
         return ResponseEntity.ok(additionalElementsFacade.getAll());
     }
+
 }
