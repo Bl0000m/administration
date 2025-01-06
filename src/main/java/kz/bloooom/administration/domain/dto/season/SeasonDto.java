@@ -1,7 +1,7 @@
-package kz.bloooom.administration.domain.dto.fragrance;
+package kz.bloooom.administration.domain.dto.season;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kz.bloooom.administration.enumeration.Fragrance;
+import kz.bloooom.administration.enumeration.Season;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +12,9 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FragranceDto {
+public class SeasonDto {
     @Schema(description = "Код")
-    Fragrance code;
+    Season code;
 
     @Schema(description = "Наименование")
     String name;
