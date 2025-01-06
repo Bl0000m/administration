@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -46,6 +47,13 @@ public class CompanyController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<CompanyInfoDto> getCompanyById(@PathVariable Long id) {
         return ResponseEntity.ok(companyFacade.getCompanyById(id));
+    }
+
+    @GetMapping("/bouquet/{bouquetId}")
+    @Operation(summary = "Получить компанию по bouquet id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<CompanyInfoDto>> getCompanyByBouquetId(@PathVariable Long bouquetId) {
+        return ResponseEntity.ok(companyFacade.getCompanyByBouquetId(bouquetId));
     }
 
     @GetMapping

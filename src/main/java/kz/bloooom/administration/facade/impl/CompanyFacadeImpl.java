@@ -6,8 +6,11 @@ import kz.bloooom.administration.domain.dto.company.CompanyCreateDto;
 import kz.bloooom.administration.domain.dto.company.CompanyInfoDto;
 import kz.bloooom.administration.domain.dto.company.CompanySearchDto;
 import kz.bloooom.administration.domain.dto.page.PageDTO;
+import kz.bloooom.administration.domain.entity.Bouquet;
 import kz.bloooom.administration.domain.entity.Company;
 import kz.bloooom.administration.facade.CompanyFacade;
+import kz.bloooom.administration.service.BouquetService;
+import kz.bloooom.administration.service.BouquetStyleService;
 import kz.bloooom.administration.service.CompanyService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompanyFacadeImpl implements CompanyFacade {
 
     CompanyService companyService;
+    BouquetService bouquetService;
     CreateCompanyDtoConverter createCompanyDtoConverter;
     CompanyInfoDtoConverter companyInfoDtoConverter;
 
@@ -40,6 +47,13 @@ public class CompanyFacadeImpl implements CompanyFacade {
     public CompanyInfoDto getCompanyById(Long companyId) {
         Company company = companyService.getById(companyId);
         return companyInfoDtoConverter.convert(company);
+    }
+
+    @Override
+    public List<CompanyInfoDto> getCompanyByBouquetId(Long bouquetId) {
+        Bouquet bouquet = bouquetService.getById(bouquetId);
+        CompanyInfoDto dto = companyInfoDtoConverter.convert(bouquet.getCompany());
+        return Collections.singletonList(dto);
     }
 
     @Override

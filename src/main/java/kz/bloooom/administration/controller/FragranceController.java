@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.AbstractEnumDto;
+import kz.bloooom.administration.domain.dto.fragrance.FragranceDto;
+import kz.bloooom.administration.enumeration.Fragrance;
 import kz.bloooom.administration.enumeration.role.RoleCode;
+import kz.bloooom.administration.facade.FragranceFacade;
 import kz.bloooom.administration.facade.RoleFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,33 +21,25 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/roles")
-@Tag(name = "Role API", description = "Методы для работы с ролями")
+@RequestMapping("/v1/fragrance")
+@Tag(name = "Fragrance API", description = "Методы для работы с ароматом")
 @SecurityRequirement(name = "Bearer Authentication")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleController {
-
-    RoleFacade roleFacade;
+public class FragranceController {
+    FragranceFacade fragranceFacade;
 
     @GetMapping()
     @Operation(summary = "Получить список всех ролей")
     @SecurityRequirement(name = "Bearer Authentication")
-    public List<AbstractEnumDto<RoleCode>> getAllRoles() {
-        return roleFacade.getAllRoles();
+    public List<FragranceDto> getAllRoles() {
+        return fragranceFacade.getAllFragrances();
     }
 
-    @GetMapping("/id/{id}")
-    @Operation(summary = "Получить роль по id")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public AbstractEnumDto<RoleCode> getRoleById(@PathVariable Long id) {
-        return roleFacade.getRoleById(id);
-    }
 
     @GetMapping("/code/{code}")
     @Operation(summary = "Получить роль по коду")
     @SecurityRequirement(name = "Bearer Authentication")
-    public AbstractEnumDto<RoleCode> getRoleByCode(@PathVariable RoleCode code) {
-        return roleFacade.getRoleByCode(code);
+    public FragranceDto getRoleByCode(@PathVariable Fragrance code) {
+        return fragranceFacade.getFragranceByCode(code);
     }
-
 }
