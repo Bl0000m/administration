@@ -23,6 +23,10 @@ public class FragranceFacadeImpl implements FragranceFacade {
     @Override
     public List<FragranceDto> getAllFragrances() {
         List<Fragrance> fragrances = new ArrayList<>();
+        fragrances.add(Fragrance.ABSENT);
+        fragrances.add(Fragrance.PUNGENT);
+        fragrances.add(Fragrance.RICH);
+        fragrances.add(Fragrance.SLIGHT);
         return fragranceConverter.convert(fragrances);
     }
 
