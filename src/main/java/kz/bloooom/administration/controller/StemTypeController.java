@@ -18,8 +18,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/steam-type")
-@Tag(name = "Steam Type API", description = "Методы для работы с типами")
+@RequestMapping("/v1/stem-type")
+@Tag(name = "Stem Type API", description = "Методы для работы с типами")
 @SecurityRequirement(name = "Bearer Authentication")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StemTypeController {
