@@ -80,14 +80,14 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
 
     @Override
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
-        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-        if (BooleanUtils.isFalse(isEmployeeNotDelete)) {
-            throw new BloomAdministrationException(
-                    HttpStatus.UNAUTHORIZED,
-                    ErrorCodeConstant.EMPLOYEE_NOT_FOUNT,
-                    "messages.exception.employee-not-found", keycloakAuthRequestDto.getUsername()
-            );
-        }
+//        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
+//        if (BooleanUtils.isFalse(isEmployeeNotDelete)) {
+//            throw new BloomAdministrationException(
+//                    HttpStatus.UNAUTHORIZED,
+//                    ErrorCodeConstant.EMPLOYEE_NOT_FOUNT,
+//                    "messages.exception.employee-not-found", keycloakAuthRequestDto.getUsername()
+//            );
+//        }
         return accessTokenResponseConverter.convert(keycloakService.login(keycloakAuthRequestDto));
     }
 
