@@ -42,4 +42,6 @@ public class OrderController {
         log.info("GET: /v1/client/subscription/{}", subscriptionId);
         return ResponseEntity.ok(orderFacade.getOrdersBySubscriptionId(subscriptionId));
     }
+
+
 }

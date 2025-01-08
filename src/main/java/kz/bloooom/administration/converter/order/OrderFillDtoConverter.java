@@ -5,6 +5,7 @@ import kz.bloooom.administration.domain.entity.Order;
 import kz.bloooom.administration.domain.entity.OrderCode;
 import kz.bloooom.administration.enumeration.order_status.OrderStatusCode;
 import kz.bloooom.administration.service.BouquetService;
+import kz.bloooom.administration.service.BranchDivisionService;
 import kz.bloooom.administration.service.OrderCodeService;
 import kz.bloooom.administration.service.OrderStatusService;
 import lombok.AccessLevel;
@@ -22,6 +23,7 @@ public class OrderFillDtoConverter {
     OrderStatusService orderStatusService;
     OrderCodeService orderCodeService;
     BouquetService bouquetService;
+    BranchDivisionService branchDivisionService;
 
     public Order convert(OrderFillDto source, Order target) {
 
@@ -29,6 +31,7 @@ public class OrderFillDtoConverter {
         target.setOrderStatus(orderStatusService.getByCode(OrderStatusCode.NEW));
         target.setOrderCode(generateUniqueOrderCode());
         target.setBouquet(bouquetService.getById(source.getBouquetId()));
+        target.setBranchDivision(branchDivisionService.getById(source.getBranchDivisionId()));
         return target;
     }
 

@@ -10,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -37,9 +36,13 @@ public class Order {
     @Column(name = "address")
     String address;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "bouquet_id")
     Bouquet bouquet;
+
+    @ManyToOne
+    @JoinColumn(name = "branch_division_id")
+    BranchDivision branchDivision;
 
     @Column(name = "delivery_date")
     LocalDate deliveryDate;

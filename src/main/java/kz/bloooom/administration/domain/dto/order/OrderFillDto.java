@@ -23,6 +23,10 @@ public class OrderFillDto {
     @Schema(description = "Id букета")
     Long bouquetId;
 
+    @NotNull(message = "Id филиала не должен быть пустым")
+    @Schema(description = "Id филиала")
+    Long branchDivisionId;
+
     @Schema(description = "Адрес доставки")
     String address;
 }
