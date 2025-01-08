@@ -3,6 +3,8 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
@@ -34,6 +36,14 @@ public class FlowerVarietyController {
             @Valid @RequestPart(name = "dto") FlowerVarietyCreateDto dto,
             @RequestParam(name = "file") MultipartFile file) {
         flowerVarietyFacade.create(dto, file);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add")
+    @Operation(summary = "Присоединиться к существующему сорту цветка")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> create(@Valid @RequestBody FlowerVarietyAddBranchDto flowerVarietyAddBranchDto) {
+        flowerVarietyFacade.addFlowerVarietyToBranch(flowerVarietyAddBranchDto);
         return ResponseEntity.ok().build();
     }
 

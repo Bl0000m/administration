@@ -2,6 +2,7 @@ package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.converter.flower_variety.FlowerVarietyCreateDtoConverter;
 import kz.bloooom.administration.converter.flower_variety.FlowerVarietyInfoDtoConverter;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import kz.bloooom.administration.domain.entity.BranchDivision;
@@ -47,6 +48,29 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
         flowerVariety = flowerVarietyService.save(flowerVariety);
 
         FlowerVarietyPrice flowerVarietyPrice = createPrice(dto, flowerVariety);
+        flowerVarietyPriceService.create(flowerVarietyPrice);
+    }
+
+    @Override
+    @Transactional
+    public void addFlowerVarietyToBranch(FlowerVarietyAddBranchDto dto) {
+        FlowerVariety flowerVariety = flowerVarietyService.getById(dto.getFlowerVarietyId());
+        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
+
+        FlowerVarietyPrice flowerVarietyPrice = FlowerVarietyPrice
+                .builder()
+                .flowerVariety(flowerVariety)
+                .branchDivision(branchDivision)
+                .price(dto.getPrice())
+                .currency(dto.getCurrency())
+                .validFrom(dto.getValidFrom())
+                .validTo(dto.getValidTo())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .updatedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(JwtUtils.getKeycloakId())
+                .updatedBy(JwtUtils.getKeycloakId())
+                .build();
+
         flowerVarietyPriceService.create(flowerVarietyPrice);
     }
 

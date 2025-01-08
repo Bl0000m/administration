@@ -2,6 +2,7 @@ package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsCreateDtoConverter;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsInfoDtoConverter;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 import kz.bloooom.administration.domain.entity.AdditionalElements;
@@ -42,6 +43,28 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 .create(additionalElementsCreateDtoConverter.convert(dto));
 
         AdditionalElementsPrice additionalElementsPrice = createPrice(dto, additionalElements);
+        additionalElementsPriceService.create(additionalElementsPrice);
+    }
+
+    @Override
+    @Transactional
+    public void addAdditionalElementToBranch(AdditionalElementAddBranchDto dto) {
+        AdditionalElements additionalElement = additionalElementsService.getById(dto.getAdditionalElementId());
+        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
+
+        AdditionalElementsPrice additionalElementsPrice = AdditionalElementsPrice
+                .builder()
+                .additionalElements(additionalElement)
+                .branchDivision(branchDivision)
+                .price(dto.getPrice())
+                .currency(dto.getCurrency())
+                .validFrom(dto.getValidFrom())
+                .validTo(dto.getValidTo())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .updatedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(JwtUtils.getKeycloakId())
+                .updatedBy(JwtUtils.getKeycloakId())
+                .build();
         additionalElementsPriceService.create(additionalElementsPrice);
     }
 

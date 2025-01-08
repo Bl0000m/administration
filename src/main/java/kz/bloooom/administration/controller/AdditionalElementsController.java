@@ -3,8 +3,10 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,14 @@ public class AdditionalElementsController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody AdditionalElementsCreateDto dto) {
         additionalElementsFacade.create(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add")
+    @Operation(summary = "Присоединиться к существующему доп элементу")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> create(@Valid @RequestBody AdditionalElementAddBranchDto additionalElementAddBranchDto) {
+        additionalElementsFacade.addAdditionalElementToBranch(additionalElementAddBranchDto);
         return ResponseEntity.ok().build();
     }
 
