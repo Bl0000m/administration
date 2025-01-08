@@ -30,6 +30,8 @@ public class ResourceServerConfig {
             "/swagger-ui/**",
             "/actuator/**",
             "/v1/users/login",
+            "/v1/employee/login",
+            "/v1/employee/auth/password-setup",
             "/v1/client/users",
             "/v1/users/refresh",
             "/v1/client/users/forgot-password",
