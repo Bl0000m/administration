@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +38,10 @@ public class ResourceServerConfig {
             "/v1/client/users/forgot-password",
             "/v1/client/users/reset-code/**",
             "/api/v1/api-docs/**"
+    };
+
+    private static final String[] WEB_IGNORING_LIST = {
+            "/v1/employee/auth/password-setup"
     };
 
     @Bean
@@ -77,6 +82,10 @@ public class ResourceServerConfig {
         return source;
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().antMatchers(WEB_IGNORING_LIST);
+    }
     @Bean
     public MethodInvokingFactoryBean methodInvokingFactoryBean() {
         MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
