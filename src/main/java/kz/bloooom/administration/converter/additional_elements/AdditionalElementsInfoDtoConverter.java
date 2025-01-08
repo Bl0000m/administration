@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,10 +33,10 @@ public class AdditionalElementsInfoDtoConverter {
         AdditionalElementsPrice additionalElementsPrice =
                 additionalElementsPriceService.getByElementId(source.getId());
 
-        target.setPrice(additionalElementsPrice.getPrice());
-        target.setCurrency(additionalElementsPrice.getCurrency().getTitle());
-        target.setValidFrom(additionalElementsPrice.getValidFrom());
-        target.setValidTo(additionalElementsPrice.getValidTo());
+        target.setPrice(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getPrice() : null);
+        target.setCurrency(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getCurrency().getTitle() : null);
+        target.setValidFrom(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getValidFrom() : null);
+        target.setValidTo(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getValidTo() : null);
         target.setBranchDivisionInfo(branchDivisionInfoDtoConverter.convert(additionalElementsPrice.getBranchDivision()));
 
         target.setExample(source.getExample());

@@ -3,6 +3,7 @@ package kz.bloooom.administration.facade.impl;
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.employee.EmployeeCreateDtoConverter;
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
+import kz.bloooom.administration.domain.dto.employee.ResetUserAuthorizationRequestDto;
 import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
@@ -10,8 +11,11 @@ import kz.bloooom.administration.facade.EmployeeFacade;
 import kz.bloooom.administration.service.CredentialService;
 import kz.bloooom.administration.service.EmployeeService;
 import kz.bloooom.administration.service.KeycloakService;
+import kz.bloooom.administration.service.MailService;
+import kz.bloooom.administration.util.JwtUtils;
 import kz.bloooom.administration.validator.EmailValidator;
 import kz.bloooom.administration.validator.PhoneNumberValidator;
+import kz.bloooom.administration.validator.ResetAuthorizationPasswordValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,6 +38,9 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
     CredentialService credentialService;
     EmployeeCreateDtoConverter employeeCreateDtoConverter;
     KeycloakService keycloakService;
+    MailService mailService;
+    ResetAuthorizationPasswordValidator resetAuthorizationPasswordValidator;
+
 
     @Override
     @Transactional
@@ -47,12 +54,11 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
             assignRolesToUser(employee);
 
             log.info("UserServiceImpl:create: userInfoDto={}, keycloakId={}", dto, keycloakId);
-//            return mailService.sendRegistrationMessage(dto.getFirstName(),
-//                    dto.getLastName(),
-//                    dto.getEmail(),
-//                    position.getName(),
-//                    position.getStructureLevel().getCompany().getName(),
-//                    keycloakId);
+            mailService.sendRegistrationMessageForEmployee(dto.getName(),
+                    dto.getPosition(),
+                    dto.getEmail(),
+                    employee.getCompany().getName(),
+                    keycloakId);
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -65,6 +71,15 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
                     "messages.exception.create-keycloak-user-error"
             );
         }
+    }
+
+    @Override
+    @Transactional
+    public void userResetAuthorizationPassword(ResetUserAuthorizationRequestDto dto) {
+        Employee employee = employeeService.findByEmail(dto.getEmail());
+        resetAuthorizationPasswordValidator.checkValid(dto);
+        keycloakService.resetPassword(JwtUtils.getKeycloakId(), dto.getNewPassword());
+        log.info("Employee: {} the password was updated", dto.getEmail());
     }
 
     @Transactional

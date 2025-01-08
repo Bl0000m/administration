@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,6 +28,7 @@ public class TemperatureCareController {
 
     @PostMapping()
     @Operation(summary = "Создание ухода")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody TemperatureCareCreateDto dto) {
         temperatureCareFacade.create(dto);

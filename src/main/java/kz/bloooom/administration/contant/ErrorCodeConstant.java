@@ -46,5 +46,6 @@ public class ErrorCodeConstant {
     public final String FLOWER_THIS_ID_DOEST_EXISTS = "FLOWER_THIS_ID_DOEST_EXISTS";
     public final String ELEMENT_WITH_THIS_ID_DOEST_EXISTS = "ELEMENT_WITH_THIS_ID_DOEST_EXISTS";
     public final String BRANCH_WITH_THIS_ID_DOEST_EXISTS = "BRANCH_WITH_THIS_ID_DOEST_EXISTS";
+    public final String PASSWORDS_NOT_SAME = "PASSWORDS_NOT_SAME";
 
 }

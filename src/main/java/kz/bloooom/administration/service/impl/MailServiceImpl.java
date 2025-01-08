@@ -29,14 +29,18 @@ public class MailServiceImpl implements MailService {
             "</br> Добро пожаловать в Bloooom!" +
             "</br> Ваш код подтверждения %s";
 
+    public static final String HELLO_MESSAGE = "Уважаемый/ая %s," +
+            "</br>Вы были добавлены в систему \"Bloom\" как <b>'%s'</b> компании <b>%s</b>. Для завершения регистрации и получения доступа к вашему профилю, пожалуйста, установите пароль." +
+            "</br>Для этого перейдите по следующей ссылке:" +
+            "</br> <a href=%s>Установить пароль</a>";
 
     private final JavaMailSender mailSender;
     private final I18nService i18nService;
     @Value("${spring.mail.username}")
     private String sender;
 
-//    @Value("${spring.mail.sign-in-link}")
-//    private String signInLink;
+    @Value("${spring.mail.sign-in-link}")
+    private String signInLink;
 
     /**
      * {@inheritDoc}
@@ -68,6 +72,18 @@ public class MailServiceImpl implements MailService {
                                         String keycloakId) {
         String[] args = {name, code};
         String message = String.format(REGISTRATION_MESSAGE, args);
+        send(message, String.format(MAIL_SUBJECT), email);
+    }
+
+    @Override
+    public void sendRegistrationMessageForEmployee(String name,
+                                                   String position,
+                                                   String email,
+                                                   String companyName,
+                                                   String keycloakId) {
+        String responseLink = signInLink + "=" + keycloakId;
+        String[] args = {name, position, companyName, responseLink};
+        String message = String.format(HELLO_MESSAGE, args);
         send(message, String.format(MAIL_SUBJECT), email);
     }
 

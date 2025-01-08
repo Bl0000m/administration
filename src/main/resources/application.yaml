@@ -27,6 +27,7 @@ spring:
     username: no-reply@bloooom.kz
     password: ITbloooom2024$
     protocol: smtp
+    sign-in-link: ${SIGN_IN_LINK:--------------}
     properties:
       mail:
         smtp:

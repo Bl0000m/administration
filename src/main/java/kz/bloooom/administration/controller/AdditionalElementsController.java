@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class AdditionalElementsController {
     @PostMapping()
     @Operation(summary = "Создание доп элементов")
     @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     public ResponseEntity<Void> create(@Valid @RequestBody AdditionalElementsCreateDto dto) {
         additionalElementsFacade.create(dto);
         return ResponseEntity.ok().build();
@@ -39,6 +41,7 @@ public class AdditionalElementsController {
     @PostMapping("/add")
     @Operation(summary = "Присоединиться к существующему доп элементу")
     @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     public ResponseEntity<Void> create(@Valid @RequestBody AdditionalElementAddBranchDto additionalElementAddBranchDto) {
         additionalElementsFacade.addAdditionalElementToBranch(additionalElementAddBranchDto);
         return ResponseEntity.ok().build();

@@ -21,13 +21,17 @@ import java.util.Set;
 @Table(name = "bouquet")
 @FieldNameConstants
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Bouquet {
+public class    Bouquet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(name = "name")
     String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    Employee employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bouquet_styles_id")

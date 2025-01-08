@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -46,10 +47,10 @@ public class FlowerVarietyInfoDtoConverter {
                 .id(source.getId())
                 .name(source.getName())
                 .flowerInfo(flowerInfoDtoConverter.convert(source.getFlower()))
-                .price(flowerVarietyPrice.getPrice())
-                .currency(flowerVarietyPrice.getCurrency().getTitle())
-                .validFrom(flowerVarietyPrice.getValidFrom())
-                .validTo(flowerVarietyPrice.getValidTo())
+                .price(Objects.nonNull(flowerVarietyPrice) ? flowerVarietyPrice.getPrice() : null)
+                .currency(Objects.nonNull(flowerVarietyPrice) ? flowerVarietyPrice.getCurrency().getTitle() : null)
+                .validFrom(Objects.nonNull(flowerVarietyPrice) ? flowerVarietyPrice.getValidFrom() : null)
+                .validTo(Objects.nonNull(flowerVarietyPrice) ? flowerVarietyPrice.getValidTo(): null)
                 .branchDivisionInfo(branchDivisionInfoDtoConverter.convert(flowerVarietyPrice.getBranchDivision()))
                 .shelfLifeDaysMin(source.getShelfLifeDaysMin())
                 .shelfLifeDaysMax(source.getShelfLifeDaysMax())

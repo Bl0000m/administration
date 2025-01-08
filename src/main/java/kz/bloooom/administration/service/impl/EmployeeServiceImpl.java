@@ -56,4 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findByKeycloakId(String keycloakId) {
         return employeeRepository.findByKeycloakId(keycloakId);
     }
+
+    @Override
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
 }

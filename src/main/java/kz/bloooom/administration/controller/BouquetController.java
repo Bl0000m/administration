@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,7 @@ public class BouquetController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "Создание букета")
     @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     public ResponseEntity<Void> create(
             @Valid @RequestPart(name = "dto") BouquetCreateDto bouquetCreateDto,
             @RequestParam(name = "files") List<MultipartFile> files) {
@@ -40,6 +42,7 @@ public class BouquetController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     @Operation(summary = "Присоединиться к существующему букету")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody BouquetAddBranchDto addBranchToBouquet) {

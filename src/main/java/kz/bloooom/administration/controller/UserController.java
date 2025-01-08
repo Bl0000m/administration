@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,6 +31,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Получить токен доступа")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     public ResponseEntity<KeycloakAuthResponseDto> login(
             @Valid @RequestBody KeycloakAuthRequestDto keycloakAuthRequestDto
     ) {

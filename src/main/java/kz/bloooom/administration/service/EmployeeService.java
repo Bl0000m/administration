@@ -14,4 +14,5 @@ public interface EmployeeService {
     boolean existsByPhoneNumber(String phoneNumber);
 
     Employee findByKeycloakId(String keycloakId);
+    Employee findByEmail(String email);
 }
