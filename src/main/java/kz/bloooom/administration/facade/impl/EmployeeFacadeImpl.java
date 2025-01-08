@@ -96,7 +96,7 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
     public void userResetAuthorizationPassword(ResetUserAuthorizationRequestDto dto) {
         Employee employee = employeeService.findByEmail(dto.getEmail());
         resetAuthorizationPasswordValidator.checkValid(dto);
-        keycloakService.resetPassword(JwtUtils.getKeycloakId(), dto.getNewPassword());
+        keycloakService.resetPassword(employee.getKeycloakId(), dto.getNewPassword());
         log.info("Employee: {} the password was updated", dto.getEmail());
     }
 
