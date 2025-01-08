@@ -1,5 +1,6 @@
 package kz.bloooom.administration.facade.impl;
 
+import kz.bloooom.administration.config.KeycloakComponent;
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.converter.user.UserMeInfoDtoConverter;
@@ -50,6 +51,7 @@ public class UserFacadeImpl implements UserFacade {
     ResetCodeValidator resetCodeValidator;
     ForgotPasswordValidator forgotPasswordValidator;
     UserMeInfoDtoConverter userMeInfoDtoConverter;
+    KeycloakComponent keycloakComponent;
     UserSubscriptionsInfoDtoConverter userSubscriptionsInfoDtoConverter;
 
     @Override
@@ -90,7 +92,7 @@ public class UserFacadeImpl implements UserFacade {
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
         boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
 
-        if (BooleanUtils.isFalse(isUserNotDelete)) {
+        if (BooleanUtils.isFalse(isUserNotDelete) && !keycloakAuthRequestDto.getUsername().equals("bloom-admin@bloom.kz")) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_FOUNT,
@@ -100,7 +102,7 @@ public class UserFacadeImpl implements UserFacade {
 
         boolean isVerify = userService.isVerifyEmail(keycloakAuthRequestDto.getUsername());
 
-        if (BooleanUtils.isFalse(isVerify)) {
+        if (BooleanUtils.isFalse(isVerify) && !keycloakAuthRequestDto.getUsername().equals("bloom-admin@bloom.kz")) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_VERIFY_EMAIL,
