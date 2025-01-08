@@ -1,7 +1,10 @@
 package kz.bloooom.administration.converter.additional_elements;
 
+import kz.bloooom.administration.converter.branch_division.BranchDivisionInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 import kz.bloooom.administration.domain.entity.AdditionalElements;
+import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
+import kz.bloooom.administration.service.AdditionalElementsPriceService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,11 +20,24 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdditionalElementsInfoDtoConverter {
 
+    AdditionalElementsPriceService additionalElementsPriceService;
+    BranchDivisionInfoDtoConverter branchDivisionInfoDtoConverter;
+
     public AdditionalElementsInfoDto convert(AdditionalElements source) {
         AdditionalElementsInfoDto target = new AdditionalElementsInfoDto();
         target.setId(source.getId());
         target.setName(source.getName());
         target.setDescription(source.getDescription());
+
+        AdditionalElementsPrice additionalElementsPrice =
+                additionalElementsPriceService.getByElementId(source.getId());
+
+        target.setPrice(additionalElementsPrice.getPrice());
+        target.setCurrency(additionalElementsPrice.getCurrency().getTitle());
+        target.setValidFrom(additionalElementsPrice.getValidFrom());
+        target.setValidTo(additionalElementsPrice.getValidTo());
+        target.setBranchDivisionInfo(branchDivisionInfoDtoConverter.convert(additionalElementsPrice.getBranchDivision()));
+
         target.setExample(source.getExample());
         target.setUnitOfMeasurement(source.getUnitOfMeasurement());
         return target;

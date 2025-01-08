@@ -22,9 +22,6 @@ public class BouquetInfoDto {
     @Schema(description = "Наименование букета")
     String name;
 
-    @Schema(description = "Наименование компании")
-    String companyName;
-
     @Schema(description = "Фотографии букета")
     Set<ImageShortInfoDto> bouquetPhotos;
 

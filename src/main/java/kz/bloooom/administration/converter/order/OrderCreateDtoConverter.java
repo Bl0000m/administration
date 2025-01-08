@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor

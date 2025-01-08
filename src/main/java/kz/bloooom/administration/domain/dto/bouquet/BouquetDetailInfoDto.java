@@ -1,15 +1,11 @@
 package kz.bloooom.administration.domain.dto.bouquet;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsNameInfoDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
+import kz.bloooom.administration.domain.dto.branch_division.BranchBouquetInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyNameInfoDto;
 import kz.bloooom.administration.domain.dto.img.ImageShortInfoDto;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -27,14 +23,11 @@ public class BouquetDetailInfoDto {
     @Schema(description = "Наименование букета")
     String name;
 
-    @Schema(description = "Наименование компании")
-    String companyName;
-
     @Schema(description = "Фотографии букета")
     Set<ImageShortInfoDto> bouquetPhotos;
 
-    @Schema(description = "Цена букета")
-    Double price;
+    @Schema(description = "Информация о филиалах которые продают данный букет")
+    List<BranchBouquetInfoDto> branchBouquetInfo;
 
     @Schema(description = "Стиль букета")
     String bouquetStyle;

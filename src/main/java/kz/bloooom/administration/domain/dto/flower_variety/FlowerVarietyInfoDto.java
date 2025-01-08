@@ -1,6 +1,8 @@
 package kz.bloooom.administration.domain.dto.flower_variety;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
 import kz.bloooom.administration.domain.dto.country.CountryInfoDto;
 import kz.bloooom.administration.domain.dto.flower.FlowerInfoDto;
 import kz.bloooom.administration.domain.dto.stem_care.StemCareInfoDto;
@@ -9,7 +11,7 @@ import kz.bloooom.administration.domain.dto.water_care.WaterCareInfoDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,6 +27,23 @@ public class FlowerVarietyInfoDto {
 
     @Schema(description = "Группа цветов")
     FlowerInfoDto flowerInfo;
+
+    @Schema(description = "Цена")
+    Double price;
+
+    @Schema(description = "филиал")
+    BranchDivisionInfoDto branchDivisionInfo;
+
+    @Schema(description = "Валюта")
+    String currency;
+
+    @Schema(description = "Дата начала действия цены")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    LocalDateTime validFrom;
+
+    @Schema(description = "Дата окончания действия цены")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    LocalDateTime validTo;
 
     @Schema(description = "Минимальное количество дней хранения")
     Long shelfLifeDaysMin;

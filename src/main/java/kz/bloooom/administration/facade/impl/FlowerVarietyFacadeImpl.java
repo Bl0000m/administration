@@ -4,10 +4,15 @@ import kz.bloooom.administration.converter.flower_variety.FlowerVarietyCreateDto
 import kz.bloooom.administration.converter.flower_variety.FlowerVarietyInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
+import kz.bloooom.administration.domain.entity.BranchDivision;
 import kz.bloooom.administration.domain.entity.FlowerVariety;
+import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
+import kz.bloooom.administration.service.BranchDivisionService;
+import kz.bloooom.administration.service.FlowerVarietyPriceService;
 import kz.bloooom.administration.service.FlowerVarietyService;
 import kz.bloooom.administration.service.StorageService;
+import kz.bloooom.administration.util.JwtUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,6 +33,8 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     FlowerVarietyService flowerVarietyService;
+    BranchDivisionService branchDivisionService;
+    FlowerVarietyPriceService flowerVarietyPriceService;
     StorageService storageService;
     FlowerVarietyCreateDtoConverter flowerVarietyCreateDtoConverter;
     FlowerVarietyInfoDtoConverter flowerVarietyInfoDtoConverter;
@@ -36,9 +44,29 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     public void create(FlowerVarietyCreateDto dto, MultipartFile photo) {
         FlowerVariety flowerVariety = flowerVarietyCreateDtoConverter.convert(dto);
         addPhoto(flowerVariety, photo);
-        flowerVarietyService.save(flowerVariety);
+        flowerVariety = flowerVarietyService.save(flowerVariety);
 
+        FlowerVarietyPrice flowerVarietyPrice = createPrice(dto, flowerVariety);
+        flowerVarietyPriceService.create(flowerVarietyPrice);
+    }
 
+    private FlowerVarietyPrice createPrice(FlowerVarietyCreateDto dto,
+                                           FlowerVariety flowerVariety) {
+        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
+
+        return FlowerVarietyPrice
+                .builder()
+                .flowerVariety(flowerVariety)
+                .branchDivision(branchDivision)
+                .price(dto.getPrice())
+                .currency(dto.getCurrency())
+                .validFrom(dto.getValidFrom())
+                .validTo(dto.getValidTo())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .updatedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(JwtUtils.getKeycloakId())
+                .updatedBy(JwtUtils.getKeycloakId())
+                .build();
     }
 
     private void addPhoto(FlowerVariety flowerVariety, MultipartFile photo) {

@@ -3,6 +3,8 @@ package kz.bloooom.administration.converter.bouquet;
 import kz.bloooom.administration.converter.img.ImageInfoConverter;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
 import kz.bloooom.administration.domain.entity.Bouquet;
+import kz.bloooom.administration.domain.entity.BouquetBranchPrice;
+import kz.bloooom.administration.service.BouquetBranchPriceService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,15 +21,26 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BouquetInfoDtoConverter {
     ImageInfoConverter imageInfoConverter;
+    BouquetBranchPriceService bouquetBranchPriceService;
 
     public BouquetInfoDto convert(Bouquet source) {
         BouquetInfoDto target = new BouquetInfoDto();
         target.setId(source.getId());
         target.setName(source.getName());
-        target.setCompanyName(source.getCompany().getName());
+        target.setPrice(getLowPrice(source.getId()));
         target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquetPhotos()));
-        target.setPrice(source.getPrice());
         return target;
+    }
+
+    private Double getLowPrice(Long bouquetId){
+        List<BouquetBranchPrice> bouquetBranchPrices =
+                bouquetBranchPriceService.getAllBouquetBranchByBouquetId(bouquetId);
+
+        Optional<Double> price = bouquetBranchPrices.stream()
+                .map(BouquetBranchPrice::getPrice)
+                .min(Double::compareTo);
+
+        return price.orElse(null);
     }
 
     public List<BouquetInfoDto> convert(List<Bouquet> bouquets) {

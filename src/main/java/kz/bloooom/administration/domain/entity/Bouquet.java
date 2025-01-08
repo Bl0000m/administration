@@ -30,18 +30,11 @@ public class Bouquet {
     String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    Company company;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bouquet_styles_id")
     BouquetStyle bouquetStyle;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bouquet", cascade = CascadeType.ALL)
     Set<BouquetPhoto> bouquetPhotos;
-
-    @Column(name = "price")
-    Double price;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "bouquet_flower_variety",

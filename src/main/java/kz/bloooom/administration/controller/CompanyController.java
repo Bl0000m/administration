@@ -49,13 +49,6 @@ public class CompanyController {
         return ResponseEntity.ok(companyFacade.getCompanyById(id));
     }
 
-    @GetMapping("/bouquet/{bouquetId}")
-    @Operation(summary = "Получить компанию по bouquet id")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<CompanyInfoDto>> getCompanyByBouquetId(@PathVariable Long bouquetId) {
-        return ResponseEntity.ok(companyFacade.getCompanyByBouquetId(bouquetId));
-    }
-
     @GetMapping
     @Operation(summary = "Получить список всех компании")
     @SecurityRequirement(name = "Bearer Authentication")

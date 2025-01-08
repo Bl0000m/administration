@@ -45,6 +45,8 @@ public class BouquetFacadeImpl implements BouquetFacade {
     BouquetCreateDtoConverter bouquetCreateDtoConverter;
     BouquetInfoDtoConverter bouquetInfoDtoConverter;
     BouquetDetailInfoDtoConverter bouquetDetailInfoDtoConverter;
+    BouquetBranchPriceService bouquetBranchPriceService;
+    BranchDivisionService branchDivisionService;
 
     @Override
     @Transactional
@@ -54,12 +56,29 @@ public class BouquetFacadeImpl implements BouquetFacade {
         Bouquet bouquet = bouquetCreateDtoConverter.convert(bouquetCreateDto);
         bouquet = bouquetService.create(bouquet);
         log.info("Created bouquet: {}", bouquet.getId());
-        String organizationPath = getOrganizationPath(bouquet.getCompany().getName(), bouquet.getId());
+        String organizationPath = getOrganizationPath(bouquet.getName(), bouquet.getId());
         savePhoto(files, bouquet, organizationPath);
 
         attachFlowerVarietiesToBouquet(bouquetCreateDto, bouquet);
 
         attachAdditionalElementsToBouquet(bouquetCreateDto, bouquet);
+
+        // create price for bouquet
+        createBouquetBranchPrice(bouquetCreateDto, bouquet);
+    }
+
+    private void createBouquetBranchPrice(BouquetCreateDto dto, Bouquet bouquet) {
+        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchId());
+
+        BouquetBranchPrice bouquetBranchPrice =
+                BouquetBranchPrice
+                        .builder()
+                        .bouquet(bouquet)
+                        .price(dto.getPrice())
+                        .branchDivision(branchDivision)
+                        .build();
+
+        bouquetBranchPriceService.create(bouquetBranchPrice);
     }
 
     @Override

@@ -29,13 +29,13 @@ public class BouquetCreateDto {
     @Schema(description = "Название букета")
     String name;
 
-    @NotNull(message = "Id компании не должен быть пустым")
-    @Schema(description = "Id компании")
-    Long companyId;
-
     @NotNull(message = "Цена букета не должен быть пустым")
     @Schema(description = "Цена букета")
     Double price;
+
+    @NotNull(message = "Id филиала не должен быть пустым")
+    @Schema(description = "Id филиала")
+    Long branchId;
 
     @NotNull(message = "Id-ки цветов из которых состоит не должен быть пустым")
     @Schema(description = "Id-ки цветов из которых состоит")

@@ -4,8 +4,14 @@ import kz.bloooom.administration.converter.additional_elements.AdditionalElement
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
+import kz.bloooom.administration.domain.entity.AdditionalElements;
+import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
+import kz.bloooom.administration.domain.entity.BranchDivision;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
+import kz.bloooom.administration.service.AdditionalElementsPriceService;
 import kz.bloooom.administration.service.AdditionalElementsService;
+import kz.bloooom.administration.service.BranchDivisionService;
+import kz.bloooom.administration.util.JwtUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +29,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     AdditionalElementsService additionalElementsService;
+    AdditionalElementsPriceService additionalElementsPriceService;
+    BranchDivisionService branchDivisionService;
     AdditionalElementsCreateDtoConverter additionalElementsCreateDtoConverter;
     AdditionalElementsInfoDtoConverter additionalElementsInfoDtoConverter;
 
@@ -29,7 +38,30 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     @Override
     @Transactional
     public void create(AdditionalElementsCreateDto dto) {
-        additionalElementsService.create(additionalElementsCreateDtoConverter.convert(dto));
+        AdditionalElements additionalElements = additionalElementsService
+                .create(additionalElementsCreateDtoConverter.convert(dto));
+
+        AdditionalElementsPrice additionalElementsPrice = createPrice(dto, additionalElements);
+        additionalElementsPriceService.create(additionalElementsPrice);
+    }
+
+    private AdditionalElementsPrice createPrice(AdditionalElementsCreateDto dto,
+                                                AdditionalElements additionalElement) {
+        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
+
+        return AdditionalElementsPrice
+                .builder()
+                .additionalElements(additionalElement)
+                .branchDivision(branchDivision)
+                .price(dto.getPrice())
+                .currency(dto.getCurrency())
+                .validFrom(dto.getValidFrom())
+                .validTo(dto.getValidTo())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .updatedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(JwtUtils.getKeycloakId())
+                .updatedBy(JwtUtils.getKeycloakId())
+                .build();
     }
 
     @Override
