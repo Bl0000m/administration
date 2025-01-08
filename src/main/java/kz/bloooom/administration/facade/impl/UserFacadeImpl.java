@@ -1,5 +1,6 @@
 package kz.bloooom.administration.facade.impl;
 
+import kz.bloooom.administration.config.KeycloakComponent;
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.converter.user.UserMeInfoDtoConverter;
@@ -13,10 +14,7 @@ import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.UserFacade;
-import kz.bloooom.administration.service.KeycloakService;
-import kz.bloooom.administration.service.MailService;
-import kz.bloooom.administration.service.UserResetCodeService;
-import kz.bloooom.administration.service.UserService;
+import kz.bloooom.administration.service.*;
 import kz.bloooom.administration.util.JwtUtils;
 import kz.bloooom.administration.validator.*;
 import lombok.AccessLevel;
@@ -40,6 +38,7 @@ public class UserFacadeImpl implements UserFacade {
 
     UserService userService;
     EmailValidator emailValidator;
+    EmployeeService employeeService;
     PhoneNumberValidator phoneNumberValidator;
     UserRegisterDtoConverter userRegisterDtoConverter;
     KeycloakService keycloakService;
@@ -89,8 +88,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
         boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
+        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
 
-        if (BooleanUtils.isFalse(isUserNotDelete)) {
+        if ((BooleanUtils.isFalse(isUserNotDelete) || BooleanUtils.isFalse(isEmployeeNotDelete))  && !keycloakAuthRequestDto.getUsername().equals("bloom-admin@bloom.kz")) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_FOUNT,
@@ -100,7 +100,7 @@ public class UserFacadeImpl implements UserFacade {
 
         boolean isVerify = userService.isVerifyEmail(keycloakAuthRequestDto.getUsername());
 
-        if (BooleanUtils.isFalse(isVerify)) {
+        if ((BooleanUtils.isFalse(isVerify) || BooleanUtils.isFalse(isEmployeeNotDelete)) && !keycloakAuthRequestDto.getUsername().equals("bloom-admin@bloom.kz")) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_VERIFY_EMAIL,
