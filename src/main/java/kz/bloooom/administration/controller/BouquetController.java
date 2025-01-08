@@ -3,6 +3,7 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
@@ -35,6 +36,14 @@ public class BouquetController {
             @Valid @RequestPart(name = "dto") BouquetCreateDto bouquetCreateDto,
             @RequestParam(name = "files") List<MultipartFile> files) {
         bouquetFacade.createBouquet(bouquetCreateDto, files);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add")
+    @Operation(summary = "Присоединиться к существующему букету")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> create(@Valid @RequestBody BouquetAddBranchDto addBranchToBouquet) {
+        bouquetFacade.addBranchToBouquet(addBranchToBouquet);
         return ResponseEntity.ok().build();
     }
 

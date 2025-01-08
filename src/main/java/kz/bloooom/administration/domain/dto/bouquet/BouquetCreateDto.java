@@ -1,12 +1,8 @@
 package kz.bloooom.administration.domain.dto.bouquet;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsShortInfoDto;
-import kz.bloooom.administration.domain.dto.bouquet_style.BouquetStyleInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyShortInfoToAttachBouquetDto;
-import kz.bloooom.administration.domain.entity.BouquetStyle;
-import kz.bloooom.administration.repository.BouquetStyleRepository;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

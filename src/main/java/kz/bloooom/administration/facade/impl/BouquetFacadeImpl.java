@@ -4,6 +4,7 @@ import kz.bloooom.administration.converter.bouquet.BouquetCreateDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetDetailInfoDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsShortInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
@@ -65,6 +66,23 @@ public class BouquetFacadeImpl implements BouquetFacade {
 
         // create price for bouquet
         createBouquetBranchPrice(bouquetCreateDto, bouquet);
+    }
+
+    @Override
+    @Transactional
+    public void addBranchToBouquet(BouquetAddBranchDto bouquetAddBranchDto) {
+        BranchDivision branchDivision = branchDivisionService.getById(bouquetAddBranchDto.getBranchDivisionId());
+
+        Bouquet bouquet = bouquetService.getById(bouquetAddBranchDto.getBouquetId());
+
+        BouquetBranchPrice bouquetBranchPrice = BouquetBranchPrice
+                .builder()
+                .bouquet(bouquet)
+                .branchDivision(branchDivision)
+                .price(bouquetAddBranchDto.getPrice())
+                .build();
+
+        bouquetBranchPriceService.create(bouquetBranchPrice);
     }
 
     private void createBouquetBranchPrice(BouquetCreateDto dto, Bouquet bouquet) {

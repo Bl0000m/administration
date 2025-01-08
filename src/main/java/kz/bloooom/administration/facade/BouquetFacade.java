@@ -1,5 +1,6 @@
 package kz.bloooom.administration.facade;
 
+import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
@@ -10,6 +11,8 @@ import java.util.List;
 public interface BouquetFacade {
     void createBouquet(BouquetCreateDto bouquetCreateDto,
                        List<MultipartFile> files);
+
+    void addBranchToBouquet(BouquetAddBranchDto bouquetAddBranchDto);
 
     BouquetDetailInfoDto getById(Long id);
 
