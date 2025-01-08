@@ -2,8 +2,11 @@ package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.employee.EmployeeCreateDtoConverter;
+import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
 import kz.bloooom.administration.domain.dto.employee.ResetUserAuthorizationRequestDto;
+import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
+import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
@@ -20,6 +23,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -39,6 +43,7 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
     EmployeeCreateDtoConverter employeeCreateDtoConverter;
     KeycloakService keycloakService;
     MailService mailService;
+    AccessTokenResponseConverter accessTokenResponseConverter;
     ResetAuthorizationPasswordValidator resetAuthorizationPasswordValidator;
 
 
@@ -71,6 +76,19 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
                     "messages.exception.create-keycloak-user-error"
             );
         }
+    }
+
+    @Override
+    public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
+        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
+        if (BooleanUtils.isFalse(isEmployeeNotDelete)) {
+            throw new BloomAdministrationException(
+                    HttpStatus.UNAUTHORIZED,
+                    ErrorCodeConstant.EMPLOYEE_NOT_FOUNT,
+                    "messages.exception.employee-not-found", keycloakAuthRequestDto.getUsername()
+            );
+        }
+        return accessTokenResponseConverter.convert(keycloakService.login(keycloakAuthRequestDto));
     }
 
     @Override

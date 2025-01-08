@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
 import kz.bloooom.administration.domain.dto.employee.ResetUserAuthorizationRequestDto;
+import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
+import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.facade.EmployeeFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,14 @@ public class EmployeeController {
         log.info("POST: /v1/employee to create user form web admin");
         employeeFacade.create(dto);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Получить токен доступа")
+    public ResponseEntity<KeycloakAuthResponseDto> login(
+            @Valid @RequestBody KeycloakAuthRequestDto keycloakAuthRequestDto
+    ) {
+        return ResponseEntity.ok(employeeFacade.login(keycloakAuthRequestDto));
     }
 
     @PostMapping("/auth/password-setup")

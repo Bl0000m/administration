@@ -88,8 +88,6 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
         boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-//        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-//|| BooleanUtils.isFalse(isEmployeeNotDelete)
         if ((BooleanUtils.isFalse(isUserNotDelete) )) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
@@ -100,7 +98,6 @@ public class UserFacadeImpl implements UserFacade {
 
         boolean isVerify = userService.isVerifyEmail(keycloakAuthRequestDto.getUsername());
 
-//        BooleanUtils.isFalse(isEmployeeNotDelete)
         if ((BooleanUtils.isFalse(isVerify))) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
