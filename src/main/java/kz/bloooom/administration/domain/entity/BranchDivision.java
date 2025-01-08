@@ -26,6 +26,9 @@ public class BranchDivision {
     @JoinColumn(name = "company_id")
     Company company;
 
+    @Column(name = "division_type")
+    String divisionType;
+
     @Column(name = "address")
     String address;
 

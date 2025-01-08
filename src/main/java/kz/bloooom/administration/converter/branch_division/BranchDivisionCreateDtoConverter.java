@@ -18,6 +18,7 @@ public class BranchDivisionCreateDtoConverter {
         return BranchDivision.builder()
                 .company(companyService.getById(source.getCompanyId()))
                 .address(source.getAddress())
+                .divisionType(source.getDivisionType())
                 .phoneNumber(source.getPhoneNumber())
                 .email(source.getEmail())
                 .build();

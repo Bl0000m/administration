@@ -19,6 +19,9 @@ public class BranchDivisionCreateDto {
     @Schema(description = "Id компании")
     Long companyId;
 
+    @Schema(description = "Тип подразделения ")
+    String divisionType;
+
     @Schema(description = "Адрес филиала")
     String address;
 

@@ -11,8 +11,14 @@ import lombok.experimental.FieldDefaults;
 @Schema(description = "Обьект для отображения филиалов")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BranchDivisionInfoDto {
+    @Schema(description = "Id филиала")
+    Long id;
+
     @Schema(description = "Адрес филиала")
     String address;
+
+    @Schema(description = "Тип подразделения ")
+    String divisionType;
 
     @Schema(description = "Контактный телефон")
     String phoneNumber;

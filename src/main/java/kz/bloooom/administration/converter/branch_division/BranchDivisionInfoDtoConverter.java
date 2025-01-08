@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 public class BranchDivisionInfoDtoConverter {
     public BranchDivisionInfoDto convert(BranchDivision source) {
         return BranchDivisionInfoDto.builder()
+                .id(source.getId())
                 .address(source.getAddress())
+                .divisionType(source.getDivisionType())
                 .phoneNumber(source.getPhoneNumber())
                 .email(source.getEmail())
                 .build();
