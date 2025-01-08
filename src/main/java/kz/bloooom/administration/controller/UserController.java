@@ -31,7 +31,6 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Получить токен доступа")
-    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     public ResponseEntity<KeycloakAuthResponseDto> login(
             @Valid @RequestBody KeycloakAuthRequestDto keycloakAuthRequestDto
     ) {
