@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name = "bouquet")
 @FieldNameConstants
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class    Bouquet {
+public class Bouquet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
