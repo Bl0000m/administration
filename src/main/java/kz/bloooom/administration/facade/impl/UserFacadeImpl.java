@@ -88,9 +88,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
         boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-
-        if ((BooleanUtils.isFalse(isUserNotDelete) || BooleanUtils.isFalse(isEmployeeNotDelete))) {
+//        boolean isEmployeeNotDelete = employeeService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
+//|| BooleanUtils.isFalse(isEmployeeNotDelete)
+        if ((BooleanUtils.isFalse(isUserNotDelete) )) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_FOUNT,
@@ -100,7 +100,8 @@ public class UserFacadeImpl implements UserFacade {
 
         boolean isVerify = userService.isVerifyEmail(keycloakAuthRequestDto.getUsername());
 
-        if ((BooleanUtils.isFalse(isVerify) || BooleanUtils.isFalse(isEmployeeNotDelete))) {
+//        BooleanUtils.isFalse(isEmployeeNotDelete)
+        if ((BooleanUtils.isFalse(isVerify))) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_VERIFY_EMAIL,
