@@ -14,7 +14,7 @@ public class BranchBouquetInfoDto {
     Long branchId;
 
     @Schema(description = "Наименование компании")
-    String companyName;
+    String divisionType;
 
     @Schema(description = "Цена")
     Double price;

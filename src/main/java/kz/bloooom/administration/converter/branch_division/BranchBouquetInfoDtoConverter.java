@@ -20,7 +20,7 @@ public class BranchBouquetInfoDtoConverter {
     public BranchBouquetInfoDto convert(BouquetBranchPrice source) {
         BranchBouquetInfoDto target = new BranchBouquetInfoDto();
         target.setBranchId(source.getBranchDivision().getId());
-        target.setCompanyName(source.getBranchDivision().getCompany().getName());
+        target.setDivisionType(source.getBranchDivision().getDivisionType());
         target.setPrice(source.getPrice());
         target.setAddress(source.getBranchDivision().getAddress());
         target.setEmail(source.getBranchDivision().getEmail());
