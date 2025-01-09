@@ -7,6 +7,7 @@ import kz.bloooom.administration.converter.img.ImageInfoConverter;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
 import kz.bloooom.administration.domain.entity.Bouquet;
 import kz.bloooom.administration.service.BouquetBranchPriceService;
+import kz.bloooom.administration.service.EmployeeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,7 @@ public class BouquetDetailInfoDtoConverter {
         BouquetDetailInfoDto target = new BouquetDetailInfoDto();
         target.setId(source.getId());
         target.setName(source.getName());
+        target.setAuthor(source.getEmployee().getName());
         target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquetPhotos()));
         target.setBranchBouquetInfo(branchBouquetInfoDtoConverter
                 .convert(bouquetBranchPriceService
