@@ -10,6 +10,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -32,9 +33,9 @@ public class FlowerVarietyAddBranchDto {
 
     @Schema(description = "Дата начала действия цены")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime validFrom;
+    LocalDate validFrom;
 
     @Schema(description = "Дата окончания действия цены")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime validTo;
+    LocalDate validTo;
 }
