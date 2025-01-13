@@ -1,18 +1,31 @@
 package kz.bloooom.administration.converter.branch_division;
 
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionShortDto;
 import kz.bloooom.administration.domain.entity.BranchDivision;
+import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 public class BranchDivisionInfoDtoConverter {
     public BranchDivisionInfoDto convert(BranchDivision source) {
         return BranchDivisionInfoDto.builder()
+                .id(source.getId())
+                .address(source.getAddress())
+                .divisionType(source.getDivisionType())
+                .phoneNumber(source.getPhoneNumber())
+                .email(source.getEmail())
+                .build();
+    }
+
+    public BranchDivisionShortDto convertWithOutPrice(BranchDivision source) {
+        return BranchDivisionShortDto.builder()
                 .id(source.getId())
                 .address(source.getAddress())
                 .divisionType(source.getDivisionType())
