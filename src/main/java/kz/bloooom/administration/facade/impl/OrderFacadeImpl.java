@@ -43,4 +43,9 @@ public class OrderFacadeImpl implements OrderFacade {
         List<Order> orders = orderService.findAllBySubscription(subscription);
         return orderInfoDtoConverter.convert(orders);
     }
+
+    @Override
+    public OrderInfoDto getById(Long id) {
+        return orderInfoDtoConverter.convert(orderService.findById(id));
+    }
 }

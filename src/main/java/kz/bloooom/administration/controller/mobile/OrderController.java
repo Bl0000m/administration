@@ -35,6 +35,14 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Получить все заказы по id подписки")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<OrderInfoDto> getOrderById(@PathVariable Long id) {
+        log.info("GET: /v1/client/{}", id);
+        return ResponseEntity.ok(orderFacade.getById(id));
+    }
+
     @GetMapping("/subscription/{subscriptionId}")
     @Operation(summary = "Получить все заказы по id подписки")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -42,6 +50,4 @@ public class OrderController {
         log.info("GET: /v1/client/subscription/{}", subscriptionId);
         return ResponseEntity.ok(orderFacade.getOrdersBySubscriptionId(subscriptionId));
     }
-
-
 }

@@ -8,4 +8,6 @@ import java.util.List;
 public interface OrderFacade {
     void fillOrder(OrderFillDto orderFillDto);
     List<OrderInfoDto> getOrdersBySubscriptionId(Long subscriptionId);
+
+    OrderInfoDto getById(Long id);
 }
