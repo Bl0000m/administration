@@ -2,6 +2,7 @@ package kz.bloooom.administration.converter.bouquet;
 
 import kz.bloooom.administration.converter.img.ImageInfoConverter;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoWithOutPriceDto;
 import kz.bloooom.administration.domain.entity.Bouquet;
 import kz.bloooom.administration.domain.entity.BouquetBranchPrice;
 import kz.bloooom.administration.service.BouquetBranchPriceService;
@@ -32,7 +33,15 @@ public class BouquetInfoDtoConverter {
         return target;
     }
 
-    private Double getLowPrice(Long bouquetId){
+    public BouquetInfoWithOutPriceDto convertWithOutPrice(Bouquet source) {
+        BouquetInfoWithOutPriceDto target = new BouquetInfoWithOutPriceDto();
+        target.setId(source.getId());
+        target.setName(source.getName());
+        target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquetPhotos()));
+        return target;
+    }
+
+    private Double getLowPrice(Long bouquetId) {
         List<BouquetBranchPrice> bouquetBranchPrices =
                 bouquetBranchPriceService.getAllBouquetBranchByBouquetId(bouquetId);
 
