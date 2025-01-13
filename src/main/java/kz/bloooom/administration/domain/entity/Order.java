@@ -36,6 +36,9 @@ public class Order {
     @Column(name = "address")
     String address;
 
+    @Column(name = "assembly_cost")
+    Double assemblyCost;
+
     @ManyToOne
     @JoinColumn(name = "bouquet_id")
     Bouquet bouquet;

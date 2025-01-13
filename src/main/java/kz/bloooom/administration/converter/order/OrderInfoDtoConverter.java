@@ -1,6 +1,7 @@
 package kz.bloooom.administration.converter.order;
 
 import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
+import kz.bloooom.administration.converter.branch_division.BranchDivisionInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.order.OrderInfoDto;
 import kz.bloooom.administration.domain.entity.Order;
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class OrderInfoDtoConverter {
 
     BouquetInfoDtoConverter bouquetInfoDtoConverter;
+    BranchDivisionInfoDtoConverter branchDivisionInfoDtoConverter;
 
     public OrderInfoDto convert(Order source) {
         OrderInfoDto target = new OrderInfoDto();
@@ -27,7 +29,10 @@ public class OrderInfoDtoConverter {
         target.setOrderCode(source.getOrderCode());
         target.setAddress(source.getAddress());
         target.setBouquetInfo(Objects.nonNull(source.getBouquet()) ?
-                bouquetInfoDtoConverter.convert(source.getBouquet()) : null);
+                bouquetInfoDtoConverter.convertWithOutPrice(source.getBouquet()) : null);
+
+        target.setAssemblyCost(source.getAssemblyCost());
+        target.setBranchDivisionInfoDto(branchDivisionInfoDtoConverter.convertWithOutPrice(source.getBranchDivision()));
         target.setDeliveryDate(source.getDeliveryDate());
         target.setDeliveryStartTime(source.getDeliveryStartTime());
         target.setDeliveryEndTime(source.getDeliveryEndTime());

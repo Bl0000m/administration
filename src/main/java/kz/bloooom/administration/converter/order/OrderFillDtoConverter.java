@@ -30,6 +30,7 @@ public class OrderFillDtoConverter {
         target.setAddress(source.getAddress());
         target.setOrderStatus(orderStatusService.getByCode(OrderStatusCode.NEW));
         target.setOrderCode(generateUniqueOrderCode());
+        target.setAssemblyCost(source.getAssemblyCost());
         target.setBouquet(bouquetService.getById(source.getBouquetId()));
         target.setBranchDivision(branchDivisionService.getById(source.getBranchDivisionId()));
         return target;
