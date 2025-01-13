@@ -36,7 +36,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Получить все заказы по id подписки")
+    @Operation(summary = "Получить заказ по его id")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<OrderInfoDto> getOrderById(@PathVariable Long id) {
         log.info("GET: /v1/client/{}", id);
