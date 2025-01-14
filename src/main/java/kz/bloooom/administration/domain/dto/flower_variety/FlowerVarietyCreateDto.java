@@ -31,10 +31,13 @@ public class FlowerVarietyCreateDto {
     @Schema(description = "Id цветка")
     Long flowerId;
 
+    @NotNull(message = "Id сотрудника не должно быть пустым")
+    @Schema(description = "Id сотрудника")
+    Long employeeId;
+
     @Schema(description = "Цена")
     Double price;
 
-    @NotNull(message = "Id филиала не должно быть пустым")
     @Schema(description = "Id филиала")
     Long branchDivisionId;
 

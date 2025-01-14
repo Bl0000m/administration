@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,13 +25,16 @@ public class AdditionalElementsCreateDto {
     @Schema(description = "Название элемента")
     String name;
 
+    @NotNull(message = "Id сотрудника не должно быть пустым")
+    @Schema(description = "Id сотрудника")
+    Long employeeId;
+
     @Schema(description = "Описание элемента")
     String description;
 
     @Schema(description = "Цена")
     Double price;
 
-    @NotNull(message = "Id филиала не должно быть пустым")
     @Schema(description = "Id филиала")
     Long branchDivisionId;
 

@@ -30,9 +30,9 @@ public class OrderInfoDtoConverter {
         target.setAddress(source.getAddress());
         target.setBouquetInfo(Objects.nonNull(source.getBouquet()) ?
                 bouquetInfoDtoConverter.convertWithOutPrice(source.getBouquet()) : null);
-
         target.setAssemblyCost(source.getAssemblyCost());
-        target.setBranchDivisionInfoDto(branchDivisionInfoDtoConverter.convertWithOutPrice(source.getBranchDivision()));
+        target.setBranchDivisionInfoDto(Objects.nonNull(source.getBranchDivision()) ?
+                branchDivisionInfoDtoConverter.convertWithOutPrice(source.getBranchDivision()) : null);
         target.setDeliveryDate(source.getDeliveryDate());
         target.setDeliveryStartTime(source.getDeliveryStartTime());
         target.setDeliveryEndTime(source.getDeliveryEndTime());

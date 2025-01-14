@@ -30,6 +30,10 @@ public class BouquetBranchPrice {
     @JoinColumn(name = "branch_division_id")
     BranchDivision branchDivision;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    Employee employee;
+
     @Column(name = "price")
     Double price;
 }

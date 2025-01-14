@@ -8,10 +8,12 @@ import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElemen
 import kz.bloooom.administration.domain.entity.AdditionalElements;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
 import kz.bloooom.administration.domain.entity.BranchDivision;
+import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
 import kz.bloooom.administration.service.AdditionalElementsPriceService;
 import kz.bloooom.administration.service.AdditionalElementsService;
 import kz.bloooom.administration.service.BranchDivisionService;
+import kz.bloooom.administration.service.EmployeeService;
 import kz.bloooom.administration.util.JwtUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -30,6 +33,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     AdditionalElementsService additionalElementsService;
+    EmployeeService employeeService;
     AdditionalElementsPriceService additionalElementsPriceService;
     BranchDivisionService branchDivisionService;
     AdditionalElementsCreateDtoConverter additionalElementsCreateDtoConverter;
@@ -70,13 +74,16 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
     private AdditionalElementsPrice createPrice(AdditionalElementsCreateDto dto,
                                                 AdditionalElements additionalElement) {
-        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
+        BranchDivision branchDivision = Objects.nonNull(dto.getBranchDivisionId()) ?
+                branchDivisionService.getById(dto.getBranchDivisionId()) : null;
+        Employee employee = employeeService.getById(dto.getEmployeeId());
 
         return AdditionalElementsPrice
                 .builder()
                 .additionalElements(additionalElement)
                 .branchDivision(branchDivision)
                 .price(dto.getPrice())
+                .employee(employee)
                 .currency(dto.getCurrency())
                 .validFrom(dto.getValidFrom())
                 .validTo(dto.getValidTo())

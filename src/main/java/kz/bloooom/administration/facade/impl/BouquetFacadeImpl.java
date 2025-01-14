@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,6 +49,7 @@ public class BouquetFacadeImpl implements BouquetFacade {
     BouquetDetailInfoDtoConverter bouquetDetailInfoDtoConverter;
     BouquetBranchPriceService bouquetBranchPriceService;
     BranchDivisionService branchDivisionService;
+    EmployeeService employeeService;
 
     @Override
     @Transactional
@@ -86,12 +88,15 @@ public class BouquetFacadeImpl implements BouquetFacade {
     }
 
     private void createBouquetBranchPrice(BouquetCreateDto dto, Bouquet bouquet) {
-        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchId());
+        BranchDivision branchDivision = Objects.nonNull(dto.getBranchId()) ?
+                branchDivisionService.getById(dto.getBranchId()) : null;
+        Employee employee = employeeService.getById(dto.getEmployeeId());
 
         BouquetBranchPrice bouquetBranchPrice =
                 BouquetBranchPrice
                         .builder()
                         .bouquet(bouquet)
+                        .employee(employee)
                         .price(dto.getPrice())
                         .branchDivision(branchDivision)
                         .build();

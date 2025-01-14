@@ -6,13 +6,11 @@ import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranc
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import kz.bloooom.administration.domain.entity.BranchDivision;
+import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.domain.entity.FlowerVariety;
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
-import kz.bloooom.administration.service.BranchDivisionService;
-import kz.bloooom.administration.service.FlowerVarietyPriceService;
-import kz.bloooom.administration.service.FlowerVarietyService;
-import kz.bloooom.administration.service.StorageService;
+import kz.bloooom.administration.service.*;
 import kz.bloooom.administration.util.JwtUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +35,7 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     BranchDivisionService branchDivisionService;
     FlowerVarietyPriceService flowerVarietyPriceService;
     StorageService storageService;
+    EmployeeService employeeService;
     FlowerVarietyCreateDtoConverter flowerVarietyCreateDtoConverter;
     FlowerVarietyInfoDtoConverter flowerVarietyInfoDtoConverter;
 
@@ -76,12 +75,15 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
 
     private FlowerVarietyPrice createPrice(FlowerVarietyCreateDto dto,
                                            FlowerVariety flowerVariety) {
-        BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
+        BranchDivision branchDivision = Objects.nonNull(dto.getBranchDivisionId()) ?
+                branchDivisionService.getById(dto.getBranchDivisionId()) : null;
+        Employee employee = employeeService.getById(dto.getEmployeeId());
 
         return FlowerVarietyPrice
                 .builder()
                 .flowerVariety(flowerVariety)
                 .branchDivision(branchDivision)
+                .employee(employee)
                 .price(dto.getPrice())
                 .currency(dto.getCurrency())
                 .validFrom(dto.getValidFrom())
