@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BouquetFlowersRepository extends JpaRepository<BouquetFlowerVariety, Long> {
-
+    BouquetFlowerVariety findByFlowerVarietyIdAndBouquetId(Long flowerVarietyId, Long bouquetId);
 }

@@ -1,8 +1,8 @@
 package kz.bloooom.administration.converter.flower_variety;
 
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyNameInfoDto;
 import kz.bloooom.administration.domain.entity.FlowerVariety;
+import kz.bloooom.administration.service.BouquetFlowersService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,17 +18,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlowerVarietyNameInfoDtoConverter {
-    public FlowerVarietyNameInfoDto convert(FlowerVariety source) {
+    BouquetFlowersService bouquetFlowersService;
+
+    public FlowerVarietyNameInfoDto convert(FlowerVariety source, Long bouquetId) {
         return FlowerVarietyNameInfoDto.builder()
                 .id(source.getId())
                 .name(source.getName())
                 .image(source.getImage())
+                .quantity(bouquetFlowersService.getByFlowerVarietyIdAndBouquetId(source.getId(), bouquetId).getQuantity())
                 .build();
     }
 
-    public List<FlowerVarietyNameInfoDto> convert(Set<FlowerVariety> sources) {
+    public List<FlowerVarietyNameInfoDto> convert(Set<FlowerVariety> sources, Long bouquetId) {
         return CollectionUtils.isEmpty(sources) ?
                 Collections.emptyList() :
-                sources.stream().map(this::convert).collect(Collectors.toList());
+                sources.stream().map(source -> convert(source, bouquetId)).collect(Collectors.toList());
     }
 }

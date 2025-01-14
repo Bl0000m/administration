@@ -25,4 +25,9 @@ public class BouquetFlowersServiceImpl implements BouquetFlowersService {
     public void saveAll(List<BouquetFlowerVariety> bouquetFlowers) {
         bouquetFlowersRepository.saveAll(bouquetFlowers);
     }
+
+    @Override
+    public BouquetFlowerVariety getByFlowerVarietyIdAndBouquetId(Long flowerVarietyId, Long bouquetId) {
+        return bouquetFlowersRepository.findByFlowerVarietyIdAndBouquetId(flowerVarietyId, bouquetId);
+    }
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BouquetFlowersService {
     void saveAll(List<BouquetFlowerVariety> bouquetFlowers);
+
+    BouquetFlowerVariety getByFlowerVarietyIdAndBouquetId(Long flowerVarietyId, Long bouquetId);
 }

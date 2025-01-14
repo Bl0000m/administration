@@ -7,4 +7,6 @@ import java.util.List;
 public interface BouquetAdditionalElementsService {
     void saveAll(List<BouquetAdditionalElements> bouquetAdditionalElementsList);
 
+    BouquetAdditionalElements getByAdditionalElementIdAndBouquetId(Long additionalElementId, Long bouquetId);
+
 }

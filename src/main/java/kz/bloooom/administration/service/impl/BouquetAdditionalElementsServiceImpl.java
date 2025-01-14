@@ -26,4 +26,9 @@ public class BouquetAdditionalElementsServiceImpl implements BouquetAdditionalEl
     public void saveAll(List<BouquetAdditionalElements> bouquetAdditionalElementsList) {
         bouquetAdditionalElementsRepository.saveAll(bouquetAdditionalElementsList);
     }
+
+    @Override
+    public BouquetAdditionalElements getByAdditionalElementIdAndBouquetId(Long additionalElementId, Long bouquetId) {
+        return bouquetAdditionalElementsRepository.findByAdditionalElementsIdAndBouquetId(additionalElementId, bouquetId);
+    }
 }

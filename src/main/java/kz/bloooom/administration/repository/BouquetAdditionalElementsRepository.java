@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BouquetAdditionalElementsRepository extends JpaRepository<BouquetAdditionalElements, Long> {
+    BouquetAdditionalElements findByAdditionalElementsIdAndBouquetId(Long additionalElementId, Long bouquetId);
 }
