@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,12 +30,8 @@ public class AdditionalElementsPriceServiceImpl implements AdditionalElementsPri
     }
 
     @Override
-    public AdditionalElementsPrice getByElementId(Long additionalElementId) {
-        return additionalElementsPriceRepository.findByAdditionalElementsId(additionalElementId)
-                .orElseThrow(() -> new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.ELEMENT_WITH_THIS_ID_DOEST_EXISTS,
-                        "messages.exception.element-not-found", additionalElementId));
+    public List<AdditionalElementsPrice> getByElementId(Long additionalElementId) {
+        return additionalElementsPriceRepository.findAllByAdditionalElementsId(additionalElementId);
     }
 
     @Override

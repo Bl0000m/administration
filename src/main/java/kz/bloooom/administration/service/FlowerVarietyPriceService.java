@@ -2,10 +2,13 @@ package kz.bloooom.administration.service;
 
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 
+import java.util.List;
+
 public interface FlowerVarietyPriceService {
     FlowerVarietyPrice create(FlowerVarietyPrice flowerVarietyPrice);
 
-    FlowerVarietyPrice getByFlowerVarietyId(Long flowerVarietyId);
+    List<FlowerVarietyPrice> getAllByFlowerVarietyId(Long flowerVarietyId);
+
 
     FlowerVarietyPrice getById(Long id);
 }

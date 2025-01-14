@@ -11,6 +11,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,22 +29,8 @@ public class AdditionalElementsInfoDto {
     @Schema(description = "Описание элемента")
     String description;
 
-    @Schema(description = "Цена")
-    Double price;
-
-    @Schema(description = "филиал")
-    BranchDivisionInfoDto branchDivisionInfo;
-
-    @Schema(description = "Валюта")
-    String currency;
-
-    @Schema(description = "Дата начала действия цены")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime validFrom;
-
-    @Schema(description = "Дата окончания действия цены")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime validTo;
+    @Schema(description = "филиалы")
+    List<BranchDivisionInfoDto> branchDivisionInfo;
 
     @Schema(description = "Пример использования")
     String example;

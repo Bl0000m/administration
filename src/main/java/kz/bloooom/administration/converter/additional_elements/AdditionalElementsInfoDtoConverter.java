@@ -2,8 +2,11 @@ package kz.bloooom.administration.converter.additional_elements;
 
 import kz.bloooom.administration.converter.branch_division.BranchDivisionInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
 import kz.bloooom.administration.domain.entity.AdditionalElements;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
+import kz.bloooom.administration.domain.entity.BranchDivision;
+import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.service.AdditionalElementsPriceService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,14 +34,18 @@ public class AdditionalElementsInfoDtoConverter {
         target.setName(source.getName());
         target.setDescription(source.getDescription());
 
-        AdditionalElementsPrice additionalElementsPrice =
+        List<AdditionalElementsPrice> additionalElementsPrices =
                 additionalElementsPriceService.getByElementId(source.getId());
 
-        target.setPrice(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getPrice() : null);
-        target.setCurrency(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getCurrency().getTitle() : null);
-        target.setValidFrom(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getValidFrom() : null);
-        target.setValidTo(Objects.nonNull(additionalElementsPrice) ? additionalElementsPrice.getValidTo() : null);
-        target.setBranchDivisionInfo(branchDivisionInfoDtoConverter.convert(additionalElementsPrice.getBranchDivision()));
+        Map<AdditionalElementsPrice, BranchDivision> additionalElementsPriceMap = additionalElementsPrices.stream()
+                .collect(Collectors.toMap(
+                        additionalElementPrice -> additionalElementPrice,
+                        AdditionalElementsPrice::getBranchDivision
+                ));
+
+        List<BranchDivisionInfoDto> branchDivisionInfo = branchDivisionInfoDtoConverter.convertAdditionalElementPriceMap(additionalElementsPriceMap);
+
+        target.setBranchDivisionInfo(branchDivisionInfo);
 
         target.setExample(source.getExample());
         target.setUnitOfMeasurement(source.getUnitOfMeasurement());

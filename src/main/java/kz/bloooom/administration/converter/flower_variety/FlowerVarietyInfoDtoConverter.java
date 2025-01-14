@@ -6,7 +6,9 @@ import kz.bloooom.administration.converter.flower.FlowerInfoDtoConverter;
 import kz.bloooom.administration.converter.stem_care.StemCareInfoDtoConverter;
 import kz.bloooom.administration.converter.temperature_care.TemperatureCareInfoDtoConverter;
 import kz.bloooom.administration.converter.water_care.WaterCareInfoDtoConverter;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
+import kz.bloooom.administration.domain.entity.BranchDivision;
 import kz.bloooom.administration.domain.entity.FlowerVariety;
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.service.FlowerVarietyPriceService;
@@ -18,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,18 +42,23 @@ public class FlowerVarietyInfoDtoConverter {
 
     public FlowerVarietyInfoDto convert(FlowerVariety source) {
 
-        FlowerVarietyPrice flowerVarietyPrice =
-                flowerVarietyPriceService.getByFlowerVarietyId(source.getId());
+        List<FlowerVarietyPrice> flowerVarietyPrices =
+                flowerVarietyPriceService.getAllByFlowerVarietyId(source.getId());
+
+        Map<FlowerVarietyPrice, BranchDivision> flowerVarietyPriceMap = flowerVarietyPrices.stream()
+                .collect(Collectors.toMap(
+                        flowerVarietyPrice -> flowerVarietyPrice,
+                        FlowerVarietyPrice::getBranchDivision
+                ));
+
+        List<BranchDivisionInfoDto> branchDivisionInfo = branchDivisionInfoDtoConverter.convert(flowerVarietyPriceMap);
+
 
         return FlowerVarietyInfoDto.builder()
                 .id(source.getId())
                 .name(source.getName())
                 .flowerInfo(flowerInfoDtoConverter.convert(source.getFlower()))
-                .price(flowerVarietyPrice.getPrice())
-                .currency(flowerVarietyPrice.getCurrency().getTitle())
-                .validFrom(flowerVarietyPrice.getValidFrom())
-                .validTo(flowerVarietyPrice.getValidTo())
-                .branchDivisionInfo(branchDivisionInfoDtoConverter.convert(flowerVarietyPrice.getBranchDivision()))
+                .branchDivisionInfo(branchDivisionInfo)
                 .shelfLifeDaysMin(source.getShelfLifeDaysMin())
                 .shelfLifeDaysMax(source.getShelfLifeDaysMax())
                 .fragranceInfo(fragranceInfoDtoConverter.convert(source.getFragrance()))

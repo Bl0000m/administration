@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,12 +31,8 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     }
 
     @Override
-    public FlowerVarietyPrice getByFlowerVarietyId(Long flowerVarietyId) {
-        return flowerVarietyPriceRepository.findByFlowerVarietyId(flowerVarietyId)
-                .orElseThrow(() -> new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.FLOWER_VARIETY_THIS_ID_DOEST_EXISTS,
-                        "messages.exception.flower-variety-not-found", flowerVarietyId));
+    public List<FlowerVarietyPrice> getAllByFlowerVarietyId(Long flowerVarietyId) {
+        return flowerVarietyPriceRepository.findAllByFlowerVarietyId(flowerVarietyId);
     }
 
     @Override
