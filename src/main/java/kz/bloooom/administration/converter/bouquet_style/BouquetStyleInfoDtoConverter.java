@@ -27,9 +27,9 @@ public class BouquetStyleInfoDtoConverter {
                 .id(source.getId())
                 .name(source.getName())
                 .description(source.getDescription())
-                .createdBy(Objects.nonNull(employeeService.findByKeycloakId(source.getCreatedBy())) ?
-                        employeeService.findByKeycloakId(source.getCreatedBy()).getName() :
-                        userService.getByKeycloakId(source.getCreatedBy()).getName())
+//                .createdBy(Objects.nonNull(employeeService.findByKeycloakId(source.getCreatedBy())) ?
+//                        employeeService.findByKeycloakId(source.getCreatedBy()).getName() :
+//                        userService.getByKeycloakId(source.getCreatedBy()).getName())
                 .isVerify(source.isVerify())
                 .build();
     }

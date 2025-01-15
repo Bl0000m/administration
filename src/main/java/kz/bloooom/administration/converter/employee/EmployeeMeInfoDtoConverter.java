@@ -26,6 +26,7 @@ public class EmployeeMeInfoDtoConverter {
         target.setName(source.getName());
         target.setEmail(source.getEmail());
         target.setPhoneNumber(source.getPhoneNumber());
+        target.setBranchDivisionId(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getId() : null);
         target.setBranchDivisionType(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getDivisionType() : null);
         target.setMyBouquets(bouquetDetailInfoDtoConverter.convert(bouquetService.getAllBouquetsByEmployeeId(source.getId())));
         return target;

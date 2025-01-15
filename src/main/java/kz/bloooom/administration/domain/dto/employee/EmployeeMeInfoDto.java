@@ -23,6 +23,9 @@ public class EmployeeMeInfoDto {
     @Schema(description = "Телефон пользователя")
     String phoneNumber;
 
+    @Schema(description = "Id подразделения ")
+    Long branchDivisionId;
+
     @Schema(description = "Тип подразделения ")
     String branchDivisionType;
 

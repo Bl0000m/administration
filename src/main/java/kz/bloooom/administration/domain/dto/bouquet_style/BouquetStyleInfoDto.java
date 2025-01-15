@@ -20,8 +20,8 @@ public class BouquetStyleInfoDto {
     @Schema(description = "Описание")
     String description;
 
-    @Schema(description = "Кто создал (keycloakId)")
-    String createdBy;
+//    @Schema(description = "Кто создал (keycloakId)")
+//    String createdBy;
 
     @Schema(description = "Флаг, прошел ли проверку")
     Boolean isVerify;
