@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,12 +20,12 @@ public class BranchBouquetInfoDtoConverter {
 
     public BranchBouquetInfoDto convert(BouquetBranchPrice source) {
         BranchBouquetInfoDto target = new BranchBouquetInfoDto();
-        target.setBranchId(source.getBranchDivision().getId());
-        target.setDivisionType(source.getBranchDivision().getDivisionType());
+        target.setBranchId(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getId() : null );
+        target.setDivisionType(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getDivisionType() : null);
         target.setPrice(source.getPrice());
-        target.setAddress(source.getBranchDivision().getAddress());
-        target.setEmail(source.getBranchDivision().getEmail());
-        target.setPhoneNumber(source.getBranchDivision().getPhoneNumber());
+        target.setAddress(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getAddress() : null);
+        target.setEmail(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getEmail() : null);
+        target.setPhoneNumber(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getPhoneNumber() : null);
         return target;
     }
 
