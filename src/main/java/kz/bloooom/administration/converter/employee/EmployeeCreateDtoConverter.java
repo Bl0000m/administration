@@ -2,7 +2,7 @@ package kz.bloooom.administration.converter.employee;
 
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
 import kz.bloooom.administration.domain.entity.Employee;
-import kz.bloooom.administration.service.CompanyService;
+import kz.bloooom.administration.service.BranchDivisionService;
 import kz.bloooom.administration.service.RoleService;
 import kz.bloooom.administration.service.StatusService;
 import lombok.AccessLevel;
@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployeeCreateDtoConverter {
-    CompanyService companyService;
+    BranchDivisionService branchDivisionService;
     StatusService statusService;
     RoleService roleService;
 
@@ -28,7 +28,7 @@ public class EmployeeCreateDtoConverter {
         target.setPosition(source.getPosition());
         target.setPhoneNumber(source.getPhoneNumber());
         target.setStatus(statusService.getById(source.getStatusId()));
-        target.setCompany(companyService.getById(source.getCompanyId()));
+        target.setBranchDivision(branchDivisionService.getById(source.getBranchId()));
         target.setRole(roleService.getById(source.getRoleId()));
         target.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         target.setUpdatedDate(new Timestamp(System.currentTimeMillis()));

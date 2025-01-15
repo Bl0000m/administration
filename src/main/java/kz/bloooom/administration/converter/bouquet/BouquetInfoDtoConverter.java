@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,13 +44,14 @@ public class BouquetInfoDtoConverter {
 
     private Double getLowPrice(Long bouquetId) {
         List<BouquetBranchPrice> bouquetBranchPrices =
-                bouquetBranchPriceService.getAllBouquetBranchByBouquetId(bouquetId);
+                Optional.ofNullable(bouquetBranchPriceService.getAllBouquetBranchByBouquetId(bouquetId))
+                        .orElse(Collections.emptyList());
 
-        Optional<Double> price = bouquetBranchPrices.stream()
+        return bouquetBranchPrices.stream()
                 .map(BouquetBranchPrice::getPrice)
-                .min(Double::compareTo);
-
-        return price.orElse(null);
+                .filter(Objects::nonNull)
+                .min(Double::compareTo)
+                .orElse(null);
     }
 
     public List<BouquetInfoDto> convert(List<Bouquet> bouquets) {

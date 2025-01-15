@@ -25,8 +25,8 @@ public class Employee extends AbstractUserEntity {
     String position;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    Company company;
+    @JoinColumn(name = "branch_division_id")
+    BranchDivision branchDivision;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")

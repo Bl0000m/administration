@@ -43,4 +43,9 @@ public class BouquetServiceImpl implements BouquetService {
     public List<Bouquet> getAll() {
         return bouquetRepository.findAll();
     }
+
+    @Override
+    public List<Bouquet> getAllBouquetsByEmployeeId(Long employeeId) {
+        return bouquetRepository.findAllByEmployeeId(employeeId);
+    }
 }

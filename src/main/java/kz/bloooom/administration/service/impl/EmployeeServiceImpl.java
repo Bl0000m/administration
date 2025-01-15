@@ -5,6 +5,7 @@ import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.repository.EmployeeRepository;
 import kz.bloooom.administration.service.EmployeeService;
+import kz.bloooom.administration.util.JwtUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -54,11 +55,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findByKeycloakId(String keycloakId) {
-        return employeeRepository.findByKeycloakId(keycloakId);
+        return employeeRepository.findByKeycloakId(keycloakId)
+                .orElseThrow(() ->
+                        new BloomAdministrationException(
+                                HttpStatus.NOT_FOUND,
+                                ErrorCodeConstant.EMPLOYEE_WITH_THIS_KEYCLOAK_NOT_FOUND,
+                                "messages.exception.employee-not-found", keycloakId
+                        ));
     }
 
     @Override
     public Employee findByEmail(String email) {
         return employeeRepository.findByEmail(email);
+    }
+
+    @Override
+    public Employee getCurrentEmployee() {
+        String keycloakId = JwtUtils.getKeycloakId();
+        return findByKeycloakId(keycloakId);
     }
 }

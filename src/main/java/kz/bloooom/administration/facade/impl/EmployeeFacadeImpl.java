@@ -2,8 +2,10 @@ package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.employee.EmployeeCreateDtoConverter;
+import kz.bloooom.administration.converter.employee.EmployeeMeInfoDtoConverter;
 import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
+import kz.bloooom.administration.domain.dto.employee.EmployeeMeInfoDto;
 import kz.bloooom.administration.domain.dto.employee.ResetUserAuthorizationRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
@@ -15,7 +17,6 @@ import kz.bloooom.administration.service.CredentialService;
 import kz.bloooom.administration.service.EmployeeService;
 import kz.bloooom.administration.service.KeycloakService;
 import kz.bloooom.administration.service.MailService;
-import kz.bloooom.administration.util.JwtUtils;
 import kz.bloooom.administration.validator.EmailValidator;
 import kz.bloooom.administration.validator.PhoneNumberValidator;
 import kz.bloooom.administration.validator.ResetAuthorizationPasswordValidator;
@@ -23,7 +24,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -45,6 +45,7 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
     MailService mailService;
     AccessTokenResponseConverter accessTokenResponseConverter;
     ResetAuthorizationPasswordValidator resetAuthorizationPasswordValidator;
+    EmployeeMeInfoDtoConverter employeeMeInfoDtoConverter;
 
 
     @Override
@@ -62,7 +63,7 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
             mailService.sendRegistrationMessageForEmployee(dto.getName(),
                     dto.getPosition(),
                     dto.getEmail(),
-                    employee.getCompany().getName(),
+                    employee.getBranchDivision().getCompany().getName(),
                     keycloakId);
 
         } catch (Exception e) {
@@ -98,6 +99,11 @@ public class EmployeeFacadeImpl implements EmployeeFacade {
         resetAuthorizationPasswordValidator.checkValid(dto);
         keycloakService.resetPassword(employee.getKeycloakId(), dto.getNewPassword());
         log.info("Employee: {} the password was updated", dto.getEmail());
+    }
+
+    @Override
+    public EmployeeMeInfoDto getMe() {
+        return employeeMeInfoDtoConverter.convert(employeeService.getCurrentEmployee());
     }
 
     @Transactional

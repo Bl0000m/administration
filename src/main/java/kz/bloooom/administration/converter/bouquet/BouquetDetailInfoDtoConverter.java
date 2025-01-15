@@ -11,6 +11,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -36,5 +41,11 @@ public class BouquetDetailInfoDtoConverter {
         target.setFlowerVarietyInfo(flowerVarietyNameInfoDtoConverter.convert(source.getFlowers(), source.getId()));
         target.setAdditionalElements(additionalElementsNameInfoDtoConverter.convert(source.getAdditionalElements(), source.getId()));
         return target;
+    }
+
+    public List<BouquetDetailInfoDto> convert(List<Bouquet> bouquets) {
+        return CollectionUtils.isEmpty(bouquets) ?
+                Collections.emptyList() :
+                bouquets.stream().map(this::convert).collect(Collectors.toList());
     }
 }

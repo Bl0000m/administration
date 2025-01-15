@@ -25,9 +25,9 @@ public class EmployeeCreateDto {
     @Schema(description = "ИИН пользователя")
     String iin;
 
-    @NotNull(message = "Id компании не должен быть пустым")
-    @Schema(description = "Id компании")
-    Long companyId;
+    @NotNull(message = "Id филиала не должен быть пустым")
+    @Schema(description = "Id филиала")
+    Long branchId;
 
     @NotNull(message = "Id роли не должен быть пустым")
     @Schema(description = "Id роли")

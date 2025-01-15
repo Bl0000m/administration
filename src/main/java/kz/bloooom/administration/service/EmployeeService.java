@@ -15,4 +15,6 @@ public interface EmployeeService {
 
     Employee findByKeycloakId(String keycloakId);
     Employee findByEmail(String email);
+
+    Employee getCurrentEmployee();
 }

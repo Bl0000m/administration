@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.employee.EmployeeCreateDto;
+import kz.bloooom.administration.domain.dto.employee.EmployeeMeInfoDto;
 import kz.bloooom.administration.domain.dto.employee.ResetUserAuthorizationRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
@@ -13,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -53,5 +51,12 @@ public class EmployeeController {
         log.info("POST /v1/employee/auth/password-setup");
         employeeFacade.userResetAuthorizationPassword(dto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Получить информацию о текущем сотруднике")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<EmployeeMeInfoDto> getMe() {
+        return ResponseEntity.ok(employeeFacade.getMe());
     }
 }

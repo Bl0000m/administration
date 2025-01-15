@@ -10,4 +10,5 @@ public interface BouquetService {
     Bouquet getById(Long id);
 
     List<Bouquet> getAll();
+    List<Bouquet> getAllBouquetsByEmployeeId(Long employeeId);
 }
