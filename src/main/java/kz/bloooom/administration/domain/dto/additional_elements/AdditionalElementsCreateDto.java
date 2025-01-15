@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -43,11 +44,11 @@ public class AdditionalElementsCreateDto {
 
     @Schema(description = "Дата начала действия цены")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime validFrom;
+    LocalDate validFrom;
 
     @Schema(description = "Дата окончания действия цены")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime validTo;
+    LocalDate validTo;
 
     @Schema(description = "Пример использования")
     String example;
