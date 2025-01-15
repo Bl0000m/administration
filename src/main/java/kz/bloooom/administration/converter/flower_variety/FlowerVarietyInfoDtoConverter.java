@@ -21,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,12 +46,14 @@ public class FlowerVarietyInfoDtoConverter {
         List<FlowerVarietyPrice> flowerVarietyPrices =
                 flowerVarietyPriceService.getAllByFlowerVarietyId(source.getId());
 
-        Map<FlowerVarietyPrice, BranchDivision> flowerVarietyPriceMap = flowerVarietyPrices.stream()
-                .collect(Collectors.toMap(
-                        flowerVarietyPrice -> flowerVarietyPrice,
-                        FlowerVarietyPrice::getBranchDivision
-                ));
-
+        Map<FlowerVarietyPrice, BranchDivision> flowerVarietyPriceMap =
+                flowerVarietyPrices.stream()
+                        .filter(Objects::nonNull)
+                        .filter(flowerVarietyPrice -> flowerVarietyPrice.getBranchDivision() != null)
+                        .collect(Collectors.toMap(
+                                flowerVarietyPrice -> flowerVarietyPrice,
+                                FlowerVarietyPrice::getBranchDivision
+                        ));
         List<BranchDivisionInfoDto> branchDivisionInfo = branchDivisionInfoDtoConverter.convert(flowerVarietyPriceMap);
 
 

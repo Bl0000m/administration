@@ -37,11 +37,14 @@ public class AdditionalElementsInfoDtoConverter {
         List<AdditionalElementsPrice> additionalElementsPrices =
                 additionalElementsPriceService.getByElementId(source.getId());
 
-        Map<AdditionalElementsPrice, BranchDivision> additionalElementsPriceMap = additionalElementsPrices.stream()
-                .collect(Collectors.toMap(
-                        additionalElementPrice -> additionalElementPrice,
-                        AdditionalElementsPrice::getBranchDivision
-                ));
+        Map<AdditionalElementsPrice, BranchDivision> additionalElementsPriceMap =
+                additionalElementsPrices.stream()
+                        .filter(Objects::nonNull)
+                        .filter(additionalElementPrice -> additionalElementPrice.getBranchDivision() != null)
+                        .collect(Collectors.toMap(
+                                additionalElementPrice -> additionalElementPrice,
+                                AdditionalElementsPrice::getBranchDivision
+                        ));
 
         List<BranchDivisionInfoDto> branchDivisionInfo = branchDivisionInfoDtoConverter.convertAdditionalElementPriceMap(additionalElementsPriceMap);
 
