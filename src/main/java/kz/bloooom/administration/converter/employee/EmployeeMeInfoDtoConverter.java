@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -24,7 +26,7 @@ public class EmployeeMeInfoDtoConverter {
         target.setName(source.getName());
         target.setEmail(source.getEmail());
         target.setPhoneNumber(source.getPhoneNumber());
-        target.setBranchDivisionType(source.getBranchDivision().getDivisionType());
+        target.setBranchDivisionType(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getDivisionType() : null);
         target.setMyBouquets(bouquetDetailInfoDtoConverter.convert(bouquetService.getAllBouquetsByEmployeeId(source.getId())));
         return target;
     }
