@@ -3,8 +3,10 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCompanyInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCreateDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionShortDto;
 import kz.bloooom.administration.facade.BranchDivisionFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +38,14 @@ public class BranchDivisionController {
     @GetMapping("/{id}")
     @Operation(summary = "Получить филиал по id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<BranchDivisionInfoDto> getBranchDivisionById(@PathVariable Long id) {
+    public ResponseEntity<BranchDivisionCompanyInfoDto> getBranchDivisionById(@PathVariable Long id) {
         return ResponseEntity.ok(branchDivisionFacade.getBranchById(id));
     }
 
     @GetMapping("/company/{companyId}")
     @Operation(summary = "Получить список всех филиалов компании по id компании")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<BranchDivisionInfoDto>> getBranchDivisiones(@PathVariable Long companyId) {
+    public ResponseEntity<List<BranchDivisionShortDto>> getBranchDivisiones(@PathVariable Long companyId) {
         return ResponseEntity.ok(branchDivisionFacade.getAllBranchDivisionByCompanyId(companyId));
     }
 }

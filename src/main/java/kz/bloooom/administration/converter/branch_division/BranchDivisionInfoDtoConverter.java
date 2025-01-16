@@ -1,5 +1,6 @@
 package kz.bloooom.administration.converter.branch_division;
 
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCompanyInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionShortDto;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
@@ -25,6 +26,18 @@ public class BranchDivisionInfoDtoConverter {
                 .build();
     }
 
+    public BranchDivisionCompanyInfoDto convertWithCompanyInfo(BranchDivision source) {
+        return BranchDivisionCompanyInfoDto.builder()
+                .id(source.getId())
+                .companyId(source.getCompany().getId())
+                .companyName(source.getCompany().getName())
+                .address(source.getAddress())
+                .divisionType(source.getDivisionType())
+                .phoneNumber(source.getPhoneNumber())
+                .email(source.getEmail())
+                .build();
+    }
+
     public BranchDivisionShortDto convertWithOutPrice(BranchDivision source) {
         return BranchDivisionShortDto.builder()
                 .id(source.getId())
@@ -34,6 +47,13 @@ public class BranchDivisionInfoDtoConverter {
                 .email(source.getEmail())
                 .build();
     }
+
+    public List<BranchDivisionShortDto> convertWithOutPrice(List<BranchDivision> s) {
+        return CollectionUtils.isEmpty(s) ?
+                Collections.emptyList() :
+                s.stream().map(this::convertWithOutPrice).collect(Collectors.toList());
+    }
+
 
     public List<BranchDivisionInfoDto> convert(List<BranchDivision> s) {
         return CollectionUtils.isEmpty(s) ?

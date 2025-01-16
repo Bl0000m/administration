@@ -2,8 +2,10 @@ package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.converter.branch_division.BranchDivisionCreateDtoConverter;
 import kz.bloooom.administration.converter.branch_division.BranchDivisionInfoDtoConverter;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCompanyInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCreateDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
+import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionShortDto;
 import kz.bloooom.administration.facade.BranchDivisionFacade;
 import kz.bloooom.administration.service.BranchDivisionService;
 import lombok.AccessLevel;
@@ -32,12 +34,12 @@ public class BranchDivisionFacadeImpl implements BranchDivisionFacade {
     }
 
     @Override
-    public BranchDivisionInfoDto getBranchById(Long branchId) {
-        return branchDivisionInfoDtoConverter.convert(branchDivisionService.getById(branchId));
+    public BranchDivisionCompanyInfoDto getBranchById(Long branchId) {
+        return branchDivisionInfoDtoConverter.convertWithCompanyInfo(branchDivisionService.getById(branchId));
     }
 
     @Override
-    public List<BranchDivisionInfoDto> getAllBranchDivisionByCompanyId(Long companyId) {
-        return branchDivisionInfoDtoConverter.convert(branchDivisionService.getAllByCompanyId(companyId));
+    public List<BranchDivisionShortDto> getAllBranchDivisionByCompanyId(Long companyId) {
+        return branchDivisionInfoDtoConverter.convertWithOutPrice(branchDivisionService.getAllByCompanyId(companyId));
     }
 }
