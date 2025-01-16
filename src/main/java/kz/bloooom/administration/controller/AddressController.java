@@ -22,12 +22,12 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/address")
-@Tag(name = "Bouquet API", description = "Методы для работы с букетами")
+@Tag(name = "Address API", description = "Методы для работы с адресами")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AddressController {
     AddressFacade addressFacade;
 
-    @PostMapping
+    @PostMapping("/user")
     @Operation(summary = "Создать user адрес")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody UserAddressCreateDto dto) {
@@ -35,7 +35,7 @@ public class AddressController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
+    @PostMapping("/order")
     @Operation(summary = "Создать order адрес")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> create(@Valid @RequestBody OrderAddressCreateDto dto) {
