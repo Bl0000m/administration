@@ -27,7 +27,6 @@ public class OrderInfoDtoConverter {
         OrderInfoDto target = new OrderInfoDto();
         target.setId(source.getId());
         target.setOrderCode(source.getOrderCode());
-        target.setAddress(source.getAddress());
         target.setBouquetInfo(Objects.nonNull(source.getBouquet()) ?
                 bouquetInfoDtoConverter.convertWithOutPrice(source.getBouquet()) : null);
         target.setAssemblyCost(source.getAssemblyCost());

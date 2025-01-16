@@ -33,9 +33,6 @@ public class Order {
     @JoinColumn(name = "subscription_id")
     Subscription subscription;
 
-    @Column(name = "address")
-    String address;
-
     @Column(name = "assembly_cost")
     Double assemblyCost;
 

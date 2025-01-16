@@ -30,7 +30,4 @@ public class OrderFillDto {
     @NotNull(message = "Цена выбранного букета не должен быть пустым")
     @Schema(description = "Цена выбранного букета")
     Double assemblyCost;
-
-    @Schema(description = "Адрес доставки")
-    String address;
 }

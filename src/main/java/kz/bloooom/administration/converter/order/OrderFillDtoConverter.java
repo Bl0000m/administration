@@ -27,7 +27,6 @@ public class OrderFillDtoConverter {
 
     public Order convert(OrderFillDto source, Order target) {
 
-        target.setAddress(source.getAddress());
         target.setOrderStatus(orderStatusService.getByCode(OrderStatusCode.NEW));
         target.setOrderCode(generateUniqueOrderCode());
         target.setAssemblyCost(source.getAssemblyCost());
