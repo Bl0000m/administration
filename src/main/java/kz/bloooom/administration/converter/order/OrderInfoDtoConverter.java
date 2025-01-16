@@ -5,6 +5,7 @@ import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
 import kz.bloooom.administration.converter.branch_division.BranchDivisionInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.order.OrderInfoDto;
 import kz.bloooom.administration.domain.entity.Order;
+import kz.bloooom.administration.domain.entity.OrderAddress;
 import kz.bloooom.administration.service.OrderAddressService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,8 @@ public class OrderInfoDtoConverter {
         OrderInfoDto target = new OrderInfoDto();
         target.setId(source.getId());
         target.setOrderCode(source.getOrderCode());
-        target.setAddress(orderAddressInfoDtoConverter.convert(orderAddressService.getByOrderId(source.getId())));
+        OrderAddress orderAddress = orderAddressService.getByOrderId(source.getId());
+        target.setAddress(Objects.nonNull(orderAddress) ? orderAddressInfoDtoConverter.convert(orderAddress) : null);
         target.setBouquetInfo(Objects.nonNull(source.getBouquet()) ?
                 bouquetInfoDtoConverter.convertWithOutPrice(source.getBouquet()) : null);
         target.setAssemblyCost(source.getAssemblyCost());

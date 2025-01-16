@@ -29,10 +29,6 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
     @Override
     public OrderAddress getByOrderId(Long orderId) {
-        return orderAddressRepository.findByOrderId(orderId)
-                .orElseThrow(() -> new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.ORDER_ADDRESS_WITH_THIS_ID_DOEST_EXISTS,
-                        "messages.exception.order-address-not-found", orderId));
+        return orderAddressRepository.findByOrderId(orderId).orElse(null);
     }
 }
