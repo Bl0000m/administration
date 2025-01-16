@@ -19,7 +19,7 @@ create table user_address
     address_id bigint references address (id),
     users_id   bigint references users (id),
     is_default boolean default false
-)
+);
 
 create table order_address
 (
@@ -29,7 +29,7 @@ create table order_address
     recipient_phone varchar(200),
     comment         varchar(200),
     is_default      boolean default false
-)
+);
 
 alter table orders
 drop
