@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCompanyInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionCreateDto;
-import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionShortDto;
 import kz.bloooom.administration.facade.BranchDivisionFacade;
 import lombok.AccessLevel;

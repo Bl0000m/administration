@@ -1,9 +1,8 @@
 package kz.bloooom.administration.domain.dto.order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
+import kz.bloooom.administration.domain.dto.address.OrderAddressInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoWithOutPriceDto;
-import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionShortDto;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +26,7 @@ public class OrderInfoDto {
     Long orderCode;
 
     @Schema(description = "Адрес доствки")
-    String address;
+    OrderAddressInfoDto address;
 
     @Schema(description = "Информаци о букете")
     BouquetInfoWithOutPriceDto bouquetInfo;

@@ -1,12 +1,15 @@
 package kz.bloooom.administration.service.impl;
 
+import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.domain.entity.OrderAddress;
+import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.repository.OrderAddressRepository;
 import kz.bloooom.administration.service.OrderAddressService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +25,14 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     @Transactional
     public OrderAddress save(OrderAddress address) {
         return orderAddressRepository.save(address);
+    }
+
+    @Override
+    public OrderAddress getByOrderId(Long orderId) {
+        return orderAddressRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new BloomAdministrationException(
+                        HttpStatus.NOT_FOUND,
+                        ErrorCodeConstant.ORDER_ADDRESS_WITH_THIS_ID_DOEST_EXISTS,
+                        "messages.exception.order-address-not-found", orderId));
     }
 }
