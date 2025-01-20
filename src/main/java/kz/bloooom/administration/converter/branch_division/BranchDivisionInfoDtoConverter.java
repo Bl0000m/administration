@@ -70,7 +70,7 @@ public class BranchDivisionInfoDtoConverter {
                 .phoneNumber(source.getPhoneNumber())
                 .email(source.getEmail())
                 .price(flowerVarietyPrice.getPrice())
-                .currency(flowerVarietyPrice.getCurrency().getTitle())
+                .currency(Objects.nonNull(flowerVarietyPrice.getCurrency()) ? flowerVarietyPrice.getCurrency().getTitle() : null)
                 .validFrom(flowerVarietyPrice.getValidFrom())
                 .validTo(flowerVarietyPrice.getValidTo())
                 .build();
