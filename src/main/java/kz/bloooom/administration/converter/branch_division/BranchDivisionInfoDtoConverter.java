@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -83,7 +84,7 @@ public class BranchDivisionInfoDtoConverter {
                 .phoneNumber(source.getPhoneNumber())
                 .email(source.getEmail())
                 .price(additionalElementsPrice.getPrice())
-                .currency(additionalElementsPrice.getCurrency().getTitle())
+                .currency(Objects.nonNull(additionalElementsPrice.getCurrency()) ? additionalElementsPrice.getCurrency().getTitle() : null)
                 .validFrom(additionalElementsPrice.getValidFrom())
                 .validTo(additionalElementsPrice.getValidTo())
                 .build();
