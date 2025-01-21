@@ -1,9 +1,12 @@
 package kz.bloooom.administration.facade;
 
+import kz.bloooom.administration.domain.dto.address.AddressInfoDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
 import kz.bloooom.administration.domain.dto.user.*;
+
+import java.util.List;
 
 public interface UserFacade {
     void register(UserRegistrationDto dto);
@@ -15,6 +18,8 @@ public interface UserFacade {
     UserMeInfoDto getMe();
 
     UserSubscriptionsInfoDto getMySubscriptions();
+
+    List<AddressInfoDto> getMyAddress();
 
     void logout();
 

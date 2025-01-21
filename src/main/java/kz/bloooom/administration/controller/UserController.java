@@ -3,6 +3,7 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.address.AddressInfoDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
@@ -18,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -57,6 +59,13 @@ public class UserController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<UserSubscriptionsInfoDto> getMySubscriptions() {
         return ResponseEntity.ok(userFacade.getMySubscriptions());
+    }
+
+    @GetMapping("/my-address")
+    @Operation(summary = "Получить информацию адресах пользователя")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<AddressInfoDto>> getMyAddress() {
+        return ResponseEntity.ok(userFacade.getMyAddress());
     }
 
     @PostMapping("/logout")

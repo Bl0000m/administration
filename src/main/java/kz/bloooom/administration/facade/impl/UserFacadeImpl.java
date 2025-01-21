@@ -1,21 +1,22 @@
 package kz.bloooom.administration.facade.impl;
 
-import kz.bloooom.administration.config.KeycloakComponent;
 import kz.bloooom.administration.contant.ErrorCodeConstant;
+import kz.bloooom.administration.converter.address.AddressInfoDtoConverter;
 import kz.bloooom.administration.converter.user.AccessTokenResponseConverter;
 import kz.bloooom.administration.converter.user.UserMeInfoDtoConverter;
 import kz.bloooom.administration.converter.user.UserRegisterDtoConverter;
 import kz.bloooom.administration.converter.user.UserSubscriptionsInfoDtoConverter;
+import kz.bloooom.administration.domain.dto.address.AddressInfoDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
 import kz.bloooom.administration.domain.dto.user.*;
 import kz.bloooom.administration.domain.entity.User;
+import kz.bloooom.administration.domain.entity.UserAddress;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.UserFacade;
 import kz.bloooom.administration.service.*;
-import kz.bloooom.administration.util.JwtUtils;
 import kz.bloooom.administration.validator.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -38,7 +41,7 @@ public class UserFacadeImpl implements UserFacade {
 
     UserService userService;
     EmailValidator emailValidator;
-    EmployeeService employeeService;
+    UserAddressService userAddressService;
     PhoneNumberValidator phoneNumberValidator;
     UserRegisterDtoConverter userRegisterDtoConverter;
     KeycloakService keycloakService;
@@ -49,6 +52,7 @@ public class UserFacadeImpl implements UserFacade {
     ResetCodeValidator resetCodeValidator;
     ForgotPasswordValidator forgotPasswordValidator;
     UserMeInfoDtoConverter userMeInfoDtoConverter;
+    AddressInfoDtoConverter addressInfoDtoConverter;
     UserSubscriptionsInfoDtoConverter userSubscriptionsInfoDtoConverter;
 
     @Override
@@ -88,7 +92,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public KeycloakAuthResponseDto login(KeycloakAuthRequestDto keycloakAuthRequestDto) {
         boolean isUserNotDelete = userService.existsByEmailAndNotDelete(keycloakAuthRequestDto.getUsername());
-        if ((BooleanUtils.isFalse(isUserNotDelete) )) {
+        if ((BooleanUtils.isFalse(isUserNotDelete))) {
             throw new BloomAdministrationException(
                     HttpStatus.UNAUTHORIZED,
                     ErrorCodeConstant.USER_NOT_FOUNT,
@@ -124,6 +128,14 @@ public class UserFacadeImpl implements UserFacade {
     public UserSubscriptionsInfoDto getMySubscriptions() {
         User user = userService.getCurrentUser();
         return userSubscriptionsInfoDtoConverter.convert(user);
+    }
+
+    @Override
+    public List<AddressInfoDto> getMyAddress() {
+        User user = userService.getCurrentUser();
+        List<UserAddress> userAddressList = userAddressService.getAllUserAddressByUserId(user.getId());
+        return addressInfoDtoConverter.convert(userAddressList.stream()
+                .map(UserAddress::getAddress).collect(Collectors.toList()));
     }
 
     @Override
