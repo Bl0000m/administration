@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +33,17 @@ public class AdditionalElementsPriceServiceImpl implements AdditionalElementsPri
     @Override
     public List<AdditionalElementsPrice> getByElementId(Long additionalElementId) {
         return additionalElementsPriceRepository.findAllByAdditionalElementsId(additionalElementId);
+    }
+
+    @Override
+    public boolean existsByDateOverlap(Long additionalElementId,
+                                       Long branchDivisionId,
+                                       LocalDateTime validFrom,
+                                       LocalDateTime validTo) {
+        return additionalElementsPriceRepository.existsByDateOverlap(additionalElementId,
+                branchDivisionId,
+                validFrom,
+                validTo);
     }
 
     @Override

@@ -50,6 +50,14 @@ public class FlowerVarietyController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/change-price")
+    @Operation(summary = "Поменять цену существующего цветка")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> changePrice(@Valid @RequestBody FlowerVarietyAddBranchDto flowerVarietyAddBranchDto) {
+        flowerVarietyFacade.addFlowerVarietyPrice(flowerVarietyAddBranchDto);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/{id}")
     @Operation(summary = "Получить сорт по id")
     @SecurityRequirement(name = "Bearer Authentication")

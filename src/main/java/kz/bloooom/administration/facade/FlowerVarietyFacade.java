@@ -12,6 +12,8 @@ public interface FlowerVarietyFacade {
 
     void addFlowerVarietyToBranch(FlowerVarietyAddBranchDto flowerVarietyAddBranchDto);
 
+    void addFlowerVarietyPrice(FlowerVarietyAddBranchDto dto);
+
     FlowerVarietyInfoDto getById(Long id);
 
     List<FlowerVarietyInfoDto> getAll();

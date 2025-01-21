@@ -1,5 +1,6 @@
 package kz.bloooom.administration.facade.impl;
 
+import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.flower_variety.FlowerVarietyCreateDtoConverter;
 import kz.bloooom.administration.converter.flower_variety.FlowerVarietyInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
@@ -9,6 +10,7 @@ import kz.bloooom.administration.domain.entity.BranchDivision;
 import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.domain.entity.FlowerVariety;
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
+import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
 import kz.bloooom.administration.service.*;
 import kz.bloooom.administration.util.JwtUtils;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,10 +56,15 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     @Override
     @Transactional
     public void addFlowerVarietyToBranch(FlowerVarietyAddBranchDto dto) {
+        FlowerVarietyPrice flowerVarietyPrice = createFlowerVarietyPrice(dto);
+        flowerVarietyPriceService.create(flowerVarietyPrice);
+    }
+
+    private FlowerVarietyPrice createFlowerVarietyPrice(FlowerVarietyAddBranchDto dto) {
         FlowerVariety flowerVariety = flowerVarietyService.getById(dto.getFlowerVarietyId());
         BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
 
-        FlowerVarietyPrice flowerVarietyPrice = FlowerVarietyPrice
+        return FlowerVarietyPrice
                 .builder()
                 .flowerVariety(flowerVariety)
                 .branchDivision(branchDivision)
@@ -70,7 +78,27 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                 .updatedBy(JwtUtils.getKeycloakId())
                 .build();
 
+    }
+
+    @Override
+    @Transactional
+    public void addFlowerVarietyPrice(FlowerVarietyAddBranchDto dto) {
+        boolean isOverlap = flowerVarietyPriceService.existsByDateOverlap(
+                dto.getFlowerVarietyId(),
+                dto.getBranchDivisionId(),
+                dto.getValidFrom().atStartOfDay(),
+                dto.getValidTo().atStartOfDay());
+
+        if (isOverlap) {
+            throw new BloomAdministrationException(
+                    HttpStatus.NOT_FOUND,
+                    ErrorCodeConstant.PRICE_IN_THIS_RANGE_EXITS_DOEST_EXISTS,
+                    "messages.exception.price-for-date-exist", dto.getValidFrom(), dto.getValidTo());
+        }
+        FlowerVarietyPrice flowerVarietyPrice = createFlowerVarietyPrice(dto);
+
         flowerVarietyPriceService.create(flowerVarietyPrice);
+
     }
 
     private FlowerVarietyPrice createPrice(FlowerVarietyCreateDto dto,

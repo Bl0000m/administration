@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -33,6 +34,18 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     @Override
     public List<FlowerVarietyPrice> getAllByFlowerVarietyId(Long flowerVarietyId) {
         return flowerVarietyPriceRepository.findAllByFlowerVarietyId(flowerVarietyId);
+    }
+
+    @Override
+    public boolean existsByDateOverlap(Long flowerVarietyId,
+                                       Long branchDivisionId,
+                                       LocalDateTime validFrom,
+                                       LocalDateTime validTo) {
+        return flowerVarietyPriceRepository.existsByDateOverlap(
+                flowerVarietyId,
+                branchDivisionId,
+                validFrom,
+                validTo);
     }
 
     @Override

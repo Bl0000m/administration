@@ -1,5 +1,6 @@
 package kz.bloooom.administration.facade.impl;
 
+import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsCreateDtoConverter;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
@@ -9,6 +10,7 @@ import kz.bloooom.administration.domain.entity.AdditionalElements;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
 import kz.bloooom.administration.domain.entity.BranchDivision;
 import kz.bloooom.administration.domain.entity.Employee;
+import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
 import kz.bloooom.administration.service.AdditionalElementsPriceService;
 import kz.bloooom.administration.service.AdditionalElementsService;
@@ -19,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,10 +56,15 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     @Override
     @Transactional
     public void addAdditionalElementToBranch(AdditionalElementAddBranchDto dto) {
+        AdditionalElementsPrice additionalElementsPrice = creteAdditionalElementsPrice(dto);
+        additionalElementsPriceService.create(additionalElementsPrice);
+    }
+
+    private AdditionalElementsPrice creteAdditionalElementsPrice(AdditionalElementAddBranchDto dto) {
         AdditionalElements additionalElement = additionalElementsService.getById(dto.getAdditionalElementId());
         BranchDivision branchDivision = branchDivisionService.getById(dto.getBranchDivisionId());
 
-        AdditionalElementsPrice additionalElementsPrice = AdditionalElementsPrice
+        return AdditionalElementsPrice
                 .builder()
                 .additionalElements(additionalElement)
                 .branchDivision(branchDivision)
@@ -69,6 +77,25 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 .createdBy(JwtUtils.getKeycloakId())
                 .updatedBy(JwtUtils.getKeycloakId())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void addAdditionalElementPrice(AdditionalElementAddBranchDto dto) {
+        boolean isOverlap = additionalElementsPriceService.existsByDateOverlap(
+                dto.getAdditionalElementId(),
+                dto.getBranchDivisionId(),
+                dto.getValidFrom().atStartOfDay(),
+                dto.getValidTo().atStartOfDay());
+
+        if (isOverlap) {
+            throw new BloomAdministrationException(
+                    HttpStatus.NOT_FOUND,
+                    ErrorCodeConstant.PRICE_IN_THIS_RANGE_EXITS_DOEST_EXISTS,
+                    "messages.exception.price-for-date-exist", dto.getValidFrom(), dto.getValidTo());
+        }
+        AdditionalElementsPrice additionalElementsPrice = creteAdditionalElementsPrice(dto);
+
         additionalElementsPriceService.create(additionalElementsPrice);
     }
 

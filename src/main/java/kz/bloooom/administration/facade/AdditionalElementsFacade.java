@@ -11,6 +11,8 @@ public interface AdditionalElementsFacade {
 
     void addAdditionalElementToBranch(AdditionalElementAddBranchDto additionalElementAddBranchDto);
 
+    void addAdditionalElementPrice(AdditionalElementAddBranchDto additionalElementAddBranchDto);
+
     AdditionalElementsInfoDto getById(Long id);
 
     List<AdditionalElementsInfoDto> getAll();
