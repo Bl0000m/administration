@@ -16,8 +16,8 @@ public interface FlowerVarietyPriceRepository extends JpaRepository<FlowerVariet
 
     @Query("SELECT COUNT(fvp) > 0 " +
             "FROM FlowerVarietyPrice fvp " +
-            "WHERE fvp.flowerVariety = :flowerVarietyId " +
-            "AND fvp.branchDivision = :branchDivisionId " +
+            "WHERE fvp.flowerVariety.id = :flowerVarietyId " +
+            "AND fvp.branchDivision.id = :branchDivisionId " +
             "AND ((:validFrom BETWEEN fvp.validFrom AND fvp.validTo) " +
             "     OR (:validTo BETWEEN fvp.validFrom AND fvp.validTo) " +
             "     OR (fvp.validFrom BETWEEN :validFrom AND :validTo))")
