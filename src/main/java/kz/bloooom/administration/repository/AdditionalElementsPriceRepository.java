@@ -16,8 +16,8 @@ public interface AdditionalElementsPriceRepository extends JpaRepository<Additio
 
     @Query("SELECT COUNT(aep) > 0 " +
             "FROM AdditionalElementsPrice aep " +
-            "WHERE aep.additionalElements = :additionalElementId " +
-            "AND aep.branchDivision = :branchDivisionId " +
+            "WHERE aep.additionalElements.id = :additionalElementId " +
+            "AND aep.branchDivision.id = :branchDivisionId " +
             "AND ((:validFrom BETWEEN aep.validFrom AND aep.validTo) " +
             "     OR (:validTo BETWEEN aep.validFrom AND aep.validTo) " +
             "     OR (aep.validFrom BETWEEN :validFrom AND :validTo))")
