@@ -6,7 +6,6 @@ import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDt
 import kz.bloooom.administration.domain.entity.AdditionalElements;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
 import kz.bloooom.administration.domain.entity.BranchDivision;
-import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.service.AdditionalElementsPriceService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

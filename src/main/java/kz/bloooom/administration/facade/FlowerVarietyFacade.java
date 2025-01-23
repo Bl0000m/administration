@@ -1,6 +1,7 @@
 package kz.bloooom.administration.facade;
 
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,8 @@ public interface FlowerVarietyFacade {
     void addFlowerVarietyPrice(FlowerVarietyAddBranchDto dto);
 
     FlowerVarietyInfoDto getById(Long id);
+
+    List<FlowerVarietyBranchInfoDto> getAllByBranchId(Long branchId);
 
     List<FlowerVarietyInfoDto> getAll();
 }

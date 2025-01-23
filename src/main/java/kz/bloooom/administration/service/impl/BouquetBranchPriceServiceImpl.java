@@ -36,4 +36,9 @@ public class BouquetBranchPriceServiceImpl implements BouquetBranchPriceService 
     public List<BouquetBranchPrice> getAllBouquetBranchByBouquetId(Long bouquetId) {
         return bouquetBranchPriceRepository.findAllByBouquetId(bouquetId);
     }
+
+    @Override
+    public List<BouquetBranchPrice> getAllBouquetBranchByBranchId(Long branchId) {
+        return bouquetBranchPriceRepository.findAllByBranchDivisionId(branchId);
+    }
 }

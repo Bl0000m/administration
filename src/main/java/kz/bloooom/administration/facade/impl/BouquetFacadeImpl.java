@@ -1,13 +1,13 @@
 package kz.bloooom.administration.facade.impl;
 
+import kz.bloooom.administration.converter.additional_elements.AdditionalElementsNameInfoDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetCreateDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetDetailInfoDtoConverter;
 import kz.bloooom.administration.converter.bouquet.BouquetInfoDtoConverter;
+import kz.bloooom.administration.converter.flower_variety.FlowerVarietyNameInfoDtoConverter;
+import kz.bloooom.administration.converter.img.ImageInfoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsShortInfoDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.*;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyShortInfoToAttachBouquetDto;
 import kz.bloooom.administration.domain.dto.storage.FileInfo;
 import kz.bloooom.administration.domain.entity.*;
@@ -42,7 +42,10 @@ public class BouquetFacadeImpl implements BouquetFacade {
     BouquetPhotoService photoService;
     FlowerVarietyService flowerVarietyService;
     AdditionalElementsService additionalElementsService;
+    ImageInfoConverter imageInfoConverter;
     BouquetAdditionalElementsService bouquetAdditionalElementsService;
+    FlowerVarietyNameInfoDtoConverter flowerVarietyNameInfoDtoConverter;
+    AdditionalElementsNameInfoDtoConverter additionalElementsNameInfoDtoConverter;
     BouquetFlowersService bouquetFlowersService;
     BouquetCreateDtoConverter bouquetCreateDtoConverter;
     BouquetInfoDtoConverter bouquetInfoDtoConverter;
@@ -107,6 +110,29 @@ public class BouquetFacadeImpl implements BouquetFacade {
     @Override
     public BouquetDetailInfoDto getById(Long id) {
         return bouquetDetailInfoDtoConverter.convert(bouquetService.getById(id));
+    }
+
+    @Override
+    public List<BouquetBranchInfoDto> getAllByBranchId(Long branchId) {
+        List<BouquetBranchPrice> bouquetBranchPrices = bouquetBranchPriceService.getAllBouquetBranchByBranchId(branchId);
+        return bouquetBranchPrices.stream()
+                .map(this::mapToBouquetBranchInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    private BouquetBranchInfoDto mapToBouquetBranchInfoDto(BouquetBranchPrice source) {
+        BouquetBranchInfoDto target = new BouquetBranchInfoDto();
+        if (source.getBouquet() != null) {
+            target.setId(source.getBouquet().getId());
+            target.setName(source.getBouquet().getName());
+            target.setAuthor(Objects.nonNull(source.getEmployee()) ? source.getEmployee().getName() : null);
+            target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquet().getBouquetPhotos()));
+            target.setPrice(source.getPrice());
+            target.setBouquetStyle(source.getBouquet().getBouquetStyle().getName());
+            target.setFlowerVarietyInfo(flowerVarietyNameInfoDtoConverter.convert(source.getBouquet().getFlowers(), source.getBouquet().getId()));
+            target.setAdditionalElements(additionalElementsNameInfoDtoConverter.convert(source.getBouquet().getAdditionalElements(), source.getBouquet().getId()));
+        }
+        return target;
     }
 
     @Override

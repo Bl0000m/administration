@@ -3,10 +3,8 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.*;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
 import kz.bloooom.administration.facade.BouquetFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +49,19 @@ public class BouquetController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Получить доп элемент по id")
+    @Operation(summary = "Получить букет по id")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<BouquetDetailInfoDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(bouquetFacade.getById(id));
     }
+
+    @GetMapping("/branch/{branchId}")
+    @Operation(summary = "Получить букеты филиала по его id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<BouquetBranchInfoDto>> getByBranchId(@PathVariable Long branchId) {
+        return ResponseEntity.ok(bouquetFacade.getAllByBranchId(branchId));
+    }
+
 
     @GetMapping
     @Operation(summary = "Получить список всех букетов")

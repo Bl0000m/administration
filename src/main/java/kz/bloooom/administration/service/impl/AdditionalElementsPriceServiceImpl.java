@@ -36,6 +36,11 @@ public class AdditionalElementsPriceServiceImpl implements AdditionalElementsPri
     }
 
     @Override
+    public List<AdditionalElementsPrice> findAllByBranchDivisionId(Long branchId) {
+        return additionalElementsPriceRepository.findAllByBranchDivisionIdAndCurrentDate(branchId, LocalDateTime.now());
+    }
+
+    @Override
     public boolean existsByDateOverlap(Long additionalElementId,
                                        Long branchDivisionId,
                                        LocalDateTime validFrom,

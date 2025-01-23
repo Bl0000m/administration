@@ -11,4 +11,6 @@ public interface BouquetBranchPriceRepository extends JpaRepository<BouquetBranc
     BouquetBranchPrice findByBouquetIdAndBranchDivisionId(Long bouquetId, Long branchId);
 
     List<BouquetBranchPrice> findAllByBouquetId(Long bouquetId);
+
+    List<BouquetBranchPrice> findAllByBranchDivisionId(Long bouquetId);
 }

@@ -1,9 +1,14 @@
 package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
-import kz.bloooom.administration.converter.flower_variety.FlowerVarietyCreateDtoConverter;
-import kz.bloooom.administration.converter.flower_variety.FlowerVarietyInfoDtoConverter;
+import kz.bloooom.administration.converter.country.CountryInfoDtoConverter;
+import kz.bloooom.administration.converter.flower.FlowerInfoDtoConverter;
+import kz.bloooom.administration.converter.flower_variety.*;
+import kz.bloooom.administration.converter.stem_care.StemCareInfoDtoConverter;
+import kz.bloooom.administration.converter.temperature_care.TemperatureCareInfoDtoConverter;
+import kz.bloooom.administration.converter.water_care.WaterCareInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import kz.bloooom.administration.domain.entity.BranchDivision;
@@ -27,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -35,6 +41,14 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     FlowerVarietyService flowerVarietyService;
+    FlowerInfoDtoConverter flowerInfoDtoConverter;
+    SeasonInfoDtoConverter seasonInfoDtoConverter;
+    StemCareInfoDtoConverter stemCareInfoDtoConverter;
+    StemTypeInfoDtoConverter stemTypeInfoDtoConverter;
+    TemperatureCareInfoDtoConverter temperatureCareInfoDtoConverter;
+    WaterCareInfoDtoConverter waterCareInfoDtoConverter;
+    CountryInfoDtoConverter countryInfoDtoConverter;
+    FragranceInfoDtoConverter fragranceInfoDtoConverter;
     BranchDivisionService branchDivisionService;
     FlowerVarietyPriceService flowerVarietyPriceService;
     StorageService storageService;
@@ -135,6 +149,47 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     @Override
     public FlowerVarietyInfoDto getById(Long id) {
         return flowerVarietyInfoDtoConverter.convert(flowerVarietyService.getById(id));
+    }
+
+    @Override
+    public List<FlowerVarietyBranchInfoDto> getAllByBranchId(Long branchId) {
+        List<FlowerVarietyPrice> flowerVarietyPrices = flowerVarietyPriceService.getAllByBranchId(branchId);
+
+        return flowerVarietyPrices.stream()
+                .map(this::mapToFlowerVarietyBranchInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    private FlowerVarietyBranchInfoDto mapToFlowerVarietyBranchInfoDto(FlowerVarietyPrice source) {
+        FlowerVarietyBranchInfoDto target = new FlowerVarietyBranchInfoDto();
+
+        if (source.getFlowerVariety() != null) {
+            target.setId(source.getFlowerVariety().getId());
+            target.setName(source.getFlowerVariety().getName());
+            target.setFlowerInfo(flowerInfoDtoConverter.convert(source.getFlowerVariety().getFlower()));
+            target.setShelfLifeDaysMin(source.getFlowerVariety().getShelfLifeDaysMin());
+            target.setShelfLifeDaysMax(source.getFlowerVariety().getShelfLifeDaysMax());
+            target.setFragranceInfo(fragranceInfoDtoConverter.convert(source.getFlowerVariety().getFragrance()));
+            target.setSeasonInfo(seasonInfoDtoConverter.convert(source.getFlowerVariety().getSeason()));
+            target.setSteamTypeInfo(stemTypeInfoDtoConverter.convert(source.getFlowerVariety().getSteamType()));
+            target.setColor(source.getFlowerVariety().getColor());
+            target.setBudSizeMin(source.getFlowerVariety().getBudSizeMin());
+            target.setBudSizeMax(source.getFlowerVariety().getBudSizeMax());
+            target.setStemHeightSizeMin(source.getFlowerVariety().getStemHeightSizeMin());
+            target.setStemHeightSizeMax(source.getFlowerVariety().getStemHeightSizeMax());
+            target.setImage(source.getFlowerVariety().getImage());
+            target.setStemCareInfo(stemCareInfoDtoConverter.convert(source.getFlowerVariety().getStemCare()));
+            target.setTemperatureCareInfo(temperatureCareInfoDtoConverter.convert(source.getFlowerVariety().getTemperatureCare()));
+            target.setWaterCareInfo(waterCareInfoDtoConverter.convert(source.getFlowerVariety().getWaterCare()));
+            target.setCountryInfoDto(countryInfoDtoConverter.convert(source.getFlowerVariety().getCountry()));
+        }
+
+        target.setPrice(source.getPrice());
+        target.setCurrency(source.getCurrency() != null ? source.getCurrency().getTitle() : null);
+        target.setValidFrom(source.getValidFrom());
+        target.setValidTo(source.getValidTo());
+
+        return target;
     }
 
     @Override

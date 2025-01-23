@@ -49,6 +49,11 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     }
 
     @Override
+    public List<FlowerVarietyPrice> getAllByBranchId(Long branchId) {
+        return flowerVarietyPriceRepository.findAllByBranchDivisionIdAndCurrentDate(branchId, LocalDateTime.now());
+    }
+
+    @Override
     public FlowerVarietyPrice getById(Long id) {
         return flowerVarietyPriceRepository.findById(id)
                 .orElseThrow(() -> new BloomAdministrationException(

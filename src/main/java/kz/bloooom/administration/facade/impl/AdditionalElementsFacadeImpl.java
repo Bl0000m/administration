@@ -4,6 +4,7 @@ import kz.bloooom.administration.contant.ErrorCodeConstant;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsCreateDtoConverter;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 import kz.bloooom.administration.domain.entity.AdditionalElements;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -124,6 +126,31 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     @Override
     public AdditionalElementsInfoDto getById(Long id) {
         return additionalElementsInfoDtoConverter.convert(additionalElementsService.getById(id));
+    }
+
+    @Override
+    public List<AdditionalElementsBranchInfoDto> getAllByBranchId(Long branchId) {
+        List<AdditionalElementsPrice> additionalElementsPrices = additionalElementsPriceService.findAllByBranchDivisionId(branchId);
+
+        return additionalElementsPrices.stream()
+                .map(this::mapToAdditionalElementsBranchInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    private AdditionalElementsBranchInfoDto mapToAdditionalElementsBranchInfoDto(AdditionalElementsPrice source) {
+        AdditionalElementsBranchInfoDto target = new AdditionalElementsBranchInfoDto();
+
+        target.setId(source.getAdditionalElements() != null ? source.getAdditionalElements().getId() : null);
+        target.setName(source.getAdditionalElements() != null ? source.getAdditionalElements().getName() : null);
+        target.setDescription(source.getAdditionalElements() != null ? source.getAdditionalElements().getDescription() : null);
+        target.setPrice(source.getPrice());
+        target.setCurrency(source.getCurrency() != null ? source.getCurrency().getTitle() : null);
+        target.setValidFrom(source.getValidFrom());
+        target.setValidTo(source.getValidTo());
+        target.setExample(source.getAdditionalElements() != null ? source.getAdditionalElements().getExample() : null);
+        target.setUnitOfMeasurement(source.getAdditionalElements() != null ? source.getAdditionalElements().getUnitOfMeasurement() : null);
+
+        return target;
     }
 
     @Override

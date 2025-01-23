@@ -10,6 +10,8 @@ public interface AdditionalElementsPriceService {
 
     List<AdditionalElementsPrice> getByElementId(Long additionalElementId);
 
+    List<AdditionalElementsPrice> findAllByBranchDivisionId(Long branchId);
+
     boolean existsByDateOverlap(Long additionalElementId,
                                 Long branchDivisionId,
                                 LocalDateTime validFrom,

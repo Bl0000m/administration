@@ -3,8 +3,10 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
 import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
 import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
@@ -63,6 +65,13 @@ public class FlowerVarietyController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<FlowerVarietyInfoDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(flowerVarietyFacade.getById(id));
+    }
+
+    @GetMapping("/branch/{branchId}")
+    @Operation(summary = "Получить сорты указанного филиала по его id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<FlowerVarietyBranchInfoDto>> getByBranchId(@PathVariable Long branchId) {
+        return ResponseEntity.ok(flowerVarietyFacade.getAllByBranchId(branchId));
     }
 
     @GetMapping()

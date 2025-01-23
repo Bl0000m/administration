@@ -11,8 +11,10 @@ import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthRequestDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthResponseDto;
 import kz.bloooom.administration.domain.dto.keycloak.KeycloakAuthWithRefreshTokenDto;
 import kz.bloooom.administration.domain.dto.user.*;
+import kz.bloooom.administration.domain.entity.Balances;
 import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.domain.entity.UserAddress;
+import kz.bloooom.administration.enumeration.Currency;
 import kz.bloooom.administration.enumeration.role.RoleCode;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.UserFacade;
@@ -28,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -65,6 +68,7 @@ public class UserFacadeImpl implements UserFacade {
         try {
             keycloakId = createKeycloakId(dto);
             User user = createUserInDatabase(dto, keycloakId);
+            createBalanceToUser(user);
             assignRolesToUser(user);
             String code = userResetCodeService.getUserResetCode(dto.getEmail());
 
@@ -185,6 +189,15 @@ public class UserFacadeImpl implements UserFacade {
         User user = userRegisterDtoConverter.convert(dto);
         user.setKeycloakId(keycloakId);
         return userService.save(user);
+    }
+
+    private void createBalanceToUser(User user) {
+        Balances balances = Balances.builder()
+                .user(user)
+                .currentBalance(0.0)
+                .currency(Currency.KZT)
+                .updatedDate(new Timestamp(System.currentTimeMillis()))
+                .build();
     }
 
     private void validateAndExtractPhoneNumber(String email, String phoneNumber) {

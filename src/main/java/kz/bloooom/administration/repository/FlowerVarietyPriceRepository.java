@@ -28,4 +28,11 @@ public interface FlowerVarietyPriceRepository extends JpaRepository<FlowerVariet
             @Param("validTo") LocalDateTime validTo
     );
 
+    @Query("SELECT fvp FROM FlowerVarietyPrice fvp " +
+            "WHERE fvp.branchDivision.id = :branchDivisionId " +
+            "AND :currentDate BETWEEN fvp.validFrom AND fvp.validTo")
+    List<FlowerVarietyPrice> findAllByBranchDivisionIdAndCurrentDate(
+            @Param("branchDivisionId") Long branchDivisionId,
+            @Param("currentDate") LocalDateTime currentDate);
+
 }

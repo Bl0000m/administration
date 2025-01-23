@@ -15,6 +15,7 @@ public interface FlowerVarietyPriceService {
                                 LocalDateTime validFrom,
                                 LocalDateTime validTo);
 
+    List<FlowerVarietyPrice> getAllByBranchId(Long branchId);
 
     FlowerVarietyPrice getById(Long id);
 }

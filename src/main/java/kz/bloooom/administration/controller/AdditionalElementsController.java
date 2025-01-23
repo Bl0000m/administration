@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
@@ -53,6 +54,13 @@ public class AdditionalElementsController {
     public ResponseEntity<Void> changePrice(@Valid @RequestBody AdditionalElementAddBranchDto additionalElementAddBranchDto) {
         additionalElementsFacade.addAdditionalElementPrice(additionalElementAddBranchDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/branch/{branchId}")
+    @Operation(summary = "Получить доп элементы указанного филиала по его id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<AdditionalElementsBranchInfoDto>> getByBranchId(@PathVariable Long branchId) {
+        return ResponseEntity.ok(additionalElementsFacade.getAllByBranchId(branchId));
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,7 @@
 package kz.bloooom.administration.facade;
 
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
 import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
 
@@ -14,6 +15,8 @@ public interface AdditionalElementsFacade {
     void addAdditionalElementPrice(AdditionalElementAddBranchDto additionalElementAddBranchDto);
 
     AdditionalElementsInfoDto getById(Long id);
+
+    List<AdditionalElementsBranchInfoDto> getAllByBranchId(Long branchId);
 
     List<AdditionalElementsInfoDto> getAll();
 }
