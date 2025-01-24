@@ -49,6 +49,7 @@ public class TransactionsFacadeImpl implements TransactionsFacade {
         switch (typeCode) {
             case DEBIT:
             case TRANSFER:
+            case IN_THE_BLOCK:
                 if (currentBalance < amount) {
                     throw new BloomAdministrationException(
                             HttpStatus.NOT_FOUND,
