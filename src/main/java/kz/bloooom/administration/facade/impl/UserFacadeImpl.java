@@ -51,6 +51,7 @@ public class UserFacadeImpl implements UserFacade {
     AccessTokenResponseConverter accessTokenResponseConverter;
     PasswordValidator passwordValidator;
     MailService mailService;
+    BalancesService balancesService;
     UserResetCodeService userResetCodeService;
     ResetCodeValidator resetCodeValidator;
     ForgotPasswordValidator forgotPasswordValidator;
@@ -198,6 +199,7 @@ public class UserFacadeImpl implements UserFacade {
                 .currency(Currency.KZT)
                 .updatedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
+        balancesService.save(balances);
     }
 
     private void validateAndExtractPhoneNumber(String email, String phoneNumber) {
