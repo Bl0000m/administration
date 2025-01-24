@@ -125,7 +125,7 @@ public class BouquetFacadeImpl implements BouquetFacade {
         if (source.getBouquet() != null) {
             target.setId(source.getBouquet().getId());
             target.setName(source.getBouquet().getName());
-            target.setAuthor(Objects.nonNull(source.getEmployee()) ? source.getEmployee().getName() : null);
+            target.setAuthor(source.getBouquet().getEmployee().getName());
             target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquet().getBouquetPhotos()));
             target.setPrice(source.getPrice());
             target.setBouquetStyle(source.getBouquet().getBouquetStyle().getName());
