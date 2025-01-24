@@ -192,7 +192,8 @@ public class UserFacadeImpl implements UserFacade {
         return userService.save(user);
     }
 
-    private void createBalanceToUser(User user) {
+    @Transactional
+    public void createBalanceToUser(User user) {
         Balances balances = Balances.builder()
                 .user(user)
                 .currentBalance(0.0)
