@@ -21,7 +21,7 @@ public class FlowerVarietyPriceInfoDtoConverter {
 
     public FlowerVarietyPriceInfoDto convert(FlowerVarietyPrice source) {
         return FlowerVarietyPriceInfoDto.builder()
-                .id(source.getFlowerVariety().getId())
+                .id(source.getId())
                 .price(source.getPrice())
                 .currency(Objects.nonNull(source.getCurrency()) ? source.getCurrency().getTitle() : null)
                 .validFrom(source.getValidFrom())

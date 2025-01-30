@@ -15,7 +15,7 @@ public class AdditionalElementPriceInfoDtoConverter {
 
     public AdditionalElementsPriceInfoDto convert(AdditionalElementsPrice source) {
         return AdditionalElementsPriceInfoDto.builder()
-                .id(source.getAdditionalElements().getId())
+                .id(source.getId())
                 .price(source.getPrice())
                 .currency(Objects.nonNull(source.getCurrency()) ? source.getCurrency().getTitle() : null)
                 .validFrom(source.getValidFrom())
