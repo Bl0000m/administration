@@ -35,4 +35,10 @@ public interface FlowerVarietyPriceRepository extends JpaRepository<FlowerVariet
             @Param("branchDivisionId") Long branchDivisionId,
             @Param("currentDate") LocalDateTime currentDate);
 
+    boolean existsByBranchDivisionIdAndValidFromLessThanEqualAndValidToGreaterThanEqual(
+            Long branchDivisionId, LocalDateTime validFrom, LocalDateTime validTo);
+
+    List<FlowerVarietyPrice> findAllByBranchDivisionIdAndFlowerVarietyId(Long branchId, Long varietyId);
+
+
 }

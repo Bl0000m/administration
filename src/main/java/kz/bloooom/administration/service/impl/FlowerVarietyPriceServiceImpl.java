@@ -54,6 +54,16 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     }
 
     @Override
+    public boolean existsByBranchDivisionIdAndDateRange(Long branchDivisionId, LocalDateTime validFrom, LocalDateTime validTo) {
+        return flowerVarietyPriceRepository.existsByBranchDivisionIdAndValidFromLessThanEqualAndValidToGreaterThanEqual(branchDivisionId, validFrom, validTo);
+    }
+
+    @Override
+    public List<FlowerVarietyPrice> getAllByBranchIdAndFlowerVarietyId(Long branchId, Long varietyId) {
+        return flowerVarietyPriceRepository.findAllByBranchDivisionIdAndFlowerVarietyId(branchId, varietyId);
+    }
+
+    @Override
     public FlowerVarietyPrice getById(Long id) {
         return flowerVarietyPriceRepository.findById(id)
                 .orElseThrow(() -> new BloomAdministrationException(

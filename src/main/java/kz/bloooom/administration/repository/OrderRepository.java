@@ -11,4 +11,6 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllBySubscription(Subscription subscription);
+
+    List<Order> findAllByBranchDivisionIdAndOrderStatusId(Long branchId, Long statusId);
 }

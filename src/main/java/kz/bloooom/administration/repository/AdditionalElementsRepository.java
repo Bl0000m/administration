@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface AdditionalElementsRepository extends JpaRepository<AdditionalElements, Long> {
     List<AdditionalElements> findByIdIn(List<Long> ids);
-
 }

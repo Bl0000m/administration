@@ -15,4 +15,6 @@ public interface OrderService {
     List<Order> findAllBySubscription(Subscription subscription);
 
     List<Order> saveAll(List<Order> orders);
+
+    List<Order> findAllByBranchIdAndStatusId(Long branchId, Long statusId);
 }

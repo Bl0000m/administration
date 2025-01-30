@@ -55,4 +55,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> saveAll(List<Order> orders) {
         return orderRepository.saveAll(orders);
     }
+
+    @Override
+    public List<Order> findAllByBranchIdAndStatusId(Long branchId, Long statusId) {
+        return orderRepository.findAllByBranchDivisionIdAndOrderStatusId(branchId, statusId);
+    }
 }

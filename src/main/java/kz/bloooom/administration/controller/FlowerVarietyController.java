@@ -3,12 +3,7 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
-import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
+import kz.bloooom.administration.domain.dto.flower_variety.*;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -60,12 +55,30 @@ public class FlowerVarietyController {
         flowerVarietyFacade.addFlowerVarietyPrice(flowerVarietyAddBranchDto);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/{id}")
     @Operation(summary = "Получить сорт по id")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<FlowerVarietyInfoDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(flowerVarietyFacade.getById(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updatePrice(
+            @PathVariable Long id,
+            @RequestBody FlowerVarietyUpdateDto dto) {
+        flowerVarietyFacade.updatePrice(id, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/branch/{branchId}/variety/{varietyId}")
+    @Operation(summary = "Получить заказ по филиал Id и статус Id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<FlowerVarietyPriceInfoDto>> getByBranchIdAndVarietyIdId(@PathVariable Long branchId,
+                                                                                       @PathVariable Long varietyId) {
+        return ResponseEntity.ok(flowerVarietyFacade.getByBranchIdAndVarietyId(branchId, varietyId));
+    }
+
 
     @GetMapping("/branch/{branchId}")
     @Operation(summary = "Получить сорты указанного филиала по его id")

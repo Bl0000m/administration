@@ -1,16 +1,13 @@
 package kz.bloooom.administration.domain.dto.additional_elements;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kz.bloooom.administration.domain.dto.branch_division.BranchDivisionInfoDto;
-import kz.bloooom.administration.enumeration.Currency;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

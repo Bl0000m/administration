@@ -48,4 +48,10 @@ public class OrderFacadeImpl implements OrderFacade {
     public OrderInfoDto getById(Long id) {
         return orderInfoDtoConverter.convert(orderService.findById(id));
     }
+
+    @Override
+    public List<OrderInfoDto> getByBranchIdAndStatusId(Long branchId, Long statusId) {
+        List<Order> orders = orderService.findAllByBranchIdAndStatusId(branchId, statusId);
+        return orderInfoDtoConverter.convert(orders);
+    }
 }

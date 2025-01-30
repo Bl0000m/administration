@@ -43,6 +43,13 @@ public class OrderController {
         return ResponseEntity.ok(orderFacade.getById(id));
     }
 
+    @GetMapping("/branch/{branchId}/status/{statusId}")
+    @Operation(summary = "Получить заказ по филиал Id и статус Id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<OrderInfoDto>> getByBranchIdAndStatusId(@PathVariable Long branchId, @PathVariable Long statusId) {
+        return ResponseEntity.ok(orderFacade.getByBranchIdAndStatusId(branchId, statusId));
+    }
+
     @GetMapping("/subscription/{subscriptionId}")
     @Operation(summary = "Получить все заказы по id подписки")
     @SecurityRequirement(name = "Bearer Authentication")

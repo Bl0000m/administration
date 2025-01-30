@@ -10,4 +10,5 @@ public interface OrderFacade {
     List<OrderInfoDto> getOrdersBySubscriptionId(Long subscriptionId);
 
     OrderInfoDto getById(Long id);
+    List<OrderInfoDto> getByBranchIdAndStatusId(Long branchId, Long statusId);
 }

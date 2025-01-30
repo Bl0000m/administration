@@ -21,6 +21,9 @@ public interface AdditionalElementsPriceRepository extends JpaRepository<Additio
             @Param("branchDivisionId") Long branchDivisionId,
             @Param("currentDate") LocalDateTime currentDate);
 
+    List<AdditionalElementsPrice> findAllByBranchDivisionIdAndAdditionalElementsId(Long branchId, Long elementId);
+
+
     @Query("SELECT COUNT(aep) > 0 " +
             "FROM AdditionalElementsPrice aep " +
             "WHERE aep.additionalElements.id = :additionalElementId " +

@@ -3,10 +3,7 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
+import kz.bloooom.administration.domain.dto.additional_elements.*;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +65,13 @@ public class AdditionalElementsController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<AdditionalElementsInfoDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(additionalElementsFacade.getById(id));
+    }
+
+    @GetMapping("/branch/{branchId}/element/{elementId}")
+    @Operation(summary = "Получить заказ по филиал Id и статус Id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<AdditionalElementsPriceInfoDto>> getByBranchIdAndElementId(@PathVariable Long branchId, @PathVariable Long elementId) {
+        return ResponseEntity.ok(additionalElementsFacade.getByBranchIdAndElementId(branchId, elementId));
     }
 
     @GetMapping()

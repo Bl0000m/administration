@@ -1,12 +1,10 @@
 package kz.bloooom.administration.facade.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
+import kz.bloooom.administration.converter.additional_elements.AdditionalElementPriceInfoDtoConverter;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsCreateDtoConverter;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsInfoDtoConverter;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsBranchInfoDto;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsCreateDto;
-import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementsInfoDto;
+import kz.bloooom.administration.domain.dto.additional_elements.*;
 import kz.bloooom.administration.domain.entity.AdditionalElements;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
 import kz.bloooom.administration.domain.entity.BranchDivision;
@@ -41,6 +39,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     EmployeeService employeeService;
     AdditionalElementsPriceService additionalElementsPriceService;
     BranchDivisionService branchDivisionService;
+    AdditionalElementPriceInfoDtoConverter additionalElementPriceInfoDtoConverter;
     AdditionalElementsCreateDtoConverter additionalElementsCreateDtoConverter;
     AdditionalElementsInfoDtoConverter additionalElementsInfoDtoConverter;
 
@@ -126,6 +125,13 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     @Override
     public AdditionalElementsInfoDto getById(Long id) {
         return additionalElementsInfoDtoConverter.convert(additionalElementsService.getById(id));
+    }
+
+    @Override
+    public List<AdditionalElementsPriceInfoDto> getByBranchIdAndElementId(Long branchId, Long elementId) {
+        List<AdditionalElementsPrice> additionalElementsPrices =
+                additionalElementsPriceService.getAdditionalElementsByBranchIdAndElementId(branchId, elementId);
+        return additionalElementPriceInfoDtoConverter.convert(additionalElementsPrices);
     }
 
     @Override

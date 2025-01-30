@@ -56,4 +56,9 @@ public class ErrorCodeConstant {
     public final String TRANSACTION_WITH_THIS_ID_DOEST_EXISTS = "TRANSACTION_WITH_THIS_ID_DOEST_EXISTS";
     public final String TRANSACTION_TYPE_WITH_THIS_ID_DOEST_EXISTS = "TRANSACTION_TYPE_WITH_THIS_ID_DOEST_EXISTS";
     public final String NOT_ENOUGH_MONEY = "NOT_ENOUGH_MONEY";
+    public final String NOT_CHANGES = "NOT_CHANGES";
+    public final String VALID_FROM_ARRIVED = "VALID_FROM_ARRIVED";
+    public final String VALID_TO_PASSED = "VALID_TO_PASSED";
+    public final String DATA_NON_VALID = "DATA_NON_VALID";
+
 }

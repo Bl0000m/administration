@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,6 +27,9 @@ public class AdditionalElements {
 
     @Column(name = "name")
     String name;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "additionalElements", cascade = CascadeType.ALL)
+    Set<AdditionalElementsPrice> additionalElementsPrices;
 
     @Column(name = "description")
     String description;

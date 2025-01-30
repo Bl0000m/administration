@@ -54,10 +54,10 @@ public class AdditionalElementsInfoDtoConverter {
         return target;
     }
 
-    public List<AdditionalElementsInfoDto> convert(List<AdditionalElements> bouquets) {
-        return CollectionUtils.isEmpty(bouquets) ?
+    public List<AdditionalElementsInfoDto> convert(List<AdditionalElements> additionalElements) {
+        return CollectionUtils.isEmpty(additionalElements) ?
                 Collections.emptyList() :
-                bouquets.stream().map(this::convert).collect(Collectors.toList());
+                additionalElements.stream().map(this::convert).collect(Collectors.toList());
     }
 
 }

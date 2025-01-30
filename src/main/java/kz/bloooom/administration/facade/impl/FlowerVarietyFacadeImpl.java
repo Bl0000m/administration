@@ -7,10 +7,7 @@ import kz.bloooom.administration.converter.flower_variety.*;
 import kz.bloooom.administration.converter.stem_care.StemCareInfoDtoConverter;
 import kz.bloooom.administration.converter.temperature_care.TemperatureCareInfoDtoConverter;
 import kz.bloooom.administration.converter.water_care.WaterCareInfoDtoConverter;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyCreateDto;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyInfoDto;
+import kz.bloooom.administration.domain.dto.flower_variety.*;
 import kz.bloooom.administration.domain.entity.BranchDivision;
 import kz.bloooom.administration.domain.entity.Employee;
 import kz.bloooom.administration.domain.entity.FlowerVariety;
@@ -30,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,6 +49,7 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     FragranceInfoDtoConverter fragranceInfoDtoConverter;
     BranchDivisionService branchDivisionService;
     FlowerVarietyPriceService flowerVarietyPriceService;
+    FlowerVarietyPriceInfoDtoConverter flowerVarietyPriceInfoDtoConverter;
     StorageService storageService;
     EmployeeService employeeService;
     FlowerVarietyCreateDtoConverter flowerVarietyCreateDtoConverter;
@@ -149,6 +148,149 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     @Override
     public FlowerVarietyInfoDto getById(Long id) {
         return flowerVarietyInfoDtoConverter.convert(flowerVarietyService.getById(id));
+    }
+
+    @Override
+    @Transactional
+    public void updatePrice(Long id, FlowerVarietyUpdateDto dto) {
+        FlowerVarietyPrice existing = flowerVarietyPriceService.getById(id);
+
+        LocalDateTime today = LocalDateTime.now();
+
+        LocalDateTime dtoValidFrom = dto.getValidFrom().atStartOfDay();
+        LocalDateTime dtoValidTo = dto.getValidTo().atStartOfDay();
+        Double dtoPrice = dto.getPrice();
+
+        LocalDateTime existingValidFrom = existing.getValidFrom();
+        LocalDateTime existingValidTo = existing.getValidTo();
+        Double existingPrice = existing.getPrice();
+
+        boolean priceChanged = dtoPrice != null && !dtoPrice.equals(existingPrice);
+        boolean validFromChanged = dtoValidFrom != null && !dtoValidFrom.equals(existingValidFrom);
+        boolean validToChanged = dtoValidTo != null && !dtoValidTo.equals(existingValidTo);
+
+
+        if (!priceChanged && !validFromChanged && !validToChanged) {
+            throw new BloomAdministrationException(
+                    HttpStatus.NOT_FOUND,
+                    ErrorCodeConstant.NOT_CHANGES,
+                    "messages.exception.not-changes");
+        }
+
+        if (priceChanged && !validFromChanged && !validToChanged) {
+            if (existingValidFrom.isAfter(today) || existingValidFrom.isEqual(today)) {
+                existing.setPrice(dtoPrice);
+                saveAndReturn(existing);
+            }
+            throw new BloomAdministrationException(
+                    HttpStatus.NOT_FOUND,
+                    ErrorCodeConstant.VALID_FROM_ARRIVED,
+                    "messages.exception.valid-from-arrived");
+        }
+
+        if (validToChanged && !priceChanged && !validFromChanged) {
+            if (existingValidTo.isBefore(today)) {
+                throw new BloomAdministrationException(
+                        HttpStatus.NOT_FOUND,
+                        ErrorCodeConstant.VALID_TO_PASSED,
+                        "messages.exception.valid-to-passed");
+
+            }
+            if (dtoValidTo.isBefore(existingValidTo) || (dtoValidTo.isAfter(today) && !hasPriceOverlap(existing, dtoValidTo))) {
+                existing.setValidTo(dtoValidTo);
+                saveAndReturn(existing);
+            }
+        }
+
+        if (!priceChanged && validFromChanged && !validToChanged) {
+            if (existingValidFrom.isAfter(today) || existingValidFrom.isEqual(today) ||
+                    (dtoValidFrom.isAfter(existingValidFrom) || !hasPriceOverlap(existing, dtoValidFrom))) {
+                existing.setValidFrom(dtoValidFrom);
+                saveAndReturn(existing);
+            }
+            throw new BloomAdministrationException(
+                    HttpStatus.NOT_FOUND,
+                    ErrorCodeConstant.VALID_FROM_ARRIVED,
+                    "messages.exception.validFrom-cannot-be-changed");
+        }
+
+        if (priceChanged && !validFromChanged && validToChanged) {
+            if (existingValidTo.isBefore(today)) {
+                throw new BloomAdministrationException(
+                        HttpStatus.NOT_FOUND,
+                        ErrorCodeConstant.VALID_TO_PASSED,
+                        "messages.exception.valid-to-passed");
+
+            }
+            if (dtoValidTo.isBefore(existingValidTo) || !hasPriceOverlap(existing, dtoValidTo)) {
+                existing.setPrice(dtoPrice);
+                existing.setValidTo(dtoValidTo);
+                saveAndReturn(existing);
+            }
+        }
+
+        if (priceChanged && validFromChanged && !validToChanged) {
+            if (existingValidFrom.isBefore(today)) {
+                FlowerVarietyPrice newEntry = createNewEntry(existing, dtoPrice, dtoValidFrom, existingValidTo);
+                flowerVarietyPriceService.create(newEntry);
+                existing.setValidTo(dtoValidFrom.minusDays(1));
+                saveAndReturn(existing);
+            }
+            existing.setPrice(dtoPrice);
+            existing.setValidFrom(dtoValidFrom);
+            saveAndReturn(existing);
+        }
+
+        if (priceChanged && validFromChanged && validToChanged) {
+            if (dtoValidFrom.isBefore(today)) {
+                throw new BloomAdministrationException(
+                        HttpStatus.NOT_FOUND,
+                        ErrorCodeConstant.VALID_FROM_ARRIVED,
+                        "messages.exception.validFrom-cannot-be-changed");
+            }
+            if (existingValidFrom.isBefore(today) && existingValidTo.isAfter(today)) {
+                FlowerVarietyPrice newEntry = createNewEntry(existing, dtoPrice, dtoValidFrom, dtoValidTo);
+                flowerVarietyPriceService.create(newEntry);
+                existing.setValidTo(dtoValidFrom.minusDays(1));
+                saveAndReturn(existing);
+            }
+            existing.setPrice(dtoPrice);
+            existing.setValidFrom(dtoValidFrom);
+            existing.setValidTo(dtoValidTo);
+            saveAndReturn(existing);
+        }
+
+        throw new BloomAdministrationException(
+                HttpStatus.NOT_FOUND,
+                ErrorCodeConstant.DATA_NON_VALID,
+                "messages.exception.non-valid");
+    }
+
+    @Override
+    public List<FlowerVarietyPriceInfoDto> getByBranchIdAndVarietyId(Long branchId, Long varietyId) {
+        List<FlowerVarietyPrice> flowerVarietyPrices =
+                flowerVarietyPriceService.getAllByBranchIdAndFlowerVarietyId(branchId, varietyId);
+        return flowerVarietyPriceInfoDtoConverter.convert(flowerVarietyPrices);
+    }
+
+
+    private FlowerVarietyPrice createNewEntry(FlowerVarietyPrice existing, Double price, LocalDateTime validFrom, LocalDateTime validTo) {
+        return FlowerVarietyPrice.builder()
+                .branchDivision(existing.getBranchDivision())
+                .flowerVariety(existing.getFlowerVariety())
+                .price(price)
+                .validFrom(validFrom)
+                .validTo(validTo)
+                .currency(existing.getCurrency())
+                .build();
+    }
+
+    private boolean hasPriceOverlap(FlowerVarietyPrice existing, LocalDateTime dtoValidTo) {
+        return flowerVarietyPriceService.existsByBranchDivisionIdAndDateRange(existing.getBranchDivision().getId(), dtoValidTo, dtoValidTo);
+    }
+
+    private FlowerVarietyPrice saveAndReturn(FlowerVarietyPrice entity) {
+        return flowerVarietyPriceService.create(entity);
     }
 
     @Override
