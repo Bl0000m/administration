@@ -25,6 +25,7 @@ public class EmployeeMeInfoDtoConverter {
         target.setId(source.getId());
         target.setName(source.getName());
         target.setEmail(source.getEmail());
+        target.setCompanyId(source.getBranchDivision().getCompany().getId());
         target.setPhoneNumber(source.getPhoneNumber());
         target.setBranchDivisionId(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getId() : null);
         target.setBranchDivisionType(Objects.nonNull(source.getBranchDivision()) ? source.getBranchDivision().getDivisionType() : null);
