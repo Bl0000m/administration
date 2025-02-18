@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.order.OrderFillDto;
 import kz.bloooom.administration.domain.dto.order.OrderInfoDto;
+import kz.bloooom.administration.domain.dto.order.OrderStatusDto;
 import kz.bloooom.administration.facade.OrderFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,15 @@ public class OrderController {
     public ResponseEntity<Void> fill(@Valid @RequestBody OrderFillDto orderFillDto) {
         log.info("POST: /v1/client/order fill order");
         orderFacade.fillOrder(orderFillDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-status")
+    @Operation(summary = "Заполнение заказа")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> fill(@Valid @RequestBody OrderStatusDto dto) {
+        log.info("POST: /v1/client/order fill order");
+        orderFacade.changeStatus(dto);
         return ResponseEntity.ok().build();
     }
 

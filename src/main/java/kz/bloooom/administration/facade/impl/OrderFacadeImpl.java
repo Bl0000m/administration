@@ -5,9 +5,11 @@ import kz.bloooom.administration.converter.order.OrderFillDtoConverter;
 import kz.bloooom.administration.converter.order.OrderInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.order.OrderFillDto;
 import kz.bloooom.administration.domain.dto.order.OrderInfoDto;
+import kz.bloooom.administration.domain.dto.order.OrderStatusDto;
 import kz.bloooom.administration.domain.dto.transaction.TransactionCreateDto;
 import kz.bloooom.administration.domain.entity.Balances;
 import kz.bloooom.administration.domain.entity.Order;
+import kz.bloooom.administration.domain.entity.OrderStatus;
 import kz.bloooom.administration.domain.entity.Subscription;
 import kz.bloooom.administration.domain.entity.User;
 import kz.bloooom.administration.enumeration.Currency;
@@ -16,6 +18,7 @@ import kz.bloooom.administration.facade.OrderFacade;
 import kz.bloooom.administration.facade.TransactionsFacade;
 import kz.bloooom.administration.service.BalancesService;
 import kz.bloooom.administration.service.OrderService;
+import kz.bloooom.administration.service.OrderStatusService;
 import kz.bloooom.administration.service.SubscriptionService;
 import kz.bloooom.administration.service.UserService;
 import lombok.AccessLevel;
@@ -36,6 +39,7 @@ import java.util.List;
 public class OrderFacadeImpl implements OrderFacade {
 
     OrderService orderService;
+    OrderStatusService orderStatusService;
     BalancesService balancesService;
     UserService userService;
     TransactionsFacade transactionsFacade;
@@ -85,5 +89,15 @@ public class OrderFacadeImpl implements OrderFacade {
             Long statusId) {
         List<Order> orders = orderService.findAllByBranchIdAndStatusId(branchId, statusId);
         return orderInfoDtoConverter.convert(orders);
+    }
+
+    @Override
+    @Transactional
+    public void changeStatus(final OrderStatusDto orderStatusDto) {
+        Order order = orderService.findById(orderStatusDto.getOrderId());
+        OrderStatus status = orderStatusService.getById(orderStatusDto.getStatusId());
+
+        order.setOrderStatus(status);
+        orderService.save(order);
     }
 }
