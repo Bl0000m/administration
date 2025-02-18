@@ -3,8 +3,12 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.bloooom.administration.domain.dto.bouquet.*;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyBranchInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetAddBranchDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetBranchInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetCreateDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetDeletePriceDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetDetailInfoDto;
+import kz.bloooom.administration.domain.dto.bouquet.BouquetInfoDto;
 import kz.bloooom.administration.facade.BouquetFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -68,5 +80,13 @@ public class BouquetController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<List<BouquetInfoDto>> getAllBouquets() {
         return ResponseEntity.ok(bouquetFacade.getAll());
+    }
+
+    @DeleteMapping("/delete-price")
+    @Operation(summary = "Удалить цену букета")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deletePrice(@Valid @RequestBody BouquetDeletePriceDto dto) {
+        bouquetFacade.deletePrice(dto);
+        return ResponseEntity.ok().build();
     }
 }

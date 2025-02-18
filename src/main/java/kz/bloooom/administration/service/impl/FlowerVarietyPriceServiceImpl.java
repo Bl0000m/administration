@@ -1,6 +1,7 @@
 package kz.bloooom.administration.service.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.repository.FlowerVarietyPriceRepository;
@@ -37,10 +38,11 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     }
 
     @Override
-    public boolean existsByDateOverlap(Long flowerVarietyId,
-                                       Long branchDivisionId,
-                                       LocalDateTime validFrom,
-                                       LocalDateTime validTo) {
+    public boolean existsByDateOverlap(
+            Long flowerVarietyId,
+            Long branchDivisionId,
+            LocalDateTime validFrom,
+            LocalDateTime validTo) {
         return flowerVarietyPriceRepository.existsByDateOverlap(
                 flowerVarietyId,
                 branchDivisionId,
@@ -54,21 +56,38 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     }
 
     @Override
-    public boolean existsByBranchDivisionIdAndDateRange(Long branchDivisionId, LocalDateTime validFrom, LocalDateTime validTo) {
-        return flowerVarietyPriceRepository.existsByBranchDivisionIdAndValidFromLessThanEqualAndValidToGreaterThanEqual(branchDivisionId, validFrom, validTo);
+    public boolean existsByBranchDivisionIdAndDateRange(
+            Long branchDivisionId,
+            LocalDateTime validFrom,
+            LocalDateTime validTo) {
+        return flowerVarietyPriceRepository.existsByBranchDivisionIdAndValidFromLessThanEqualAndValidToGreaterThanEqual(
+                branchDivisionId, validFrom, validTo);
     }
 
     @Override
-    public List<FlowerVarietyPrice> getAllByBranchIdAndFlowerVarietyId(Long branchId, Long varietyId) {
+    public List<FlowerVarietyPrice> getAllByBranchIdAndFlowerVarietyId(
+            Long branchId,
+            Long varietyId) {
         return flowerVarietyPriceRepository.findAllByBranchDivisionIdAndFlowerVarietyId(branchId, varietyId);
     }
 
     @Override
     public FlowerVarietyPrice getById(Long id) {
         return flowerVarietyPriceRepository.findById(id)
-                .orElseThrow(() -> new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.FLOWER_VARIETY_THIS_ID_DOEST_EXISTS,
-                        "messages.exception.flower-variety-not-found", id));
+                                           .orElseThrow(() -> new BloomAdministrationException(
+                                                   HttpStatus.NOT_FOUND,
+                                                   ErrorCodeConstant.FLOWER_VARIETY_THIS_ID_DOEST_EXISTS,
+                                                   "messages.exception.flower-variety-not-found", id));
+    }
+
+    @Override
+    @Transactional
+    public void deletePrice(final FlowerVarietyAddBranchDto dto) {
+        flowerVarietyPriceRepository.deleteByParams(dto.getFlowerVarietyId(),
+                                                    dto.getPrice(),
+                                                    dto.getBranchDivisionId(),
+                                                    dto.getCurrency(),
+                                                    dto.getValidFrom(),
+                                                    dto.getValidTo());
     }
 }

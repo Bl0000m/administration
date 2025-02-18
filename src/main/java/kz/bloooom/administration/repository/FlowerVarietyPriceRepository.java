@@ -1,11 +1,13 @@
 package kz.bloooom.administration.repository;
 
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
+import kz.bloooom.administration.enumeration.Currency;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,5 +42,16 @@ public interface FlowerVarietyPriceRepository extends JpaRepository<FlowerVariet
 
     List<FlowerVarietyPrice> findAllByBranchDivisionIdAndFlowerVarietyId(Long branchId, Long varietyId);
 
-
+    @Query("DELETE FROM FlowerVarietyPrice e WHERE e.flowerVariety.id = :flowerVarietyId " +
+            "AND e.price = :price " +
+            "AND e.branchDivision.id = :branchDivisionId " +
+            "AND e.currency = :currency " +
+            "AND e.validFrom = :validFrom " +
+            "AND e.validTo = :validTo")
+    void deleteByParams(@Param("flowerVarietyId") Long flowerVarietyId,
+                        @Param("price") Double price,
+                        @Param("branchDivisionId") Long branchDivisionId,
+                        @Param("currency") Currency currency,
+                        @Param("validFrom") LocalDate validFrom,
+                        @Param("validTo") LocalDate validTo);
 }

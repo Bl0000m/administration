@@ -1,11 +1,13 @@
 package kz.bloooom.administration.repository;
 
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
+import kz.bloooom.administration.enumeration.Currency;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +23,9 @@ public interface AdditionalElementsPriceRepository extends JpaRepository<Additio
             @Param("branchDivisionId") Long branchDivisionId,
             @Param("currentDate") LocalDateTime currentDate);
 
-    List<AdditionalElementsPrice> findAllByBranchDivisionIdAndAdditionalElementsId(Long branchId, Long elementId);
+    List<AdditionalElementsPrice> findAllByBranchDivisionIdAndAdditionalElementsId(
+            Long branchId,
+            Long elementId);
 
 
     @Query("SELECT COUNT(aep) > 0 " +
@@ -36,5 +40,18 @@ public interface AdditionalElementsPriceRepository extends JpaRepository<Additio
             @Param("branchDivisionId") Long branchDivisionId,
             @Param("validFrom") LocalDateTime validFrom,
             @Param("validTo") LocalDateTime validTo
-    );
+                               );
+
+    @Query("DELETE FROM AdditionalElementsPrice e WHERE e.additionalElements.id = :additionalElementId " +
+            "AND e.price = :price " +
+            "AND e.branchDivision.id = :branchDivisionId " +
+            "AND e.currency = :currency " +
+            "AND e.validFrom = :validFrom " +
+            "AND e.validTo = :validTo")
+    void deleteByParams(@Param("additionalElementId") Long additionalElementId,
+                        @Param("price") Double price,
+                        @Param("branchDivisionId") Long branchDivisionId,
+                        @Param("currency") Currency currency,
+                        @Param("validFrom") LocalDate validFrom,
+                        @Param("validTo") LocalDate validTo);
 }

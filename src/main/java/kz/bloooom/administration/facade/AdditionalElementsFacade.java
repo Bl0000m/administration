@@ -18,4 +18,6 @@ public interface AdditionalElementsFacade {
     List<AdditionalElementsBranchInfoDto> getAllByBranchId(Long branchId);
 
     List<AdditionalElementsInfoDto> getAll();
+
+    void deletePrice(AdditionalElementAddBranchDto dto);
 }

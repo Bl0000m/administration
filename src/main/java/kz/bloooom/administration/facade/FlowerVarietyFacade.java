@@ -21,4 +21,6 @@ public interface FlowerVarietyFacade {
     List<FlowerVarietyBranchInfoDto> getAllByBranchId(Long branchId);
 
     List<FlowerVarietyInfoDto> getAll();
+
+    void deletePrice(FlowerVarietyAddBranchDto dto);
 }

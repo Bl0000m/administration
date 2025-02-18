@@ -70,7 +70,9 @@ public class AdditionalElementsController {
     @GetMapping("/branch/{branchId}/element/{elementId}")
     @Operation(summary = "Получить заказ по филиал Id и статус Id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<AdditionalElementsPriceInfoDto>> getByBranchIdAndElementId(@PathVariable Long branchId, @PathVariable Long elementId) {
+    public ResponseEntity<List<AdditionalElementsPriceInfoDto>> getByBranchIdAndElementId(
+            @PathVariable Long branchId,
+            @PathVariable Long elementId) {
         return ResponseEntity.ok(additionalElementsFacade.getByBranchIdAndElementId(branchId, elementId));
     }
 
@@ -81,4 +83,11 @@ public class AdditionalElementsController {
         return ResponseEntity.ok(additionalElementsFacade.getAll());
     }
 
+    @DeleteMapping("/delete-price")
+    @Operation(summary = "Удалить цену доп элемента")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deletePrice(@Valid @RequestBody AdditionalElementAddBranchDto dto) {
+        additionalElementsFacade.deletePrice(dto);
+        return ResponseEntity.ok().build();
+    }
 }

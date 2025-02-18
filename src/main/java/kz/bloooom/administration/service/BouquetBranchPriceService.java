@@ -13,5 +13,4 @@ public interface BouquetBranchPriceService {
     List<BouquetBranchPrice> getAllBouquetBranchByBouquetId(Long bouquetId);
 
     List<BouquetBranchPrice> getAllBouquetBranchByBranchId(Long branchId);
-
 }

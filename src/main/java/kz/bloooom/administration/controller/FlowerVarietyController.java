@@ -3,6 +3,7 @@ package kz.bloooom.administration.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
 import kz.bloooom.administration.domain.dto.flower_variety.*;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
 import lombok.AccessLevel;
@@ -92,5 +93,13 @@ public class FlowerVarietyController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<List<FlowerVarietyInfoDto>> getByAll() {
         return ResponseEntity.ok(flowerVarietyFacade.getAll());
+    }
+
+    @DeleteMapping("/delete-price")
+    @Operation(summary = "Удалить цену сорта цветка")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deletePrice(@Valid @RequestBody FlowerVarietyAddBranchDto dto) {
+        flowerVarietyFacade.deletePrice(dto);
+        return ResponseEntity.ok().build();
     }
 }

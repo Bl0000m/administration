@@ -1,6 +1,7 @@
 package kz.bloooom.administration.service.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.repository.AdditionalElementsPriceRepository;
@@ -63,5 +64,16 @@ public class AdditionalElementsPriceServiceImpl implements AdditionalElementsPri
                         HttpStatus.NOT_FOUND,
                         ErrorCodeConstant.ELEMENT_WITH_THIS_ID_DOEST_EXISTS,
                         "messages.exception.element-not-found", id));
+    }
+
+    @Override
+    @Transactional
+    public void deletePrice(AdditionalElementAddBranchDto dto) {
+        additionalElementsPriceRepository.deleteByParams(dto.getAdditionalElementId(),
+                                                         dto.getPrice(),
+                                                         dto.getBranchDivisionId(),
+                                                         dto.getCurrency(),
+                                                         dto.getValidFrom(),
+                                                         dto.getValidTo());
     }
 }

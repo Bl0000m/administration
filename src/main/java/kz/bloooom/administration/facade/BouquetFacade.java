@@ -16,4 +16,6 @@ public interface BouquetFacade {
     List<BouquetBranchInfoDto> getAllByBranchId(Long branchId);
 
     List<BouquetInfoDto> getAll();
+
+    void deletePrice(BouquetDeletePriceDto dto);
 }

@@ -57,7 +57,9 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
 
     @Override
     @Transactional
-    public void create(FlowerVarietyCreateDto dto, MultipartFile photo) {
+    public void create(
+            FlowerVarietyCreateDto dto,
+            MultipartFile photo) {
         FlowerVariety flowerVariety = flowerVarietyCreateDtoConverter.convert(dto);
         addPhoto(flowerVariety, photo);
         flowerVariety = flowerVarietyService.save(flowerVariety);
@@ -114,10 +116,11 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
 
     }
 
-    private FlowerVarietyPrice createPrice(FlowerVarietyCreateDto dto,
-                                           FlowerVariety flowerVariety) {
+    private FlowerVarietyPrice createPrice(
+            FlowerVarietyCreateDto dto,
+            FlowerVariety flowerVariety) {
         BranchDivision branchDivision = Objects.nonNull(dto.getBranchDivisionId()) ?
-                branchDivisionService.getById(dto.getBranchDivisionId()) : null;
+                                        branchDivisionService.getById(dto.getBranchDivisionId()) : null;
         Employee employee = employeeService.getById(dto.getEmployeeId());
 
         return FlowerVarietyPrice
@@ -136,7 +139,9 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                 .build();
     }
 
-    private void addPhoto(FlowerVariety flowerVariety, MultipartFile photo) {
+    private void addPhoto(
+            FlowerVariety flowerVariety,
+            MultipartFile photo) {
         if (Objects.nonNull(photo) && !photo.isEmpty()) {
             if (StringUtils.isNotBlank(flowerVariety.getImage())) {
                 storageService.delete(flowerVariety.getImage());
@@ -152,7 +157,9 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
 
     @Override
     @Transactional
-    public void updatePrice(Long id, FlowerVarietyUpdateDto dto) {
+    public void updatePrice(
+            Long id,
+            FlowerVarietyUpdateDto dto) {
         FlowerVarietyPrice existing = flowerVarietyPriceService.getById(id);
 
         LocalDateTime today = LocalDateTime.now();
@@ -196,7 +203,8 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                         "messages.exception.valid-to-passed");
 
             }
-            if (dtoValidTo.isBefore(existingValidTo) || (dtoValidTo.isAfter(today) && !hasPriceOverlap(existing, dtoValidTo))) {
+            if (dtoValidTo.isBefore(existingValidTo) || (dtoValidTo.isAfter(today) && !hasPriceOverlap(existing,
+                                                                                                       dtoValidTo))) {
                 existing.setValidTo(dtoValidTo);
                 saveAndReturn(existing);
             }
@@ -267,26 +275,35 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     }
 
     @Override
-    public List<FlowerVarietyPriceInfoDto> getByBranchIdAndVarietyId(Long branchId, Long varietyId) {
+    public List<FlowerVarietyPriceInfoDto> getByBranchIdAndVarietyId(
+            Long branchId,
+            Long varietyId) {
         List<FlowerVarietyPrice> flowerVarietyPrices =
                 flowerVarietyPriceService.getAllByBranchIdAndFlowerVarietyId(branchId, varietyId);
         return flowerVarietyPriceInfoDtoConverter.convert(flowerVarietyPrices);
     }
 
 
-    private FlowerVarietyPrice createNewEntry(FlowerVarietyPrice existing, Double price, LocalDateTime validFrom, LocalDateTime validTo) {
+    private FlowerVarietyPrice createNewEntry(
+            FlowerVarietyPrice existing,
+            Double price,
+            LocalDateTime validFrom,
+            LocalDateTime validTo) {
         return FlowerVarietyPrice.builder()
-                .branchDivision(existing.getBranchDivision())
-                .flowerVariety(existing.getFlowerVariety())
-                .price(price)
-                .validFrom(validFrom)
-                .validTo(validTo)
-                .currency(existing.getCurrency())
-                .build();
+                                 .branchDivision(existing.getBranchDivision())
+                                 .flowerVariety(existing.getFlowerVariety())
+                                 .price(price)
+                                 .validFrom(validFrom)
+                                 .validTo(validTo)
+                                 .currency(existing.getCurrency())
+                                 .build();
     }
 
-    private boolean hasPriceOverlap(FlowerVarietyPrice existing, LocalDateTime dtoValidTo) {
-        return flowerVarietyPriceService.existsByBranchDivisionIdAndDateRange(existing.getBranchDivision().getId(), dtoValidTo, dtoValidTo);
+    private boolean hasPriceOverlap(
+            FlowerVarietyPrice existing,
+            LocalDateTime dtoValidTo) {
+        return flowerVarietyPriceService.existsByBranchDivisionIdAndDateRange(existing.getBranchDivision().getId(),
+                                                                              dtoValidTo, dtoValidTo);
     }
 
     private FlowerVarietyPrice saveAndReturn(FlowerVarietyPrice entity) {
@@ -298,8 +315,8 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
         List<FlowerVarietyPrice> flowerVarietyPrices = flowerVarietyPriceService.getAllByBranchId(branchId);
 
         return flowerVarietyPrices.stream()
-                .map(this::mapToFlowerVarietyBranchInfoDto)
-                .collect(Collectors.toList());
+                                  .map(this::mapToFlowerVarietyBranchInfoDto)
+                                  .collect(Collectors.toList());
     }
 
     private FlowerVarietyBranchInfoDto mapToFlowerVarietyBranchInfoDto(FlowerVarietyPrice source) {
@@ -321,7 +338,8 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
             target.setStemHeightSizeMax(source.getFlowerVariety().getStemHeightSizeMax());
             target.setImage(source.getFlowerVariety().getImage());
             target.setStemCareInfo(stemCareInfoDtoConverter.convert(source.getFlowerVariety().getStemCare()));
-            target.setTemperatureCareInfo(temperatureCareInfoDtoConverter.convert(source.getFlowerVariety().getTemperatureCare()));
+            target.setTemperatureCareInfo(
+                    temperatureCareInfoDtoConverter.convert(source.getFlowerVariety().getTemperatureCare()));
             target.setWaterCareInfo(waterCareInfoDtoConverter.convert(source.getFlowerVariety().getWaterCare()));
             target.setCountryInfoDto(countryInfoDtoConverter.convert(source.getFlowerVariety().getCountry()));
         }
@@ -337,5 +355,11 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     @Override
     public List<FlowerVarietyInfoDto> getAll() {
         return flowerVarietyInfoDtoConverter.convert(flowerVarietyService.getAll());
+    }
+
+    @Override
+    @Transactional
+    public void deletePrice(final FlowerVarietyAddBranchDto dto) {
+        flowerVarietyPriceService.deletePrice(dto);
     }
 }

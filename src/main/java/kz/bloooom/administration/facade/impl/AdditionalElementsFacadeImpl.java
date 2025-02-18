@@ -163,4 +163,10 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     public List<AdditionalElementsInfoDto> getAll() {
         return additionalElementsInfoDtoConverter.convert(additionalElementsService.getAll());
     }
+
+    @Override
+    @Transactional
+    public void deletePrice(AdditionalElementAddBranchDto dto) {
+        additionalElementsPriceService.deletePrice(dto);
+    }
 }

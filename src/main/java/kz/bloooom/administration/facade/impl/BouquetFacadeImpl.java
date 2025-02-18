@@ -56,8 +56,9 @@ public class BouquetFacadeImpl implements BouquetFacade {
 
     @Override
     @Transactional
-    public void createBouquet(BouquetCreateDto bouquetCreateDto,
-                              List<MultipartFile> files) {
+    public void createBouquet(
+            BouquetCreateDto bouquetCreateDto,
+            List<MultipartFile> files) {
 
         Bouquet bouquet = bouquetCreateDtoConverter.convert(bouquetCreateDto);
         bouquet = bouquetService.create(bouquet);
@@ -90,9 +91,11 @@ public class BouquetFacadeImpl implements BouquetFacade {
         bouquetBranchPriceService.create(bouquetBranchPrice);
     }
 
-    private void createBouquetBranchPrice(BouquetCreateDto dto, Bouquet bouquet) {
+    private void createBouquetBranchPrice(
+            BouquetCreateDto dto,
+            Bouquet bouquet) {
         BranchDivision branchDivision = Objects.nonNull(dto.getBranchId()) ?
-                branchDivisionService.getById(dto.getBranchId()) : null;
+                                        branchDivisionService.getById(dto.getBranchId()) : null;
         Employee employee = employeeService.getById(dto.getEmployeeId());
 
         BouquetBranchPrice bouquetBranchPrice =
@@ -114,10 +117,11 @@ public class BouquetFacadeImpl implements BouquetFacade {
 
     @Override
     public List<BouquetBranchInfoDto> getAllByBranchId(Long branchId) {
-        List<BouquetBranchPrice> bouquetBranchPrices = bouquetBranchPriceService.getAllBouquetBranchByBranchId(branchId);
+        List<BouquetBranchPrice> bouquetBranchPrices = bouquetBranchPriceService.getAllBouquetBranchByBranchId(
+                branchId);
         return bouquetBranchPrices.stream()
-                .map(this::mapToBouquetBranchInfoDto)
-                .collect(Collectors.toList());
+                                  .map(this::mapToBouquetBranchInfoDto)
+                                  .collect(Collectors.toList());
     }
 
     private BouquetBranchInfoDto mapToBouquetBranchInfoDto(BouquetBranchPrice source) {
@@ -129,8 +133,11 @@ public class BouquetFacadeImpl implements BouquetFacade {
             target.setBouquetPhotos(imageInfoConverter.convert(source.getBouquet().getBouquetPhotos()));
             target.setPrice(source.getPrice());
             target.setBouquetStyle(source.getBouquet().getBouquetStyle().getName());
-            target.setFlowerVarietyInfo(flowerVarietyNameInfoDtoConverter.convert(source.getBouquet().getFlowers(), source.getBouquet().getId()));
-            target.setAdditionalElements(additionalElementsNameInfoDtoConverter.convert(source.getBouquet().getAdditionalElements(), source.getBouquet().getId()));
+            target.setFlowerVarietyInfo(flowerVarietyNameInfoDtoConverter.convert(source.getBouquet().getFlowers(),
+                                                                                  source.getBouquet().getId()));
+            target.setAdditionalElements(
+                    additionalElementsNameInfoDtoConverter.convert(source.getBouquet().getAdditionalElements(),
+                                                                   source.getBouquet().getId()));
         }
         return target;
     }
@@ -141,13 +148,15 @@ public class BouquetFacadeImpl implements BouquetFacade {
         return bouquetInfoDtoConverter.convert(bouquets);
     }
 
-    private void attachFlowerVarietiesToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
+    private void attachFlowerVarietiesToBouquet(
+            BouquetCreateDto bouquetCreateDto,
+            Bouquet bouquet) {
         Map<Long, Integer> flowerQuantityMap = bouquetCreateDto.getFlowersVarietyInfo()
-                .stream()
-                .collect(Collectors.toMap(
-                        FlowerVarietyShortInfoToAttachBouquetDto::getId,
-                        FlowerVarietyShortInfoToAttachBouquetDto::getQuantity
-                ));
+                                                               .stream()
+                                                               .collect(Collectors.toMap(
+                                                                       FlowerVarietyShortInfoToAttachBouquetDto::getId,
+                                                                       FlowerVarietyShortInfoToAttachBouquetDto::getQuantity
+                                                                                        ));
 
         List<Long> flowerVarietyIds = new ArrayList<>(flowerQuantityMap.keySet());
 
@@ -155,23 +164,29 @@ public class BouquetFacadeImpl implements BouquetFacade {
                 flowerVarietyService.getFlowerVarietiesByIdIn(flowerVarietyIds);
 
         List<BouquetFlowerVariety> bouquetFlowerVarietyList = flowerVarieties.stream()
-                .map(flowerVariety -> BouquetFlowerVariety.builder()
-                        .bouquet(bouquet)
-                        .flowerVariety(flowerVariety)
-                        .quantity(flowerQuantityMap.get(flowerVariety.getId()))
-                        .build())
-                .collect(Collectors.toList());
+                                                                             .map(flowerVariety -> BouquetFlowerVariety.builder()
+                                                                                                                       .bouquet(
+                                                                                                                               bouquet)
+                                                                                                                       .flowerVariety(
+                                                                                                                               flowerVariety)
+                                                                                                                       .quantity(
+                                                                                                                               flowerQuantityMap.get(
+                                                                                                                                       flowerVariety.getId()))
+                                                                                                                       .build())
+                                                                             .collect(Collectors.toList());
 
         bouquetFlowersService.saveAll(bouquetFlowerVarietyList);
     }
 
-    private void attachAdditionalElementsToBouquet(BouquetCreateDto bouquetCreateDto, Bouquet bouquet) {
+    private void attachAdditionalElementsToBouquet(
+            BouquetCreateDto bouquetCreateDto,
+            Bouquet bouquet) {
         Map<Long, AdditionalElementsShortInfoDto> additionalElementsMap = bouquetCreateDto.getAdditionalElements()
-                .stream()
-                .collect(Collectors.toMap(
-                        AdditionalElementsShortInfoDto::getId,
-                        additionalElement -> additionalElement
-                ));
+                                                                                          .stream()
+                                                                                          .collect(Collectors.toMap(
+                                                                                                  AdditionalElementsShortInfoDto::getId,
+                                                                                                  additionalElement -> additionalElement
+                                                                                                                   ));
 
 
         List<Long> additionalElementsIds = new ArrayList<>(additionalElementsMap.keySet());
@@ -180,25 +195,35 @@ public class BouquetFacadeImpl implements BouquetFacade {
                 additionalElementsService.getAdditionalElementsByIdIn(additionalElementsIds);
 
         List<BouquetAdditionalElements> bouquetAdditionalElementsList = additionalElements.stream()
-                .map(elements -> BouquetAdditionalElements.builder()
-                        .bouquet(bouquet)
-                        .additionalElements(elements)
-                        .quantity(additionalElementsMap.get(elements.getId()).getQuantity())
-                        .color(additionalElementsMap.get(elements.getId()).getColor())
-                        .build())
-                .collect(Collectors.toList());
+                                                                                          .map(elements -> BouquetAdditionalElements.builder()
+                                                                                                                                    .bouquet(
+                                                                                                                                            bouquet)
+                                                                                                                                    .additionalElements(
+                                                                                                                                            elements)
+                                                                                                                                    .quantity(
+                                                                                                                                            additionalElementsMap.get(
+                                                                                                                                                                         elements.getId())
+                                                                                                                                                                 .getQuantity())
+                                                                                                                                    .color(additionalElementsMap.get(
+                                                                                                                                                                        elements.getId())
+                                                                                                                                                                .getColor())
+                                                                                                                                    .build())
+                                                                                          .collect(Collectors.toList());
 
         bouquetAdditionalElementsService.saveAll(bouquetAdditionalElementsList);
     }
 
-    private String getOrganizationPath(String companyName, Long bouquetId) {
+    private String getOrganizationPath(
+            String companyName,
+            Long bouquetId) {
         return companyName + File.separator
                 + bouquetId + File.separator;
     }
 
-    private void savePhoto(List<MultipartFile> files,
-                           Bouquet bouquet,
-                           String organizationUrl) {
+    private void savePhoto(
+            List<MultipartFile> files,
+            Bouquet bouquet,
+            String organizationUrl) {
         List<BouquetPhoto> photos = new ArrayList<>();
         String keycloakId = JwtUtils.getKeycloakId();
         for (MultipartFile file : files) {
@@ -215,5 +240,13 @@ public class BouquetFacadeImpl implements BouquetFacade {
         log.info("Stored bouquet photos for bouquet: {}", bouquet.getId());
     }
 
+    @Override
+    @Transactional
+    public void deletePrice(final BouquetDeletePriceDto dto) {
+        BouquetBranchPrice bouquetBranchPrice = bouquetBranchPriceService.getBouquetBranchByBouquetIdAndBranchId(
+                dto.getBouquetId(), dto.getBranchDivisionId());
 
+        bouquetBranchPrice.setPrice(null);
+        bouquetBranchPriceService.create(bouquetBranchPrice);
+    }
 }

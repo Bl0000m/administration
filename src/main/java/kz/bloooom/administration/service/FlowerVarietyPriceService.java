@@ -1,5 +1,6 @@
 package kz.bloooom.administration.service;
 
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 
 import java.time.LocalDateTime;
@@ -22,4 +23,6 @@ public interface FlowerVarietyPriceService {
     List<FlowerVarietyPrice> getAllByBranchIdAndFlowerVarietyId(Long branchId, Long varietyId);
 
     FlowerVarietyPrice getById(Long id);
+
+    void deletePrice(FlowerVarietyAddBranchDto dto);
 }

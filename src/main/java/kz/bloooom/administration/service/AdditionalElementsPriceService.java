@@ -1,5 +1,6 @@
 package kz.bloooom.administration.service;
 
+import kz.bloooom.administration.domain.dto.additional_elements.AdditionalElementAddBranchDto;
 import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
 
 import java.time.LocalDateTime;
@@ -21,4 +22,6 @@ public interface AdditionalElementsPriceService {
                                 LocalDateTime validTo);
 
     AdditionalElementsPrice getById(Long id);
+
+    void deletePrice(AdditionalElementAddBranchDto dto);
 }
