@@ -82,12 +82,7 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
 
     @Override
     @Transactional
-    public void deletePrice(final FlowerVarietyAddBranchDto dto) {
-        flowerVarietyPriceRepository.deleteByParams(dto.getFlowerVarietyId(),
-                                                    dto.getPrice(),
-                                                    dto.getBranchDivisionId(),
-                                                    dto.getCurrency(),
-                                                    dto.getValidFrom(),
-                                                    dto.getValidTo());
+    public void deleteById(Long id) {
+        flowerVarietyPriceRepository.deleteById(id);
     }
 }

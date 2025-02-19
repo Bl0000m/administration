@@ -68,12 +68,7 @@ public class AdditionalElementsPriceServiceImpl implements AdditionalElementsPri
 
     @Override
     @Transactional
-    public void deletePrice(AdditionalElementAddBranchDto dto) {
-        additionalElementsPriceRepository.deleteByParams(dto.getAdditionalElementId(),
-                                                         dto.getPrice(),
-                                                         dto.getBranchDivisionId(),
-                                                         dto.getCurrency(),
-                                                         dto.getValidFrom(),
-                                                         dto.getValidTo());
+    public void deleteById(Long id) {
+        additionalElementsPriceRepository.deleteById(id);
     }
 }

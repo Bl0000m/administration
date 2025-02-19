@@ -23,5 +23,5 @@ public interface AdditionalElementsPriceService {
 
     AdditionalElementsPrice getById(Long id);
 
-    void deletePrice(AdditionalElementAddBranchDto dto);
+    void deleteById(Long id);
 }

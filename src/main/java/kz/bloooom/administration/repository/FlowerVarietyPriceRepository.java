@@ -41,17 +41,4 @@ public interface FlowerVarietyPriceRepository extends JpaRepository<FlowerVariet
             Long branchDivisionId, LocalDateTime validFrom, LocalDateTime validTo);
 
     List<FlowerVarietyPrice> findAllByBranchDivisionIdAndFlowerVarietyId(Long branchId, Long varietyId);
-
-    @Query("DELETE FROM FlowerVarietyPrice e WHERE e.flowerVariety.id = :flowerVarietyId " +
-            "AND e.price = :price " +
-            "AND e.branchDivision.id = :branchDivisionId " +
-            "AND e.currency = :currency " +
-            "AND e.validFrom = :validFrom " +
-            "AND e.validTo = :validTo")
-    void deleteByParams(@Param("flowerVarietyId") Long flowerVarietyId,
-                        @Param("price") Double price,
-                        @Param("branchDivisionId") Long branchDivisionId,
-                        @Param("currency") Currency currency,
-                        @Param("validFrom") LocalDate validFrom,
-                        @Param("validTo") LocalDate validTo);
 }

@@ -19,5 +19,5 @@ public interface AdditionalElementsFacade {
 
     List<AdditionalElementsInfoDto> getAll();
 
-    void deletePrice(AdditionalElementAddBranchDto dto);
+    void deletePrice(Long priceId);
 }

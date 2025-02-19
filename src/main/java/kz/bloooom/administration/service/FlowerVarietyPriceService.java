@@ -24,5 +24,5 @@ public interface FlowerVarietyPriceService {
 
     FlowerVarietyPrice getById(Long id);
 
-    void deletePrice(FlowerVarietyAddBranchDto dto);
+    void deleteById(Long id);
 }

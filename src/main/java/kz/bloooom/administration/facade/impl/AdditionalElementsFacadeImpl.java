@@ -166,7 +166,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
     @Override
     @Transactional
-    public void deletePrice(AdditionalElementAddBranchDto dto) {
-        additionalElementsPriceService.deletePrice(dto);
+    public void deletePrice(Long priceId) {
+        additionalElementsPriceService.deleteById(priceId);
     }
 }

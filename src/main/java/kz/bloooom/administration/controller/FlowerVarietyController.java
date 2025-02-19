@@ -95,11 +95,11 @@ public class FlowerVarietyController {
         return ResponseEntity.ok(flowerVarietyFacade.getAll());
     }
 
-    @DeleteMapping("/delete-price")
+    @DeleteMapping("/delete-price/{priceId}")
     @Operation(summary = "Удалить цену сорта цветка")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Void> deletePrice(@Valid @RequestBody FlowerVarietyAddBranchDto dto) {
-        flowerVarietyFacade.deletePrice(dto);
+    public ResponseEntity<Void> deletePrice(@PathVariable Long priceId) {
+        flowerVarietyFacade.deletePrice(priceId);
         return ResponseEntity.ok().build();
     }
 }

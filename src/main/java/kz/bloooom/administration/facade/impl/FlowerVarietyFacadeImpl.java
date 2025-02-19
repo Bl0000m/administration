@@ -359,7 +359,7 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
 
     @Override
     @Transactional
-    public void deletePrice(final FlowerVarietyAddBranchDto dto) {
-        flowerVarietyPriceService.deletePrice(dto);
+    public void deletePrice(final Long priceId) {
+        flowerVarietyPriceService.deleteById(priceId);
     }
 }

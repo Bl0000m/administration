@@ -83,11 +83,11 @@ public class AdditionalElementsController {
         return ResponseEntity.ok(additionalElementsFacade.getAll());
     }
 
-    @DeleteMapping("/delete-price")
+    @DeleteMapping("/delete-price/{priceId}")
     @Operation(summary = "Удалить цену доп элемента")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Void> deletePrice(@Valid @RequestBody AdditionalElementAddBranchDto dto) {
-        additionalElementsFacade.deletePrice(dto);
+    public ResponseEntity<Void> deletePrice(@PathVariable Long priceId) {
+        additionalElementsFacade.deletePrice(priceId);
         return ResponseEntity.ok().build();
     }
 }
