@@ -161,7 +161,6 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
             Long id,
             FlowerVarietyUpdateDto dto) {
         FlowerVarietyPrice existing = flowerVarietyPriceService.getById(id);
-
         LocalDateTime today = LocalDateTime.now();
 
         LocalDateTime dtoValidFrom = dto.getValidFrom().atStartOfDay();
@@ -176,102 +175,91 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
         boolean validFromChanged = dtoValidFrom != null && !dtoValidFrom.equals(existingValidFrom);
         boolean validToChanged = dtoValidTo != null && !dtoValidTo.equals(existingValidTo);
 
-
+        // ✅ 1. Если изменений нет — выбрасываем исключение
         if (!priceChanged && !validFromChanged && !validToChanged) {
-            throw new BloomAdministrationException(
-                    HttpStatus.NOT_FOUND,
-                    ErrorCodeConstant.NOT_CHANGES,
-                    "messages.exception.not-changes");
+            throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.NOT_CHANGES,
+                                                   "messages.exception.not-changes");
         }
 
+        // ✅ 2. Если изменяется только цена
         if (priceChanged && !validFromChanged && !validToChanged) {
             if (existingValidFrom.isAfter(today) || existingValidFrom.isEqual(today)) {
                 existing.setPrice(dtoPrice);
                 saveAndReturn(existing);
+            } else {
+                throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.VALID_FROM_ARRIVED,
+                                                       "messages.exception.valid-from-arrived");
             }
-            throw new BloomAdministrationException(
-                    HttpStatus.NOT_FOUND,
-                    ErrorCodeConstant.VALID_FROM_ARRIVED,
-                    "messages.exception.valid-from-arrived");
+            return;
         }
 
+        // ✅ 3. Если изменяется только `validTo`
         if (validToChanged && !priceChanged && !validFromChanged) {
             if (existingValidTo.isBefore(today)) {
-                throw new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.VALID_TO_PASSED,
-                        "messages.exception.valid-to-passed");
-
+                throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.VALID_TO_PASSED,
+                                                       "messages.exception.valid-to-passed");
             }
-            if (dtoValidTo.isBefore(existingValidTo) || (dtoValidTo.isAfter(today) && !hasPriceOverlap(existing,
-                                                                                                       dtoValidTo))) {
+            if (dtoValidTo.isAfter(today) && !hasPriceOverlap(existing, dtoValidTo)) {
                 existing.setValidTo(dtoValidTo);
                 saveAndReturn(existing);
             }
+            return;
         }
 
+        // ✅ 4. Если изменяется только `validFrom`
         if (!priceChanged && validFromChanged && !validToChanged) {
-            if (existingValidFrom.isAfter(today) || existingValidFrom.isEqual(today) ||
-                    (dtoValidFrom.isAfter(existingValidFrom) || !hasPriceOverlap(existing, dtoValidFrom))) {
+            if (existingValidFrom.isAfter(today) || existingValidFrom.isEqual(today)) {
                 existing.setValidFrom(dtoValidFrom);
                 saveAndReturn(existing);
+            } else {
+                throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.VALID_FROM_ARRIVED,
+                                                       "messages.exception.validFrom-cannot-be-changed");
             }
-            throw new BloomAdministrationException(
-                    HttpStatus.NOT_FOUND,
-                    ErrorCodeConstant.VALID_FROM_ARRIVED,
-                    "messages.exception.validFrom-cannot-be-changed");
+            return;
         }
 
+        // ✅ 5. Если изменяются `price` и `validTo`
         if (priceChanged && !validFromChanged && validToChanged) {
             if (existingValidTo.isBefore(today)) {
-                throw new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.VALID_TO_PASSED,
-                        "messages.exception.valid-to-passed");
-
+                throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.VALID_TO_PASSED,
+                                                       "messages.exception.valid-to-passed");
             }
-            if (dtoValidTo.isBefore(existingValidTo) || !hasPriceOverlap(existing, dtoValidTo)) {
-                existing.setPrice(dtoPrice);
-                existing.setValidTo(dtoValidTo);
-                saveAndReturn(existing);
-            }
+            existing.setPrice(dtoPrice);
+            existing.setValidTo(dtoValidTo);
+            saveAndReturn(existing);
+            return;
         }
 
+        // ✅ 6. Если изменяются `price` и `validFrom`
         if (priceChanged && validFromChanged && !validToChanged) {
             if (existingValidFrom.isBefore(today)) {
                 FlowerVarietyPrice newEntry = createNewEntry(existing, dtoPrice, dtoValidFrom, existingValidTo);
                 flowerVarietyPriceService.create(newEntry);
                 existing.setValidTo(dtoValidFrom.minusDays(1));
                 saveAndReturn(existing);
-            }
-            existing.setPrice(dtoPrice);
-            existing.setValidFrom(dtoValidFrom);
-            saveAndReturn(existing);
-        }
-
-        if (priceChanged && validFromChanged && validToChanged) {
-            if (dtoValidFrom.isBefore(today)) {
-                throw new BloomAdministrationException(
-                        HttpStatus.NOT_FOUND,
-                        ErrorCodeConstant.VALID_FROM_ARRIVED,
-                        "messages.exception.validFrom-cannot-be-changed");
-            }
-            if (existingValidFrom.isBefore(today) && existingValidTo.isAfter(today)) {
-                FlowerVarietyPrice newEntry = createNewEntry(existing, dtoPrice, dtoValidFrom, dtoValidTo);
-                flowerVarietyPriceService.create(newEntry);
-                existing.setValidTo(dtoValidFrom.minusDays(1));
+            } else {
+                existing.setPrice(dtoPrice);
+                existing.setValidFrom(dtoValidFrom);
                 saveAndReturn(existing);
             }
-            existing.setPrice(dtoPrice);
-            existing.setValidFrom(dtoValidFrom);
-            existing.setValidTo(dtoValidTo);
-            saveAndReturn(existing);
+            return;
         }
 
-        throw new BloomAdministrationException(
-                HttpStatus.NOT_FOUND,
-                ErrorCodeConstant.DATA_NON_VALID,
-                "messages.exception.non-valid");
+        // ✅ 7. Если изменяются `price`, `validFrom`, `validTo`
+        if (priceChanged && validFromChanged && validToChanged) {
+            if (dtoValidFrom.isBefore(today)) {
+                throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.VALID_FROM_ARRIVED,
+                                                       "messages.exception.validFrom-cannot-be-changed");
+            }
+            FlowerVarietyPrice newEntry = createNewEntry(existing, dtoPrice, dtoValidFrom, dtoValidTo);
+            flowerVarietyPriceService.create(newEntry);
+            existing.setValidTo(dtoValidFrom.minusDays(1));
+            saveAndReturn(existing);
+            return;
+        }
+
+        throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.DATA_NON_VALID,
+                                               "messages.exception.non-valid");
     }
 
     @Override
