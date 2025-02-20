@@ -291,6 +291,7 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
             FlowerVarietyPrice existing,
             LocalDateTime dtoValidTo) {
         return flowerVarietyPriceService.existsByBranchDivisionIdAndDateRange(existing.getBranchDivision().getId(),
+                                                                              existing.getFlowerVariety().getId(),
                                                                               dtoValidTo, dtoValidTo);
     }
 

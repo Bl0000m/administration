@@ -18,7 +18,7 @@ public interface FlowerVarietyPriceService {
 
     List<FlowerVarietyPrice> getAllByBranchId(Long branchId);
 
-    boolean existsByBranchDivisionIdAndDateRange(Long branchDivisionId, LocalDateTime validFrom, LocalDateTime validTo);
+    boolean existsByBranchDivisionIdAndDateRange(Long branchDivisionId, Long flowerVarietyId, LocalDateTime validFrom, LocalDateTime validTo);
 
     List<FlowerVarietyPrice> getAllByBranchIdAndFlowerVarietyId(Long branchId, Long varietyId);
 
