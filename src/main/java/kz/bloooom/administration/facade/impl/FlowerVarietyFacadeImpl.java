@@ -294,7 +294,8 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                                                                               dtoValidTo, dtoValidTo);
     }
 
-    private FlowerVarietyPrice saveAndReturn(FlowerVarietyPrice entity) {
+    @Transactional
+    public FlowerVarietyPrice saveAndReturn(FlowerVarietyPrice entity) {
         return flowerVarietyPriceService.create(entity);
     }
 

@@ -83,6 +83,7 @@ public class BouquetController {
     }
 
     @DeleteMapping("/delete-price")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     @Operation(summary = "Удалить цену букета")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deletePrice(@Valid @RequestBody BouquetDeletePriceDto dto) {

@@ -84,6 +84,7 @@ public class AdditionalElementsController {
     }
 
     @DeleteMapping("/delete-price/{priceId}")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     @Operation(summary = "Удалить цену доп элемента")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deletePrice(@PathVariable Long priceId) {

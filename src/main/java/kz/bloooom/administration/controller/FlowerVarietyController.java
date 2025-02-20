@@ -96,6 +96,7 @@ public class FlowerVarietyController {
     }
 
     @DeleteMapping("/delete-price/{priceId}")
+    @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     @Operation(summary = "Удалить цену сорта цветка")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deletePrice(@PathVariable Long priceId) {
