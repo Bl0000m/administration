@@ -246,7 +246,6 @@ public class BouquetFacadeImpl implements BouquetFacade {
         BouquetBranchPrice bouquetBranchPrice = bouquetBranchPriceService.getBouquetBranchByBouquetIdAndBranchId(
                 dto.getBouquetId(), dto.getBranchDivisionId());
 
-        bouquetBranchPrice.setPrice(null);
-        bouquetBranchPriceService.create(bouquetBranchPrice);
+        bouquetBranchPriceService.delete(bouquetBranchPrice);
     }
 }

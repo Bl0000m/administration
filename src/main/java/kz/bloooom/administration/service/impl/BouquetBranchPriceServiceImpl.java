@@ -41,4 +41,10 @@ public class BouquetBranchPriceServiceImpl implements BouquetBranchPriceService 
     public List<BouquetBranchPrice> getAllBouquetBranchByBranchId(Long branchId) {
         return bouquetBranchPriceRepository.findAllByBranchDivisionId(branchId);
     }
+
+    @Override
+    @Transactional
+    public void delete(final BouquetBranchPrice deleteBouquetBranchPrice) {
+        bouquetBranchPriceRepository.delete(deleteBouquetBranchPrice);
+    }
 }

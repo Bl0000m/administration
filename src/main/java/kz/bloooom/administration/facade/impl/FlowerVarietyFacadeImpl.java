@@ -199,7 +199,7 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                 throw new BloomAdministrationException(HttpStatus.NOT_FOUND, ErrorCodeConstant.VALID_TO_PASSED,
                                                        "messages.exception.valid-to-passed");
             }
-            if (dtoValidTo.isAfter(today) && !hasPriceOverlap(existing, dtoValidTo)) {
+            if (dtoValidTo.isAfter(today)) {
                 existing.setValidTo(dtoValidTo);
                 saveAndReturn(existing);
             }
