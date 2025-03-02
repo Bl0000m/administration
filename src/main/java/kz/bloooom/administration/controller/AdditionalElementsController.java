@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.bloooom.administration.domain.dto.additional_elements.*;
+import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyUpdateDto;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,14 @@ public class AdditionalElementsController {
     @PreAuthorize("@keycloak.hasAnyRole('SUPER_ADMIN', 'FLORIST')")
     public ResponseEntity<Void> create(@Valid @RequestBody AdditionalElementsCreateDto dto) {
         additionalElementsFacade.create(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updatePrice(
+            @PathVariable Long id,
+            @RequestBody AdditionalElementUpdateDto dto) {
+        additionalElementsFacade.updatePrice(id, dto);
         return ResponseEntity.ok().build();
     }
 

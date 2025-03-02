@@ -5,10 +5,7 @@ import kz.bloooom.administration.converter.additional_elements.AdditionalElement
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsCreateDtoConverter;
 import kz.bloooom.administration.converter.additional_elements.AdditionalElementsInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.additional_elements.*;
-import kz.bloooom.administration.domain.entity.AdditionalElements;
-import kz.bloooom.administration.domain.entity.AdditionalElementsPrice;
-import kz.bloooom.administration.domain.entity.BranchDivision;
-import kz.bloooom.administration.domain.entity.Employee;
+import kz.bloooom.administration.domain.entity.*;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.AdditionalElementsFacade;
 import kz.bloooom.administration.service.AdditionalElementsPriceService;
@@ -25,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -168,5 +166,113 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     @Transactional
     public void deletePrice(Long priceId) {
         additionalElementsPriceService.deleteById(priceId);
+    }
+
+    @Override
+    @Transactional
+    public void updatePrice(Long id, AdditionalElementUpdateDto dto) {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime dtoValidFrom = dto.getValidFrom().atStartOfDay();
+        LocalDateTime dtoValidTo = dto.getValidTo().atStartOfDay();
+        AdditionalElementsPrice existingPrice = additionalElementsPriceService.getById(id);
+
+        // 1. Изменение только цены
+        if (dto.getPrice() != null && dto.getValidFrom() == null && dto.getValidTo() == null) {
+            if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+                existingPrice.setPrice(dto.getPrice());
+                additionalElementsPriceService.create(existingPrice);
+            } else {
+                throw new IllegalArgumentException("Cannot change price for past periods");
+            }
+        }
+
+        // 2. Изменение только даты окончания
+        if (dto.getValidTo() != null && dto.getPrice() == null && dto.getValidFrom() == null) {
+            if (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today)) {
+                if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
+                    existingPrice.setValidTo(dtoValidTo);
+                    additionalElementsPriceService.create(existingPrice);
+                } else {
+                    throw new IllegalArgumentException("Invalid valid_to date");
+                }
+            } else {
+                throw new IllegalArgumentException("Cannot change past valid_to dates");
+            }
+        }
+
+        // 3. Изменение только даты начала
+        if (dto.getValidFrom() != null && dto.getPrice() == null && dto.getValidTo() == null) {
+            if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+                if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
+                    existingPrice.setValidFrom(dtoValidFrom);
+                    additionalElementsPriceService.create(existingPrice);
+                } else {
+                    throw new IllegalArgumentException("Invalid valid_from date");
+                }
+            } else {
+                throw new IllegalArgumentException("Cannot change past valid_from dates");
+            }
+        }
+
+        // 4. Изменение цены и даты окончания
+        if (dto.getPrice() != null && dto.getValidTo() != null && dto.getValidFrom() == null) {
+            if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+                existingPrice.setPrice(dto.getPrice());
+                existingPrice.setValidTo(dtoValidTo);
+                additionalElementsPriceService.create(existingPrice);
+            } else {
+                throw new IllegalArgumentException("Cannot change past periods");
+            }
+        }
+
+        // 5. Изменение цены и даты начала
+        if (dto.getPrice() != null && dto.getValidFrom() != null && dto.getValidTo() == null) {
+            if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+                if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
+                    existingPrice.setPrice(dto.getPrice());
+                    existingPrice.setValidFrom(dtoValidFrom);
+                    additionalElementsPriceService.create(existingPrice);
+                } else {
+                    throw new IllegalArgumentException("Invalid valid_from date");
+                }
+            } else if (existingPrice.getValidFrom().isBefore(today) &&
+                    dtoValidFrom.isAfter(today) && dtoValidTo.isAfter(today)) {
+                // Создание новой записи
+                AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
+                newPrice.setPrice(dto.getPrice());
+                newPrice.setValidFrom(dtoValidFrom);
+                newPrice.setValidTo(existingPrice.getValidTo());
+
+                existingPrice.setValidTo(dtoValidTo.minusDays(1));
+                additionalElementsPriceService.create(existingPrice);
+                additionalElementsPriceService.create(newPrice);
+            } else {
+                throw new IllegalArgumentException("Invalid operation");
+            }
+        }
+
+        // 6. Изменение цены, даты начала и даты окончания
+        if (dto.getPrice() != null && dto.getValidFrom() != null && dto.getValidTo() != null) {
+            if (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) {
+                existingPrice.setPrice(dto.getPrice());
+                existingPrice.setValidFrom(dtoValidFrom);
+                existingPrice.setValidTo(dtoValidTo);
+                additionalElementsPriceService.create(existingPrice);
+            } else if (existingPrice.getValidFrom().isBefore(today) &&
+                    existingPrice.getValidTo().isAfter(today) &&
+                    dtoValidTo.isAfter(today.minusDays(1))) {
+                // Создание новой записи
+                AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
+                newPrice.setPrice(dto.getPrice());
+                newPrice.setValidFrom(dtoValidFrom);
+                newPrice.setValidTo(dtoValidTo);
+
+                existingPrice.setValidTo(dtoValidFrom.minusDays(1));
+                additionalElementsPriceService.create(existingPrice);
+                additionalElementsPriceService.create(newPrice);
+            } else {
+                throw new IllegalArgumentException("Invalid operation");
+            }
+        }
     }
 }

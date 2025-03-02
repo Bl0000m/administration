@@ -20,4 +20,6 @@ public interface AdditionalElementsFacade {
     List<AdditionalElementsInfoDto> getAll();
 
     void deletePrice(Long priceId);
+
+    void updatePrice(Long id, AdditionalElementUpdateDto dto);
 }
