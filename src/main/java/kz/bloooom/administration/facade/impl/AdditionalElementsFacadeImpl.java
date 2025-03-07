@@ -177,7 +177,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         AdditionalElementsPrice existingPrice = additionalElementsPriceService.getById(id);
 
         // 1. Изменение только цены
-        if (dto.getPrice() != null && dto.getValidFrom() == null && dto.getValidTo() == null) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) && dto.getValidFrom().equals(existingPrice.getValidFrom()) && dto.getValidTo().equals(existingPrice.getValidTo())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 existingPrice.setPrice(dto.getPrice());
                 additionalElementsPriceService.create(existingPrice);
@@ -187,7 +187,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         }
 
         // 2. Изменение только даты окончания
-        if (dto.getValidTo() != null && dto.getPrice() == null && dto.getValidFrom() == null) {
+        if (!dto.getValidTo().equals(existingPrice.getValidTo()) && dto.getPrice().equals(existingPrice.getPrice()) && dto.getValidFrom().equals(existingPrice.getValidFrom())) {
             if (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today)) {
                 if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
                     existingPrice.setValidTo(dtoValidTo);
@@ -201,7 +201,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         }
 
         // 3. Изменение только даты начала
-        if (dto.getValidFrom() != null && dto.getPrice() == null && dto.getValidTo() == null) {
+        if (!dto.getValidFrom().equals(existingPrice.getValidFrom())
+                && dto.getPrice().equals(existingPrice.getPrice()) && dto.getValidTo().equals(existingPrice.getValidTo())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
                     existingPrice.setValidFrom(dtoValidFrom);
@@ -215,7 +216,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         }
 
         // 4. Изменение цены и даты окончания
-        if (dto.getPrice() != null && dto.getValidTo() != null && dto.getValidFrom() == null) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dto.getValidTo().equals(existingPrice.getValidTo()) && dto.getValidFrom().equals(existingPrice.getValidFrom())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 existingPrice.setPrice(dto.getPrice());
                 existingPrice.setValidTo(dtoValidTo);
@@ -226,7 +228,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         }
 
         // 5. Изменение цены и даты начала
-        if (dto.getPrice() != null && dto.getValidFrom() != null && dto.getValidTo() == null) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dto.getValidFrom().equals(existingPrice.getValidFrom()) && dto.getValidTo().equals(existingPrice.getValidTo())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
                     existingPrice.setPrice(dto.getPrice());
@@ -252,7 +255,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         }
 
         // 6. Изменение цены, даты начала и даты окончания
-        if (dto.getPrice() != null && dto.getValidFrom() != null && dto.getValidTo() != null) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dto.getValidFrom().equals(existingPrice.getValidFrom()) && !dto.getValidTo().equals(existingPrice.getValidTo())) {
             if (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) {
                 existingPrice.setPrice(dto.getPrice());
                 existingPrice.setValidFrom(dtoValidFrom);
