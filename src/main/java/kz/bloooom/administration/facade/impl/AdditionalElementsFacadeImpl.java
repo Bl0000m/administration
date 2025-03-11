@@ -268,6 +268,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 // Создание новой записи
                 AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
                 newPrice.setPrice(dto.getPrice());
+                newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
                 newPrice.setValidFrom(dtoValidFrom);
                 newPrice.setValidTo(dtoValidTo);
 
