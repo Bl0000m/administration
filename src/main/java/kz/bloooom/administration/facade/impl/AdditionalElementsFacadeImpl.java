@@ -243,8 +243,13 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 // Создание новой записи
                 AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
                 newPrice.setPrice(dto.getPrice());
+                newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
+                newPrice.setBranchDivision(existingPrice.getBranchDivision());
+                newPrice.setCurrency(existingPrice.getCurrency());
+                newPrice.setCreatedBy(JwtUtils.getKeycloakId());
+                newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
                 newPrice.setValidFrom(dtoValidFrom);
-                newPrice.setValidTo(existingPrice.getValidTo());
+                newPrice.setValidTo(dtoValidTo);
 
                 existingPrice.setValidTo(dtoValidTo.minusDays(1));
                 additionalElementsPriceService.create(existingPrice);
