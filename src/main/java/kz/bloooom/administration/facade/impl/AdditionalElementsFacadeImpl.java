@@ -240,19 +240,11 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
         // 5. Изменение цены и даты начала
         if (!dto.getPrice().equals(existingPrice.getPrice()) &&
-                !dtoValidFrom.equals(existingPrice.getValidFrom()) && dtoValidTo.equals(existingPrice.getValidTo())) {
-            if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
-                if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
-                    existingPrice.setPrice(dto.getPrice());
-                    existingPrice.setValidFrom(dtoValidFrom);
-                    additionalElementsPriceService.create(existingPrice);
-                    log.info("Изменение цены и даты начала");
-                    return;
-                } else {
-                    throw new IllegalArgumentException("Invalid valid_from date");
-                }
-            } else if (existingPrice.getValidFrom().isBefore(today) &&
-                    dtoValidFrom.isAfter(today) && dtoValidTo.isAfter(today)) {
+                !dtoValidFrom.equals(existingPrice.getValidFrom()) &&
+                dtoValidTo.equals(existingPrice.getValidTo())) {
+            if ((dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo()))
+                    && (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today))
+                    && (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today))) {
                 // Создание новой записи
                 AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
                 newPrice.setPrice(dto.getPrice());
@@ -275,12 +267,14 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         }
 
         // 6. Изменение цены, даты начала и даты окончания
-        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+        if (!dto.getPrice().
+
+                equals(existingPrice.getPrice()) &&
                 !dtoValidFrom.equals(existingPrice.getValidFrom()) && !dtoValidTo.equals(existingPrice.getValidTo())) {
             if ((dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) &&
                     (existingPrice.getValidFrom().isBefore(today) &&
-                    existingPrice.getValidTo().isAfter(today) &&
-                    dtoValidTo.isAfter(today.minusDays(1)))) {
+                            existingPrice.getValidTo().isAfter(today) &&
+                            dtoValidTo.isAfter(today.minusDays(1)))) {
                 // Создание новой записи
                 AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
                 newPrice.setPrice(dto.getPrice());
