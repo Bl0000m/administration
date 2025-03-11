@@ -171,7 +171,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
     @Override
     @Transactional
     public void updatePrice(Long id, AdditionalElementUpdateDto dto) {
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.now().toLocalDate().atStartOfDay();
         LocalDateTime dtoValidFrom = dto.getValidFrom().atStartOfDay();
         LocalDateTime dtoValidTo = dto.getValidTo().atStartOfDay();
         AdditionalElementsPrice existingPrice = additionalElementsPriceService.getById(id);
