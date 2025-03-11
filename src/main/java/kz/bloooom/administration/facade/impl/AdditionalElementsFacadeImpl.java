@@ -262,14 +262,10 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         // 6. Изменение цены, даты начала и даты окончания
         if (!dto.getPrice().equals(existingPrice.getPrice()) &&
                 !dto.getValidFrom().equals(existingPrice.getValidFrom()) && !dto.getValidTo().equals(existingPrice.getValidTo())) {
-            if (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) {
-                existingPrice.setPrice(dto.getPrice());
-                existingPrice.setValidFrom(dtoValidFrom);
-                existingPrice.setValidTo(dtoValidTo);
-                additionalElementsPriceService.create(existingPrice);
-            } else if (existingPrice.getValidFrom().isBefore(today) &&
+            if ((dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) &&
+                    (existingPrice.getValidFrom().isBefore(today) &&
                     existingPrice.getValidTo().isAfter(today) &&
-                    dtoValidTo.isAfter(today.minusDays(1))) {
+                    dtoValidTo.isAfter(today.minusDays(1)))) {
                 // Создание новой записи
                 AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
                 newPrice.setPrice(dto.getPrice());
