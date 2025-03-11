@@ -180,7 +180,9 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         if (!dto.getPrice().equals(existingPrice.getPrice()) && dto.getValidFrom().equals(existingPrice.getValidFrom()) && dto.getValidTo().equals(existingPrice.getValidTo())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 existingPrice.setPrice(dto.getPrice());
+                log.info("Изменение только цены");
                 additionalElementsPriceService.create(existingPrice);
+                return;
             } else {
                 throw new IllegalArgumentException("Cannot change price for past periods");
             }
@@ -192,6 +194,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
                     existingPrice.setValidTo(dtoValidTo);
                     additionalElementsPriceService.create(existingPrice);
+                    log.info("Изменение только даты окончания");
+                    return;
                 } else {
                     throw new IllegalArgumentException("Invalid valid_to date");
                 }
@@ -207,6 +211,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
                     existingPrice.setValidFrom(dtoValidFrom);
                     additionalElementsPriceService.create(existingPrice);
+                    log.info("Изменение только даты начала");
+                    return;
                 } else {
                     throw new IllegalArgumentException("Invalid valid_from date");
                 }
@@ -222,6 +228,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 existingPrice.setPrice(dto.getPrice());
                 existingPrice.setValidTo(dtoValidTo);
                 additionalElementsPriceService.create(existingPrice);
+                log.info("Изменение цены и даты окончания");
+                return;
             } else {
                 throw new IllegalArgumentException("Cannot change past periods");
             }
@@ -235,6 +243,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                     existingPrice.setPrice(dto.getPrice());
                     existingPrice.setValidFrom(dtoValidFrom);
                     additionalElementsPriceService.create(existingPrice);
+                    log.info("Изменение цены и даты начала");
+                    return;
                 } else {
                     throw new IllegalArgumentException("Invalid valid_from date");
                 }
@@ -254,6 +264,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 existingPrice.setValidTo(dtoValidTo.minusDays(1));
                 additionalElementsPriceService.create(existingPrice);
                 additionalElementsPriceService.create(newPrice);
+                log.info("Изменение цены и даты начала 2");
+                return;
             } else {
                 throw new IllegalArgumentException("Invalid operation");
             }
@@ -280,6 +292,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 existingPrice.setValidTo(dtoValidFrom.minusDays(1));
                 additionalElementsPriceService.create(existingPrice);
                 additionalElementsPriceService.create(newPrice);
+                log.info("Изменение цены, даты начала и даты окончания");
             } else {
                 throw new IllegalArgumentException("Invalid operation");
             }
