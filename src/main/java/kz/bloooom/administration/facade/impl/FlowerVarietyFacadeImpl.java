@@ -304,7 +304,6 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
             }
         }
     }
-
     @Override
     public List<FlowerVarietyPriceInfoDto> getByBranchIdAndVarietyId(
             Long branchId,
