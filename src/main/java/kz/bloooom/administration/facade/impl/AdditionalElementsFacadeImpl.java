@@ -238,29 +238,54 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
             }
         }
 
-        // 5. Изменение цены и даты начала
+        // 5. Проверка на изменение цены и даты
         if (!dto.getPrice().equals(existingPrice.getPrice()) &&
                 !dtoValidFrom.equals(existingPrice.getValidFrom()) &&
                 dtoValidTo.equals(existingPrice.getValidTo())) {
+
+            // Проверяем выполнение условий для обновления цены
             if ((dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo()))
                     && (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today))
                     && (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today))) {
-                // Создание новой записи
-                AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
-                newPrice.setPrice(dto.getPrice());
-                newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
-                newPrice.setBranchDivision(existingPrice.getBranchDivision());
-                newPrice.setCurrency(existingPrice.getCurrency());
-                newPrice.setCreatedBy(JwtUtils.getKeycloakId());
-                newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
-                newPrice.setValidFrom(dtoValidFrom);
-                newPrice.setValidTo(dtoValidTo);
 
-                existingPrice.setValidTo(dtoValidTo.minusDays(1));
+                // Если existingValidFrom < today, создаем новую запись и изменяем validTo у старой
+                if (existingPrice.getValidFrom().isBefore(today)) {
+                    // Создаем новую запись
+                    AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
+                    newPrice.setPrice(dto.getPrice());
+                    newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
+                    newPrice.setBranchDivision(existingPrice.getBranchDivision());
+                    newPrice.setCurrency(existingPrice.getCurrency());
+                    newPrice.setCreatedBy(JwtUtils.getKeycloakId());
+                    newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
+                    newPrice.setValidFrom(dtoValidFrom);
+                    newPrice.setValidTo(dtoValidTo);
+
+                    // Обновляем старую запись (validTo = dtoValidFrom - 1 день)
+                    existingPrice.setValidTo(dtoValidFrom.minusDays(1));
+                    additionalElementsPriceService.create(existingPrice);
+                    additionalElementsPriceService.create(newPrice);
+
+                    log.info("Изменение цены и даты начала: создана новая запись");
+                    return;
+                }
+
+                // Проверяем, нет ли других цен на этот период
+                boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                        existingPrice.getId(),
+                        existingPrice.getBranchDivision().getId(),
+                        dtoValidFrom,
+                        dtoValidTo);
+                if (priceConflict) {
+                    throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                }
+
+                // Изменение цены в текущей записи
+                existingPrice.setPrice(dto.getPrice());
+                existingPrice.setValidFrom(dtoValidFrom);
                 additionalElementsPriceService.create(existingPrice);
-                additionalElementsPriceService.create(newPrice);
-                log.info("Изменение цены и даты начала 2");
-                return;
+
+                log.info("Изменение цены и даты начала: обновлена текущая запись");
             } else {
                 throw new IllegalArgumentException("Invalid operation");
             }

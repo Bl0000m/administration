@@ -8,10 +8,7 @@ import kz.bloooom.administration.converter.stem_care.StemCareInfoDtoConverter;
 import kz.bloooom.administration.converter.temperature_care.TemperatureCareInfoDtoConverter;
 import kz.bloooom.administration.converter.water_care.WaterCareInfoDtoConverter;
 import kz.bloooom.administration.domain.dto.flower_variety.*;
-import kz.bloooom.administration.domain.entity.BranchDivision;
-import kz.bloooom.administration.domain.entity.Employee;
-import kz.bloooom.administration.domain.entity.FlowerVariety;
-import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
+import kz.bloooom.administration.domain.entity.*;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.facade.FlowerVarietyFacade;
 import kz.bloooom.administration.service.*;
@@ -160,27 +157,34 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
     public void updatePrice(
             Long id,
             FlowerVarietyUpdateDto dto) {
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.now().toLocalDate().atStartOfDay();
         LocalDateTime dtoValidFrom = dto.getValidFrom().atStartOfDay();
         LocalDateTime dtoValidTo = dto.getValidTo().atStartOfDay();
         FlowerVarietyPrice existingPrice = flowerVarietyPriceService.getById(id);
 
         // 1. Изменение только цены
-        if (dto.getPrice() != null && dto.getValidFrom() == null && dto.getValidTo() == null) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) && dtoValidFrom.equals(existingPrice.getValidFrom())
+                && dtoValidTo.equals(existingPrice.getValidTo())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 existingPrice.setPrice(dto.getPrice());
+                log.info("Изменение только цены");
                 flowerVarietyPriceService.create(existingPrice);
+                return;
             } else {
                 throw new IllegalArgumentException("Cannot change price for past periods");
             }
         }
 
         // 2. Изменение только даты окончания
-        if (dto.getValidTo() != null && dto.getPrice() == null && dto.getValidFrom() == null) {
+        if (!dtoValidTo.equals(existingPrice.getValidTo()) &&
+                dto.getPrice().equals(existingPrice.getPrice()) &&
+                dtoValidFrom.equals(existingPrice.getValidFrom())) {
             if (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today)) {
                 if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
                     existingPrice.setValidTo(dtoValidTo);
                     flowerVarietyPriceService.create(existingPrice);
+                    log.info("Изменение только даты окончания");
+                    return;
                 } else {
                     throw new IllegalArgumentException("Invalid valid_to date");
                 }
@@ -190,11 +194,14 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
         }
 
         // 3. Изменение только даты начала
-        if (dto.getValidFrom() != null && dto.getPrice() == null && dto.getValidTo() == null) {
+        if (!dtoValidFrom.equals(existingPrice.getValidFrom())
+                && dto.getPrice().equals(existingPrice.getPrice()) && dtoValidTo.equals(existingPrice.getValidTo())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
                     existingPrice.setValidFrom(dtoValidFrom);
                     flowerVarietyPriceService.create(existingPrice);
+                    log.info("Изменение только даты начала");
+                    return;
                 } else {
                     throw new IllegalArgumentException("Invalid valid_from date");
                 }
@@ -204,61 +211,94 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
         }
 
         // 4. Изменение цены и даты окончания
-        if (dto.getPrice() != null && dto.getValidTo() != null && dto.getValidFrom() == null) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dtoValidTo.equals(existingPrice.getValidTo()) && dtoValidFrom.equals(existingPrice.getValidFrom())) {
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
                 existingPrice.setPrice(dto.getPrice());
                 existingPrice.setValidTo(dtoValidTo);
                 flowerVarietyPriceService.create(existingPrice);
+                log.info("Изменение цены и даты окончания");
+                return;
             } else {
                 throw new IllegalArgumentException("Cannot change past periods");
             }
         }
 
-        // 5. Изменение цены и даты начала
-        if (dto.getPrice() != null && dto.getValidFrom() != null && dto.getValidTo() == null) {
-            if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
-                if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
-                    existingPrice.setPrice(dto.getPrice());
-                    existingPrice.setValidFrom(dtoValidFrom);
-                    flowerVarietyPriceService.create(existingPrice);
-                } else {
-                    throw new IllegalArgumentException("Invalid valid_from date");
-                }
-            } else if (existingPrice.getValidFrom().isBefore(today) &&
-                    dtoValidFrom.isAfter(today) && dtoValidTo.isAfter(today)) {
-                // Создание новой записи
-                FlowerVarietyPrice newPrice = new FlowerVarietyPrice();
-                newPrice.setPrice(dto.getPrice());
-                newPrice.setValidFrom(dtoValidFrom);
-                newPrice.setValidTo(existingPrice.getValidTo());
+        // 5. Проверка на изменение цены и даты
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dtoValidFrom.equals(existingPrice.getValidFrom()) &&
+                dtoValidTo.equals(existingPrice.getValidTo())) {
 
-                existingPrice.setValidTo(dtoValidTo.minusDays(1));
+            // Проверяем выполнение условий для обновления цены
+            if ((dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo()))
+                    && (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today))
+                    && (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today))) {
+
+                // Если existingValidFrom < today, создаем новую запись и изменяем validTo у старой
+                if (existingPrice.getValidFrom().isBefore(today)) {
+                    // Создаем новую запись
+                    FlowerVarietyPrice newPrice = new FlowerVarietyPrice();
+                    newPrice.setPrice(dto.getPrice());
+                    newPrice.setFlowerVariety(existingPrice.getFlowerVariety());
+                    newPrice.setBranchDivision(existingPrice.getBranchDivision());
+                    newPrice.setCurrency(existingPrice.getCurrency());
+                    newPrice.setCreatedBy(JwtUtils.getKeycloakId());
+                    newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
+                    newPrice.setValidFrom(dtoValidFrom);
+                    newPrice.setValidTo(dtoValidTo);
+
+                    // Обновляем старую запись (validTo = dtoValidFrom - 1 день)
+                    existingPrice.setValidTo(dtoValidFrom.minusDays(1));
+                    flowerVarietyPriceService.create(existingPrice);
+                    flowerVarietyPriceService.create(newPrice);
+
+                    log.info("Изменение цены и даты начала: создана новая запись");
+                    return;
+                }
+
+                // Проверяем, нет ли других цен на этот период
+                boolean priceConflict = flowerVarietyPriceService.existsByDateOverlap(
+                        existingPrice.getId(),
+                        existingPrice.getBranchDivision().getId(),
+                        dtoValidFrom,
+                        dtoValidTo);
+                if (priceConflict) {
+                    throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                }
+
+                // Изменение цены в текущей записи
+                existingPrice.setPrice(dto.getPrice());
+                existingPrice.setValidFrom(dtoValidFrom);
                 flowerVarietyPriceService.create(existingPrice);
-                flowerVarietyPriceService.create(newPrice);
+
+                log.info("Изменение цены и даты начала: обновлена текущая запись");
             } else {
                 throw new IllegalArgumentException("Invalid operation");
             }
         }
 
         // 6. Изменение цены, даты начала и даты окончания
-        if (dto.getPrice() != null && dto.getValidFrom() != null && dto.getValidTo() != null) {
-            if (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) {
-                existingPrice.setPrice(dto.getPrice());
-                existingPrice.setValidFrom(dtoValidFrom);
-                existingPrice.setValidTo(dtoValidTo);
-                flowerVarietyPriceService.create(existingPrice);
-            } else if (existingPrice.getValidFrom().isBefore(today) &&
-                    existingPrice.getValidTo().isAfter(today) &&
-                    dtoValidTo.isAfter(today.minusDays(1))) {
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dtoValidFrom.equals(existingPrice.getValidFrom()) && !dtoValidTo.equals(existingPrice.getValidTo())) {
+            if ((dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) &&
+                    (existingPrice.getValidFrom().isBefore(today) &&
+                            existingPrice.getValidTo().isAfter(today) &&
+                            dtoValidTo.isAfter(today.minusDays(1)))) {
                 // Создание новой записи
                 FlowerVarietyPrice newPrice = new FlowerVarietyPrice();
                 newPrice.setPrice(dto.getPrice());
+                newPrice.setFlowerVariety(existingPrice.getFlowerVariety());
+                newPrice.setBranchDivision(existingPrice.getBranchDivision());
+                newPrice.setCurrency(existingPrice.getCurrency());
+                newPrice.setCreatedBy(JwtUtils.getKeycloakId());
+                newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
                 newPrice.setValidFrom(dtoValidFrom);
                 newPrice.setValidTo(dtoValidTo);
 
                 existingPrice.setValidTo(dtoValidFrom.minusDays(1));
                 flowerVarietyPriceService.create(existingPrice);
                 flowerVarietyPriceService.create(newPrice);
+                log.info("Изменение цены, даты начала и даты окончания");
             } else {
                 throw new IllegalArgumentException("Invalid operation");
             }
