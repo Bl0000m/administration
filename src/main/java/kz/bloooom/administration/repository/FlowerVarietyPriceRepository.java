@@ -27,8 +27,22 @@ public interface FlowerVarietyPriceRepository extends JpaRepository<FlowerVariet
             @Param("flowerVarietyId") Long flowerVarietyId,
             @Param("branchDivisionId") Long branchDivisionId,
             @Param("validFrom") LocalDateTime validFrom,
-            @Param("validTo") LocalDateTime validTo
-    );
+            @Param("validTo") LocalDateTime validTo);
+
+    @Query("SELECT COUNT(fvp) > 0 " +
+            "FROM FlowerVarietyPrice fvp " +
+            "WHERE fvp.flowerVariety.id = :flowerVarietyId " +
+            "AND fvp.branchDivision.id = :branchDivisionId " +
+            "AND fvp.id <> :excludeId " +
+            "AND ((:validFrom BETWEEN fvp.validFrom AND fvp.validTo) " +
+            "     OR (:validTo BETWEEN fvp.validFrom AND fvp.validTo) " +
+            "     OR (fvp.validFrom BETWEEN :validFrom AND :validTo))")
+    boolean existsByDateOverlap(
+            @Param("flowerVarietyId") Long flowerVarietyId,
+            @Param("branchDivisionId") Long branchDivisionId,
+            @Param("validFrom") LocalDateTime validFrom,
+            @Param("validTo") LocalDateTime validTo,
+            @Param("excludeId") Long excludeId);
 
     @Query("SELECT fvp FROM FlowerVarietyPrice fvp " +
             "WHERE fvp.branchDivision.id = :branchDivisionId " +

@@ -179,10 +179,28 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
         if (!dtoValidTo.equals(existingPrice.getValidTo()) &&
                 dto.getPrice().equals(existingPrice.getPrice()) &&
                 dtoValidFrom.equals(existingPrice.getValidFrom())) {
+
+            // Проверяем, что validTo еще актуален
             if (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today)) {
+
+                // Проверяем, что новый validTo ≥ validFrom
                 if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
+
+                    // Проверяем, нет ли других цен в этом диапазоне
+                    boolean priceConflict = flowerVarietyPriceService.existsByDateOverlap(
+                            existingPrice.getFlowerVariety().getId(),
+                            existingPrice.getBranchDivision().getId(),
+                            existingPrice.getValidFrom(),
+                            dtoValidTo,
+                            existingPrice.getId());
+                    if (priceConflict) {
+                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    }
+
+                    // Обновляем дату validTo
                     existingPrice.setValidTo(dtoValidTo);
                     flowerVarietyPriceService.create(existingPrice);
+
                     log.info("Изменение только даты окончания");
                     return;
                 } else {

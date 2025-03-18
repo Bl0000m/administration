@@ -39,8 +39,22 @@ public interface AdditionalElementsPriceRepository extends JpaRepository<Additio
             @Param("additionalElementId") Long additionalElementId,
             @Param("branchDivisionId") Long branchDivisionId,
             @Param("validFrom") LocalDateTime validFrom,
-            @Param("validTo") LocalDateTime validTo
-                               );
+            @Param("validTo") LocalDateTime validTo);
+
+    @Query("SELECT COUNT(aep) > 0 " +
+            "FROM AdditionalElementsPrice aep " +
+            "WHERE aep.additionalElements.id = :additionalElementId " +
+            "AND aep.branchDivision.id = :branchDivisionId " +
+            "AND aep.id <> :excludeId " +
+            "AND ((:validFrom BETWEEN aep.validFrom AND aep.validTo) " +
+            "     OR (:validTo BETWEEN aep.validFrom AND aep.validTo) " +
+            "     OR (aep.validFrom BETWEEN :validFrom AND :validTo))")
+    boolean existsByDateOverlap(
+            @Param("additionalElementId") Long additionalElementId,
+            @Param("branchDivisionId") Long branchDivisionId,
+            @Param("validFrom") LocalDateTime validFrom,
+            @Param("validTo") LocalDateTime validTo,
+            @Param("excludeId") Long excludeId);
 
     @Query("DELETE FROM AdditionalElementsPrice e WHERE e.additionalElements.id = :additionalElementId " +
             "AND e.price = :price " +

@@ -21,6 +21,12 @@ public interface AdditionalElementsPriceService {
                                 LocalDateTime validFrom,
                                 LocalDateTime validTo);
 
+    boolean existsByDateOverlap(Long additionalElementId,
+                                Long branchDivisionId,
+                                LocalDateTime validFrom,
+                                LocalDateTime validTo,
+                                Long excludeId);
+
     AdditionalElementsPrice getById(Long id);
 
     void deleteById(Long id);

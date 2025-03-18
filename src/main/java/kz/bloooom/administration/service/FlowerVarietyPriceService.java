@@ -16,6 +16,12 @@ public interface FlowerVarietyPriceService {
                                 LocalDateTime validFrom,
                                 LocalDateTime validTo);
 
+    boolean existsByDateOverlap(Long flowerVarietyId,
+                                Long branchDivisionId,
+                                LocalDateTime validFrom,
+                                LocalDateTime validTo,
+                                Long excludeId);
+
     List<FlowerVarietyPrice> getAllByBranchId(Long branchId);
 
     boolean existsByBranchDivisionIdAndDateRange(Long branchDivisionId, Long flowerVarietyId, LocalDateTime validFrom, LocalDateTime validTo);

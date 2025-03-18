@@ -1,7 +1,6 @@
 package kz.bloooom.administration.service.impl;
 
 import kz.bloooom.administration.contant.ErrorCodeConstant;
-import kz.bloooom.administration.domain.dto.flower_variety.FlowerVarietyAddBranchDto;
 import kz.bloooom.administration.domain.entity.FlowerVarietyPrice;
 import kz.bloooom.administration.exception.BloomAdministrationException;
 import kz.bloooom.administration.repository.FlowerVarietyPriceRepository;
@@ -51,6 +50,20 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     }
 
     @Override
+    public boolean existsByDateOverlap(Long flowerVarietyId,
+                                       Long branchDivisionId,
+                                       LocalDateTime validFrom,
+                                       LocalDateTime validTo,
+                                       Long excludeId) {
+        return flowerVarietyPriceRepository.existsByDateOverlap(
+                flowerVarietyId,
+                branchDivisionId,
+                validFrom,
+                validTo,
+                excludeId);
+    }
+
+    @Override
     public List<FlowerVarietyPrice> getAllByBranchId(Long branchId) {
         return flowerVarietyPriceRepository.findAllByBranchDivisionIdAndCurrentDate(branchId, LocalDateTime.now());
     }
@@ -75,10 +88,10 @@ public class FlowerVarietyPriceServiceImpl implements FlowerVarietyPriceService 
     @Override
     public FlowerVarietyPrice getById(Long id) {
         return flowerVarietyPriceRepository.findById(id)
-                                           .orElseThrow(() -> new BloomAdministrationException(
-                                                   HttpStatus.NOT_FOUND,
-                                                   ErrorCodeConstant.FLOWER_VARIETY_THIS_ID_DOEST_EXISTS,
-                                                   "messages.exception.flower-variety-not-found", id));
+                .orElseThrow(() -> new BloomAdministrationException(
+                        HttpStatus.NOT_FOUND,
+                        ErrorCodeConstant.FLOWER_VARIETY_THIS_ID_DOEST_EXISTS,
+                        "messages.exception.flower-variety-not-found", id));
     }
 
     @Override

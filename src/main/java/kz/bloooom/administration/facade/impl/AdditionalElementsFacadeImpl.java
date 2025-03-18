@@ -205,7 +205,8 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                             existingPrice.getAdditionalElements().getId(),
                             existingPrice.getBranchDivision().getId(),
                             existingPrice.getValidFrom(),
-                            dtoValidTo);
+                            dtoValidTo,
+                            existingPrice.getId());
                     if (priceConflict) {
                         throw new IllegalArgumentException("На этот период уже установлена другая цена");
                     }

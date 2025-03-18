@@ -58,6 +58,19 @@ public class AdditionalElementsPriceServiceImpl implements AdditionalElementsPri
     }
 
     @Override
+    public boolean existsByDateOverlap(Long additionalElementId,
+                                       Long branchDivisionId,
+                                       LocalDateTime validFrom,
+                                       LocalDateTime validTo,
+                                       Long excludeId) {
+        return additionalElementsPriceRepository.existsByDateOverlap(additionalElementId,
+                branchDivisionId,
+                validFrom,
+                validTo,
+                excludeId);
+    }
+
+    @Override
     public AdditionalElementsPrice getById(Long id) {
         return additionalElementsPriceRepository.findById(id)
                 .orElseThrow(() -> new BloomAdministrationException(
