@@ -193,10 +193,27 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
         if (!dtoValidTo.equals(existingPrice.getValidTo()) &&
                 dto.getPrice().equals(existingPrice.getPrice()) &&
                 dtoValidFrom.equals(existingPrice.getValidFrom())) {
+
+            // Проверяем, что validTo еще актуален
             if (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().isEqual(today)) {
+
+                // Проверяем, что новый validTo ≥ validFrom
                 if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
+
+                    // Проверяем, нет ли других цен в этом диапазоне
+                    boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                            existingPrice.getAdditionalElements().getId(),
+                            existingPrice.getBranchDivision().getId(),
+                            existingPrice.getValidFrom(),
+                            dtoValidTo);
+                    if (priceConflict) {
+                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    }
+
+                    // Обновляем дату validTo
                     existingPrice.setValidTo(dtoValidTo);
                     additionalElementsPriceService.create(existingPrice);
+
                     log.info("Изменение только даты окончания");
                     return;
                 } else {
