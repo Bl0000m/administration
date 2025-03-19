@@ -298,6 +298,14 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                     log.info("Изменение цены и даты окончания");
                     return;
 
+                } else if (dtoValidTo.isBefore(existingPrice.getValidTo())) {
+                    // Если новый validTo меньше текущего, просто обновляем запись
+                    existingPrice.setPrice(dto.getPrice());
+                    existingPrice.setValidTo(dtoValidTo);
+                    additionalElementsPriceService.create(existingPrice); // Используем update()
+
+                    log.info("Изменение цены и даты окончания: validTo уменьшен");
+                    return;
                 } else {
                     throw new IllegalArgumentException("Invalid valid_to date");
                 }

@@ -275,15 +275,26 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                     if (priceConflict) {
                         throw new IllegalArgumentException("На этот период уже установлена другая цена");
                     }
+
+                    // Обновляем цену и дату окончания
+                    existingPrice.setPrice(dto.getPrice());
+                    existingPrice.setValidTo(dtoValidTo);
+                    flowerVarietyPriceService.create(existingPrice); // Используем update()
+
+                    log.info("Изменение цены и даты окончания");
+                    return;
+
+                } else if (dtoValidTo.isBefore(existingPrice.getValidTo())) {
+                    // Если новый validTo меньше текущего, просто обновляем запись
+                    existingPrice.setPrice(dto.getPrice());
+                    existingPrice.setValidTo(dtoValidTo);
+                    flowerVarietyPriceService.create(existingPrice); // Используем update()
+
+                    log.info("Изменение цены и даты окончания: validTo уменьшен");
+                    return;
+                } else {
+                    throw new IllegalArgumentException("Invalid valid_to date");
                 }
-
-                // Обновляем цену и дату окончания
-                existingPrice.setPrice(dto.getPrice());
-                existingPrice.setValidTo(dtoValidTo);
-                flowerVarietyPriceService.create(existingPrice); // Используем update()
-
-                log.info("Изменение цены и даты окончания");
-                return;
             } else {
                 throw new IllegalArgumentException("Cannot change past periods");
             }
