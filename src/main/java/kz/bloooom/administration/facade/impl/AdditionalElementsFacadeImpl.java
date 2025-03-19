@@ -382,7 +382,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                 !dtoValidTo.equals(existingPrice.getValidTo())) {
 
             // Проверяем, что validFrom >= сегодня
-            if ((dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today))) {
+            if (dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) {
 
                 // Если existingValidFrom < today, но existingValidTo >= today и dtoValidTo >= (today - 1)
                 if (existingPrice.getValidFrom().isBefore(today) &&
@@ -410,7 +410,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                     newPrice.setCreatedBy(JwtUtils.getKeycloakId());
                     newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
                     newPrice.setValidFrom(dtoValidFrom);
-                    newPrice.setValidTo(dtoValidTo);
+                    newPrice.setValidTo(dtoValidTo); // Исправлено: validTo = dtoValidTo
 
                     // Обновляем текущую запись (validTo = dtoValidFrom - 1 день)
                     existingPrice.setValidTo(dtoValidFrom.minusDays(1));
@@ -421,9 +421,32 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
                     log.info("Изменение цены, даты начала и даты окончания");
                     return;
-                } else {
-                    throw new IllegalArgumentException("Invalid operation");
                 }
+
+                // Если existingValidFrom >= today, проверяем занятость периода
+                if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+                    boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                            existingPrice.getAdditionalElements().getId(),
+                            existingPrice.getBranchDivision().getId(),
+                            dtoValidFrom,
+                            dtoValidTo,
+                            existingPrice.getId()
+                                                                                              );
+                    if (priceConflict) {
+                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    }
+
+                    // Полное обновление записи
+                    existingPrice.setPrice(dto.getPrice());
+                    existingPrice.setValidFrom(dtoValidFrom);
+                    existingPrice.setValidTo(dtoValidTo);
+                    additionalElementsPriceService.create(existingPrice);
+
+                    log.info("Обновление существующей записи с изменением цены, даты начала и даты окончания");
+                    return;
+                }
+
+                throw new IllegalArgumentException("Invalid operation");
             } else {
                 throw new IllegalArgumentException("Invalid valid_from date");
             }
