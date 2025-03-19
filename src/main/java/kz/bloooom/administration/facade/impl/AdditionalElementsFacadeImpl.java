@@ -318,7 +318,90 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
                 // Если existingValidFrom < today, создаем новую запись и изменяем validTo у старой
                 if (existingPrice.getValidFrom().isBefore(today)) {
+
+                    // Проверяем, нет ли уже цен в этом периоде
+                    boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                            existingPrice.getAdditionalElements().getId(),
+                            existingPrice.getBranchDivision().getId(),
+                            dtoValidFrom,
+                            existingPrice.getValidTo(),
+                            existingPrice.getId() // Исключаем текущую запись
+                                                                                              );
+                    if (priceConflict) {
+                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    }
+
                     // Создаем новую запись
+                    AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
+                    newPrice.setPrice(dto.getPrice());
+                    newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
+                    newPrice.setBranchDivision(existingPrice.getBranchDivision());
+                    newPrice.setCurrency(existingPrice.getCurrency());
+                    newPrice.setCreatedBy(JwtUtils.getKeycloakId());
+                    newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
+                    newPrice.setValidFrom(dtoValidFrom);
+                    newPrice.setValidTo(existingPrice.getValidTo()); // Берем validTo из существующей записи
+
+                    // Обновляем validTo у старой записи
+                    existingPrice.setValidTo(dtoValidFrom.minusDays(1));
+                    additionalElementsPriceService.create(existingPrice); // Используем update()
+
+                    // Сохраняем новую запись
+                    additionalElementsPriceService.create(newPrice);
+
+                    log.info("Изменение цены и даты начала: создана новая запись");
+                    return;
+                }
+
+                // Проверяем, нет ли других цен на этот период
+                boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                        existingPrice.getAdditionalElements().getId(),
+                        existingPrice.getBranchDivision().getId(),
+                        dtoValidFrom,
+                        dtoValidTo,
+                        existingPrice.getId() // Исключаем текущую запись
+                                                                                          );
+                if (priceConflict) {
+                    throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                }
+
+                // Изменение цены в текущей записи
+                existingPrice.setPrice(dto.getPrice());
+                existingPrice.setValidFrom(dtoValidFrom);
+                additionalElementsPriceService.create(existingPrice); // Используем update()
+
+                log.info("Изменение цены и даты начала: обновлена текущая запись");
+            } else {
+                throw new IllegalArgumentException("Invalid operation");
+            }
+        }
+
+        // 6. Изменение цены, даты начала и даты окончания
+        if (!dto.getPrice().equals(existingPrice.getPrice()) &&
+                !dtoValidFrom.equals(existingPrice.getValidFrom()) &&
+                !dtoValidTo.equals(existingPrice.getValidTo())) {
+
+            // Проверяем, что validFrom >= сегодня
+            if ((dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today))) {
+
+                // Если existingValidFrom < today, но existingValidTo >= today и dtoValidTo >= (today - 1)
+                if (existingPrice.getValidFrom().isBefore(today) &&
+                        existingPrice.getValidTo().isAfter(today) &&
+                        dtoValidTo.isAfter(today.minusDays(1))) {
+
+                    // Проверяем, нет ли уже цен в этом периоде
+                    boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                            existingPrice.getAdditionalElements().getId(),
+                            existingPrice.getBranchDivision().getId(),
+                            dtoValidFrom,
+                            dtoValidTo,
+                            existingPrice.getId() // Исключаем текущую запись
+                                                                                              );
+                    if (priceConflict) {
+                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    }
+
+                    // Создание новой записи
                     AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
                     newPrice.setPrice(dto.getPrice());
                     newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
@@ -329,62 +412,20 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                     newPrice.setValidFrom(dtoValidFrom);
                     newPrice.setValidTo(dtoValidTo);
 
-                    // Обновляем старую запись (validTo = dtoValidFrom - 1 день)
+                    // Обновляем текущую запись (validTo = dtoValidFrom - 1 день)
                     existingPrice.setValidTo(dtoValidFrom.minusDays(1));
-                    additionalElementsPriceService.create(existingPrice);
+                    additionalElementsPriceService.create(existingPrice); // Используем update()
+
+                    // Сохраняем новую запись
                     additionalElementsPriceService.create(newPrice);
 
-                    log.info("Изменение цены и даты начала: создана новая запись");
+                    log.info("Изменение цены, даты начала и даты окончания");
                     return;
+                } else {
+                    throw new IllegalArgumentException("Invalid operation");
                 }
-
-                // Проверяем, нет ли других цен на этот период
-                boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
-                        existingPrice.getId(),
-                        existingPrice.getBranchDivision().getId(),
-                        dtoValidFrom,
-                        dtoValidTo);
-                if (priceConflict) {
-                    throw new IllegalArgumentException("На этот период уже установлена другая цена");
-                }
-
-                // Изменение цены в текущей записи
-                existingPrice.setPrice(dto.getPrice());
-                existingPrice.setValidFrom(dtoValidFrom);
-                additionalElementsPriceService.create(existingPrice);
-
-                log.info("Изменение цены и даты начала: обновлена текущая запись");
             } else {
-                throw new IllegalArgumentException("Invalid operation");
-            }
-        }
-
-        // 6. Изменение цены, даты начала и даты окончания
-        if (!dto.getPrice().
-
-                equals(existingPrice.getPrice()) &&
-                !dtoValidFrom.equals(existingPrice.getValidFrom()) && !dtoValidTo.equals(existingPrice.getValidTo())) {
-            if ((dtoValidFrom.isAfter(today) || dtoValidFrom.isEqual(today)) &&
-                    (existingPrice.getValidFrom().isBefore(today) &&
-                            existingPrice.getValidTo().isAfter(today) &&
-                            dtoValidTo.isAfter(today.minusDays(1)))) {
-                // Создание новой записи
-                AdditionalElementsPrice newPrice = new AdditionalElementsPrice();
-                newPrice.setPrice(dto.getPrice());
-                newPrice.setAdditionalElements(existingPrice.getAdditionalElements());
-                newPrice.setBranchDivision(existingPrice.getBranchDivision());
-                newPrice.setCurrency(existingPrice.getCurrency());
-                newPrice.setCreatedBy(JwtUtils.getKeycloakId());
-                newPrice.setUpdatedBy(JwtUtils.getKeycloakId());
-                newPrice.setValidFrom(dtoValidFrom);
-                newPrice.setValidTo(dtoValidTo);
-
-                existingPrice.setValidTo(dtoValidFrom.minusDays(1));
-                additionalElementsPriceService.create(existingPrice);
-                additionalElementsPriceService.create(newPrice);
-                log.info("Изменение цены, даты начала и даты окончания");
-            } else {
-                throw new IllegalArgumentException("Invalid operation");
+                throw new IllegalArgumentException("Invalid valid_from date");
             }
         }
     }
