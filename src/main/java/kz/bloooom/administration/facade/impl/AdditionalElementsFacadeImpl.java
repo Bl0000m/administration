@@ -266,11 +266,31 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
         // 4. Изменение цены и даты окончания
         if (!dto.getPrice().equals(existingPrice.getPrice()) &&
-                !dtoValidTo.equals(existingPrice.getValidTo()) && dtoValidFrom.equals(existingPrice.getValidFrom())) {
+                !dtoValidTo.equals(existingPrice.getValidTo()) &&
+                dtoValidFrom.equals(existingPrice.getValidFrom())) {
+
+            // Проверяем, что validFrom >= сегодня
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+
+                // Если новый validTo больше текущего validTo, проверяем, свободен ли этот период
+                if (dtoValidTo.isAfter(existingPrice.getValidTo())) {
+                    boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                            existingPrice.getAdditionalElements().getId(),
+                            existingPrice.getBranchDivision().getId(),
+                            existingPrice.getValidTo().plusDays(1), // Проверяем диапазон после текущего validTo
+                            dtoValidTo,
+                            existingPrice.getId() // Исключаем текущую запись
+                                                                                              );
+                    if (priceConflict) {
+                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    }
+                }
+
+                // Обновляем цену и дату окончания
                 existingPrice.setPrice(dto.getPrice());
                 existingPrice.setValidTo(dtoValidTo);
-                additionalElementsPriceService.create(existingPrice);
+                additionalElementsPriceService.create(existingPrice); // Используем update()
+
                 log.info("Изменение цены и даты окончания");
                 return;
             } else {
