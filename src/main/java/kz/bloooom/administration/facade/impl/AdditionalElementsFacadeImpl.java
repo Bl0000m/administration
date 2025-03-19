@@ -227,11 +227,33 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
         // 3. Изменение только даты начала
         if (!dtoValidFrom.equals(existingPrice.getValidFrom())
-                && dto.getPrice().equals(existingPrice.getPrice()) && dtoValidTo.equals(existingPrice.getValidTo())) {
+                && dto.getPrice().equals(existingPrice.getPrice())
+                && dtoValidTo.equals(existingPrice.getValidTo())) {
+
+            // Проверяем, что существующий validFrom >= сегодня
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
+
+                // Проверяем, что новый validFrom <= validTo
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
+
+                    // Если новая дата меньше существующей, проверяем, не занято ли это время
+                    if (dtoValidFrom.isBefore(existingPrice.getValidFrom())) {
+                        boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
+                                existingPrice.getAdditionalElements().getId(),
+                                existingPrice.getBranchDivision().getId(),
+                                dtoValidFrom,
+                                existingPrice.getValidFrom().minusDays(1), // Проверяем только до текущего validFrom
+                                existingPrice.getId() // Исключаем текущую запись
+                                                                                                  );
+                        if (priceConflict) {
+                            throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                        }
+                    }
+
+                    // Обновляем validFrom
                     existingPrice.setValidFrom(dtoValidFrom);
-                    additionalElementsPriceService.create(existingPrice);
+                    additionalElementsPriceService.create(existingPrice); // Используем update()
+
                     log.info("Изменение только даты начала");
                     return;
                 } else {
