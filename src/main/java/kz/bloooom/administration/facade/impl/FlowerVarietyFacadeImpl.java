@@ -219,16 +219,21 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
             // Проверяем, что существующий validFrom >= сегодня
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
 
+                // Проверяем, что новый validFrom >= today
+                if (dtoValidFrom.isBefore(today)) {
+                    throw new IllegalArgumentException("Cannot set valid_from to a past date");
+                }
+
                 // Проверяем, что новый validFrom <= validTo
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
 
-                    // Если новая дата меньше существующей, проверяем, не занято ли это время
+                    // Если новая дата validFrom меньше текущей, проверяем, свободен ли этот период
                     if (dtoValidFrom.isBefore(existingPrice.getValidFrom())) {
                         boolean priceConflict = flowerVarietyPriceService.existsByDateOverlap(
                                 existingPrice.getFlowerVariety().getId(),
                                 existingPrice.getBranchDivision().getId(),
                                 dtoValidFrom,
-                                existingPrice.getValidFrom().minusDays(1), // Проверяем только до текущего validFrom
+                                existingPrice.getValidTo(), // Проверяем до validTo
                                 existingPrice.getId() // Исключаем текущую запись
                                                                                                   );
                         if (priceConflict) {

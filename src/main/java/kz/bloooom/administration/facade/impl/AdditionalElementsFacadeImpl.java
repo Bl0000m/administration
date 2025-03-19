@@ -233,16 +233,21 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
             // Проверяем, что существующий validFrom >= сегодня
             if (existingPrice.getValidFrom().isAfter(today) || existingPrice.getValidFrom().isEqual(today)) {
 
+                // Проверяем, что новый validFrom >= today
+                if (dtoValidFrom.isBefore(today)) {
+                    throw new IllegalArgumentException("Cannot set valid_from to a past date");
+                }
+
                 // Проверяем, что новый validFrom <= validTo
                 if (dtoValidFrom.isBefore(existingPrice.getValidTo()) || dtoValidFrom.isEqual(existingPrice.getValidTo())) {
 
-                    // Если новая дата меньше существующей, проверяем, не занято ли это время
+                    // Если новая дата validFrom меньше текущей, проверяем, свободен ли этот период
                     if (dtoValidFrom.isBefore(existingPrice.getValidFrom())) {
                         boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
                                 existingPrice.getAdditionalElements().getId(),
                                 existingPrice.getBranchDivision().getId(),
                                 dtoValidFrom,
-                                existingPrice.getValidFrom().minusDays(1), // Проверяем только до текущего validFrom
+                                existingPrice.getValidTo(), // Проверяем до validTo
                                 existingPrice.getId() // Исключаем текущую запись
                                                                                                   );
                         if (priceConflict) {
@@ -284,15 +289,18 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
                     if (priceConflict) {
                         throw new IllegalArgumentException("На этот период уже установлена другая цена");
                     }
+
+                    // Обновляем цену и дату окончания
+                    existingPrice.setPrice(dto.getPrice());
+                    existingPrice.setValidTo(dtoValidTo);
+                    additionalElementsPriceService.create(existingPrice); // Используем update()
+
+                    log.info("Изменение цены и даты окончания");
+                    return;
+
+                } else {
+                    throw new IllegalArgumentException("Invalid valid_to date");
                 }
-
-                // Обновляем цену и дату окончания
-                existingPrice.setPrice(dto.getPrice());
-                existingPrice.setValidTo(dtoValidTo);
-                additionalElementsPriceService.create(existingPrice); // Используем update()
-
-                log.info("Изменение цены и даты окончания");
-                return;
             } else {
                 throw new IllegalArgumentException("Cannot change past periods");
             }
