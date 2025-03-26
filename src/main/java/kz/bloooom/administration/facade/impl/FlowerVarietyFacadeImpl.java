@@ -186,15 +186,39 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
                 // Проверяем, что новый validTo ≥ validFrom
                 if (dtoValidTo.isAfter(existingPrice.getValidFrom()) || dtoValidTo.isEqual(existingPrice.getValidFrom())) {
 
-                    // Проверяем, нет ли других цен в этом диапазоне
-                    boolean priceConflict = flowerVarietyPriceService.existsByDateOverlap(
-                            existingPrice.getFlowerVariety().getId(),
-                            existingPrice.getBranchDivision().getId(),
-                            existingPrice.getValidFrom(),
-                            dtoValidTo,
-                            existingPrice.getId());
-                    if (priceConflict) {
-                        throw new IllegalArgumentException("На этот период уже установлена другая цена");
+                    boolean validCase = false;
+
+                    // 1. Новый validTo равен (сегодня минус 1 день) и меньше существующего validTo
+                    if (dtoValidTo.equals(today.minusDays(1)) && dtoValidTo.isBefore(existingPrice.getValidTo())) {
+                        validCase = true;
+                    }
+                    // 2. Новый validTo равен сегодняшней дате и меньше существующего validTo
+                    else if (dtoValidTo.equals(today) && dtoValidTo.isBefore(existingPrice.getValidTo())) {
+                        validCase = true;
+                    }
+                    // 3. Новый validTo больше сегодняшней даты, но меньше существующего validTo
+                    else if (dtoValidTo.isAfter(today) && dtoValidTo.isBefore(existingPrice.getValidTo())) {
+                        validCase = true;
+                    }
+                    // 4. Новый validTo больше существующего validTo
+                    else if (dtoValidTo.isAfter(existingPrice.getValidTo())) {
+                        // Проверяем, что в расширенном периоде нет установленных цен
+                        boolean priceConflict = flowerVarietyPriceService.existsByDateOverlap(
+                                existingPrice.getFlowerVariety().getId(),
+                                existingPrice.getBranchDivision().getId(),
+                                existingPrice.getValidTo(), // период расширения начинается от текущего validTo
+                                dtoValidTo,
+                                existingPrice.getId()
+                                                                                                  );
+                        if (!priceConflict) {
+                            validCase = true;
+                        } else {
+                            throw new IllegalArgumentException("На расширенный период уже установлена другая цена");
+                        }
+                    }
+
+                    if (!validCase) {
+                        throw new IllegalArgumentException("Новая дата valid_to не соответствует требованиям");
                     }
 
                     // Обновляем дату validTo
