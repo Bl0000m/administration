@@ -418,7 +418,7 @@ public class AdditionalElementsFacadeImpl implements AdditionalElementsFacade {
 
                 // Если existingValidFrom < today, но existingValidTo >= today и dtoValidTo >= (today - 1)
                 if (existingPrice.getValidFrom().isBefore(today) &&
-                        existingPrice.getValidTo().isAfter(today)) {
+                        (existingPrice.getValidTo().isAfter(today) || existingPrice.getValidTo().equals(today))) {
 
                     // Проверяем, нет ли уже цен в этом периоде
                     boolean priceConflict = additionalElementsPriceService.existsByDateOverlap(
