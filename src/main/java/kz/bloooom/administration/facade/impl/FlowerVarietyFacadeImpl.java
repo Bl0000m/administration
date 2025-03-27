@@ -404,8 +404,7 @@ public class FlowerVarietyFacadeImpl implements FlowerVarietyFacade {
 
                 // Если existingValidFrom < today, но existingValidTo >= today и dtoValidTo >= (today - 1)
                 if (existingPrice.getValidFrom().isBefore(today) &&
-                        existingPrice.getValidTo().isAfter(today) &&
-                        dtoValidTo.isAfter(today.minusDays(1))) {
+                        existingPrice.getValidTo().isAfter(today)) {
 
                     // Проверяем, нет ли уже цен в этом периоде
                     boolean priceConflict = flowerVarietyPriceService.existsByDateOverlap(
